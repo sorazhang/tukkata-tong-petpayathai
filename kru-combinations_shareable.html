@@ -458,7 +458,7 @@
 </div>
 
 <footer>
-  Click any card to expand · <strong>Tukkatatong Petpayathai</strong> · Kru's Combinations 🥊<br>
+  Click any card to expand · Kru's Combinations 🥊<br>
   Part of the English ↔ Thai · More Learning Together collection
 </footer>
 
@@ -518,160 +518,298 @@
     card.appendChild(btn);
   });
 
-  /* ── Canvas renderer ─────────────────────────── */
+  /* ── Canvas renderer — 2 slides ─────────────── */
   async function shareCard(card) {
+    // Make sure expanded content is accessible even if card is closed
+    card.classList.add('on');
+
     const isSig  = card.classList.contains('sig');
     const cnum   = card.querySelector('.cnum')?.innerText?.trim()  || '';
     const cname  = card.querySelector('.cname')?.innerText?.trim() || '';
     const ctag   = card.querySelector('.ctag')?.innerText?.trim()  || '';
-    const kruQ   = card.querySelector('.ba-txt')?.innerText?.trim() || '';
-    const strikes = [...card.querySelectorAll('.seq .s')];
+    const question = card.querySelector('.bq-txt')?.innerText?.trim() || '';
+    const kruAns   = card.querySelector('.ba-txt')?.innerText?.trim() || '';
+    const noteEl   = card.querySelector('.note');
+    const strikes  = [...card.querySelectorAll('.seq .s')];
+
+    // Extract note as clean lines
+    const noteLines = noteEl
+      ? noteEl.innerHTML
+          .replace(/<br\s*\/?>/gi, '\n')
+          .replace(/<[^>]+>/g, '')
+          .split('\n')
+          .map(l => l.trim())
+          .filter(l => l.length > 0)
+      : [];
 
     await document.fonts.ready;
 
     const W = 1080, H = 1080;
-    const canvas = document.createElement('canvas');
-    canvas.width = W; canvas.height = H;
-    const ctx = canvas.getContext('2d');
+    const accentRGB = isSig ? '184,120,32' : '184,48,16';
+    const accentHex = isSig ? '#d4a055'    : '#c83010';
 
-    /* Background */
-    ctx.fillStyle = '#1c1710';
-    ctx.fillRect(0, 0, W, H);
-
-    /* Accent glow — gold for sig, red for regular */
-    const accentColor = isSig ? '184,120,32' : '184,48,16';
-    const grad = ctx.createRadialGradient(W, 0, 0, W, 0, W * 0.75);
-    grad.addColorStop(0, `rgba(${accentColor},0.22)`);
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    /* Top label */
-    ctx.font = '600 24px Outfit, sans-serif';
-    ctx.fillStyle = isSig ? '#d4a055' : 'rgba(184,48,16,0.9)';
-    ctx.textAlign = 'left';
-    ctx.fillText('🥊 KRU\'S COMBINATIONS · MUAY THAI', 80, 88);
-
-    /* Divider line */
-    ctx.strokeStyle = isSig ? 'rgba(184,120,32,0.35)' : 'rgba(184,48,16,0.35)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(80, 108); ctx.lineTo(W - 80, 108); ctx.stroke();
-
-    /* Card number */
-    ctx.font = '700 20px Outfit, sans-serif';
-    ctx.fillStyle = isSig ? 'rgba(184,120,32,0.7)' : 'rgba(250,247,242,0.22)';
-    ctx.textAlign = 'left';
-    ctx.fillText(cnum.toUpperCase(), 80, 152);
-
-    /* Combo name */
-    ctx.fillStyle = '#faf7f2';
-    const nameLines = wrapText(ctx, cname, W - 160, '700 48px Fraunces, serif');
-    ctx.font = '700 48px Fraunces, serif';
-    let y = 210;
-    nameLines.forEach(line => { ctx.fillText(line, 80, y); y += 64; });
-
-    /* Category tag */
-    if (ctag) {
-      ctx.font = '300 24px Outfit, sans-serif';
-      ctx.fillStyle = 'rgba(250,247,242,0.3)';
-      ctx.fillText(ctag, 80, y + 10);
-      y += 52;
+    /* ── shared draw helpers ── */
+    function drawBackground(ctx, glowSide = 'right') {
+      ctx.fillStyle = '#1c1710';
+      ctx.fillRect(0, 0, W, H);
+      const gx = glowSide === 'right' ? W : 0;
+      const grad = ctx.createRadialGradient(gx, 0, 0, gx, 0, W * 0.8);
+      grad.addColorStop(0, `rgba(${accentRGB},0.2)`);
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
     }
 
-    /* Strike sequence badges */
-    y += 20;
-    if (strikes.length) {
-      const BADGE_H = 46;
-      const BADGE_PAD_X = 22;
-      const BADGE_GAP = 12;
-      const ARR_W = 30;
-      ctx.font = '700 22px Outfit, sans-serif';
-      let x = 80;
-      let rowY = y;
+    function drawHeader(ctx, label, slideNum) {
+      ctx.font = '600 22px Outfit, sans-serif';
+      ctx.fillStyle = accentHex;
+      ctx.textAlign = 'left';
+      ctx.fillText('🥊 ' + label, 80, 82);
+      // Slide indicator dots
+      for (let i = 0; i < 2; i++) {
+        ctx.beginPath();
+        ctx.arc(W - 80 - (1 - i) * 22, 72, 5, 0, Math.PI * 2);
+        ctx.fillStyle = i === slideNum - 1 ? accentHex : 'rgba(250,247,242,0.18)';
+        ctx.fill();
+      }
+      ctx.strokeStyle = `rgba(${accentRGB},0.3)`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(80, 102); ctx.lineTo(W - 80, 102); ctx.stroke();
+    }
 
+    function drawWatermark(ctx) {
+      ctx.font = '400 22px Outfit, sans-serif';
+      ctx.fillStyle = 'rgba(250,247,242,0.13)';
+      ctx.textAlign = 'center';
+      ctx.fillText("Kru's Combinations · More Learning Together", W / 2, H - 52);
+    }
+
+    function drawStrikes(ctx, strikes, startY) {
+      if (!strikes.length) return startY;
+      const BADGE_H = 44, PAD_X = 20, GAP = 10, ARR_W = 28;
+      ctx.font = '700 21px Outfit, sans-serif';
+      let x = 80, rowY = startY;
       for (let i = 0; i < strikes.length; i++) {
         const txt = strikes[i].innerText.trim();
         const col = strikeColor(strikes[i]);
-        const bw  = ctx.measureText(txt).width + BADGE_PAD_X * 2;
-
-        /* Wrap to next row if needed */
-        if (x + bw > W - 80 && x > 80) {
-          x = 80;
-          rowY += BADGE_H + 16;
-        }
-
-        /* Badge background */
-        roundRect(ctx, x, rowY - BADGE_H + 8, bw, BADGE_H, 6);
-        ctx.fillStyle = col.bg;
-        ctx.fill();
-        ctx.strokeStyle = col.text.replace(')', ', 0.35)').replace('rgb', 'rgba');
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        /* Badge text */
-        ctx.fillStyle = col.text;
-        ctx.textAlign = 'left';
-        ctx.fillText(txt, x + BADGE_PAD_X, rowY);
-
-        x += bw + BADGE_GAP;
-
-        /* Arrow between badges */
+        const bw  = ctx.measureText(txt).width + PAD_X * 2;
+        if (x + bw > W - 80 && x > 80) { x = 80; rowY += BADGE_H + 14; }
+        roundRect(ctx, x, rowY - BADGE_H + 6, bw, BADGE_H, 6);
+        ctx.fillStyle = col.bg; ctx.fill();
+        ctx.strokeStyle = col.text + '55'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = col.text; ctx.textAlign = 'left';
+        ctx.fillText(txt, x + PAD_X, rowY);
+        x += bw + GAP;
         if (i < strikes.length - 1) {
-          ctx.font = '300 22px Outfit, sans-serif';
-          ctx.fillStyle = 'rgba(250,247,242,0.25)';
+          ctx.font = '300 21px Outfit, sans-serif';
+          ctx.fillStyle = 'rgba(250,247,242,0.22)';
           ctx.fillText('→', x, rowY);
-          x += ARR_W + BADGE_GAP;
-          ctx.font = '700 22px Outfit, sans-serif';
+          x += ARR_W + GAP;
+          ctx.font = '700 21px Outfit, sans-serif';
         }
       }
-      y = rowY + BADGE_H + 20;
+      return rowY + BADGE_H + 10;
     }
 
-    /* Divider */
-    y += 10;
-    ctx.strokeStyle = 'rgba(250,247,242,0.08)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([6, 4]);
-    ctx.beginPath(); ctx.moveTo(80, y); ctx.lineTo(W - 80, y); ctx.stroke();
-    ctx.setLineDash([]);
-    y += 44;
+    /* ════════════════════════════════════════════
+       SLIDE 1 — Combo + Question
+    ════════════════════════════════════════════ */
+    const c1 = document.createElement('canvas');
+    c1.width = W; c1.height = H;
+    const ctx1 = c1.getContext('2d');
 
-    /* Kru quote */
-    if (kruQ) {
-      ctx.font = 'italic 500 34px Fraunces, serif';
-      ctx.fillStyle = 'rgba(250,247,242,0.72)';
-      ctx.textAlign = 'left';
-      const qLines = wrapText(ctx, `"${kruQ}"`, W - 200, 'italic 500 34px Fraunces, serif');
-      qLines.forEach(line => { ctx.fillText(line, 90, y); y += 50; });
+    drawBackground(ctx1, 'right');
+    drawHeader(ctx1, "KRU'S COMBINATIONS · MUAY THAI", 1);
+
+    // Card number
+    ctx1.font = '700 19px Outfit, sans-serif';
+    ctx1.fillStyle = isSig ? 'rgba(184,120,32,0.7)' : 'rgba(250,247,242,0.2)';
+    ctx1.textAlign = 'left';
+    ctx1.fillText(cnum.toUpperCase(), 80, 148);
+
+    // Combo name
+    ctx1.fillStyle = '#faf7f2';
+    const nameL = wrapText(ctx1, cname, W - 160, '700 46px Fraunces, serif');
+    ctx1.font = '700 46px Fraunces, serif';
+    let y1 = 205;
+    nameL.forEach(l => { ctx1.fillText(l, 80, y1); y1 += 62; });
+
+    // Category tag
+    if (ctag) {
+      ctx1.font = '300 23px Outfit, sans-serif';
+      ctx1.fillStyle = 'rgba(250,247,242,0.28)';
+      ctx1.fillText(ctag, 80, y1 + 8);
+      y1 += 48;
     }
 
-    /* Watermark */
-    ctx.font = '400 24px Outfit, sans-serif';
-    ctx.fillStyle = 'rgba(250,247,242,0.15)';
-    ctx.textAlign = 'center';
-    ctx.fillText('Kru\'s Combinations · English ↔ Thai · More Learning Together', W / 2, H - 58);
+    // Strike sequence
+    y1 += 22;
+    y1 = drawStrikes(ctx1, strikes, y1);
 
-    /* Share or download */
-    canvas.toBlob(async (blob) => {
-      const file = new File([blob], 'kru-combo.png', { type: 'image/png' });
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({ files: [file], title: 'Kru\'s Combination', text: cname });
-        } catch (err) {
-          if (err.name !== 'AbortError') downloadBlob(blob);
+    // Divider
+    y1 += 22;
+    ctx1.strokeStyle = 'rgba(250,247,242,0.07)';
+    ctx1.lineWidth = 1; ctx1.setLineDash([6, 4]);
+    ctx1.beginPath(); ctx1.moveTo(80, y1); ctx1.lineTo(W - 80, y1); ctx1.stroke();
+    ctx1.setLineDash([]);
+    y1 += 48;
+
+    // Question label
+    ctx1.font = '700 18px Outfit, sans-serif';
+    ctx1.fillStyle = 'rgba(110,168,216,0.7)';
+    ctx1.textAlign = 'left';
+    ctx1.fillText('QUESTION', 80, y1);
+    y1 += 32;
+
+    // Question text
+    if (question) {
+      const qL = wrapText(ctx1, `"${question}"`, W - 200, 'italic 500 32px Fraunces, serif');
+      ctx1.font = 'italic 500 32px Fraunces, serif';
+      ctx1.fillStyle = 'rgba(110,168,216,0.85)';
+      qL.forEach(l => { ctx1.fillText(l, 80, y1); y1 += 48; });
+    } else {
+      ctx1.font = 'italic 400 28px Outfit, sans-serif';
+      ctx1.fillStyle = 'rgba(250,247,242,0.3)';
+      ctx1.fillText('Tap to expand and explore the thinking behind this combo.', 80, y1);
+    }
+
+    // Swipe hint
+    ctx1.font = '500 22px Outfit, sans-serif';
+    ctx1.fillStyle = 'rgba(250,247,242,0.22)';
+    ctx1.textAlign = 'right';
+    ctx1.fillText('Swipe for Kru\'s answer →', W - 80, H - 90);
+
+    drawWatermark(ctx1);
+
+    /* ════════════════════════════════════════════
+       SLIDE 2 — Answer + Key Points
+    ════════════════════════════════════════════ */
+    const c2 = document.createElement('canvas');
+    c2.width = W; c2.height = H;
+    const ctx2 = c2.getContext('2d');
+
+    drawBackground(ctx2, 'left');
+    drawHeader(ctx2, "KRU'S ANSWER", 2);
+
+    // Combo name (small, subtitle)
+    ctx2.font = '400 22px Outfit, sans-serif';
+    ctx2.fillStyle = 'rgba(250,247,242,0.3)';
+    ctx2.textAlign = 'left';
+    ctx2.fillText(cname, 80, 148);
+
+    let y2 = 200;
+
+    // Kru answer label
+    ctx2.font = '700 18px Outfit, sans-serif';
+    ctx2.fillStyle = accentHex;
+    ctx2.fillText('KRU SAYS', 80, y2);
+    y2 += 38;
+
+    // Kru answer quote
+    if (kruAns) {
+      const aL = wrapText(ctx2, `"${kruAns}"`, W - 180, '700 38px Fraunces, serif');
+      ctx2.font = '700 38px Fraunces, serif';
+      ctx2.fillStyle = '#faf7f2';
+      aL.forEach(l => { ctx2.fillText(l, 80, y2); y2 += 56; });
+    }
+
+    // Divider
+    y2 += 20;
+    ctx2.strokeStyle = 'rgba(250,247,242,0.07)';
+    ctx2.lineWidth = 1; ctx2.setLineDash([6, 4]);
+    ctx2.beginPath(); ctx2.moveTo(80, y2); ctx2.lineTo(W - 80, y2); ctx2.stroke();
+    ctx2.setLineDash([]);
+    y2 += 40;
+
+    // Key points label
+    ctx2.font = '700 18px Outfit, sans-serif';
+    ctx2.fillStyle = 'rgba(122,191,144,0.8)';
+    ctx2.textAlign = 'left';
+    ctx2.fillText('KEY POINTS', 80, y2);
+    y2 += 36;
+
+    // Note lines — clean 2-line layout: label on its own line, description indented below
+    const MAX_NOTE_Y = H - 110;
+    for (const line of noteLines) {
+      if (y2 > MAX_NOTE_Y) break;
+
+      const isStep     = line.includes('—');
+      const isCallout  = !isStep && line.length > 20 && line === line.toUpperCase();
+
+      if (isStep) {
+        // Line like "Jab → Jab — forces the right block."
+        // Render label (before —) in accent, description (after —) in muted below
+        const dashIdx = line.indexOf('—');
+        const label = line.slice(0, dashIdx).trim();
+        const desc  = line.slice(dashIdx + 1).trim();
+
+        ctx2.font = '600 24px Outfit, sans-serif';
+        ctx2.fillStyle = accentHex;
+        ctx2.fillText(label, 80, y2);
+        y2 += 32;
+
+        if (desc) {
+          const descLines = wrapText(ctx2, desc, W - 200, '400 24px Outfit, sans-serif');
+          ctx2.font = '400 24px Outfit, sans-serif';
+          ctx2.fillStyle = 'rgba(250,247,242,0.62)';
+          descLines.forEach(dl => {
+            if (y2 <= MAX_NOTE_Y) { ctx2.fillText(dl, 100, y2); y2 += 32; }
+          });
         }
+        y2 += 6; // gap between entries
+
+      } else if (isCallout) {
+        // All-caps principle line — italic, dimmer, full width
+        ctx2.font = 'italic 600 23px Fraunces, serif';
+        ctx2.fillStyle = 'rgba(250,247,242,0.42)';
+        const clLines = wrapText(ctx2, line, W - 180, 'italic 600 23px Fraunces, serif');
+        clLines.forEach(cl => { if (y2 <= MAX_NOTE_Y) { ctx2.fillText(cl, 80, y2); y2 += 32; } });
+        y2 += 4;
+
       } else {
-        downloadBlob(blob);
-        showToast('Card saved — open your gallery to share to Instagram ✨');
+        // Plain body text
+        ctx2.font = '400 24px Outfit, sans-serif';
+        ctx2.fillStyle = 'rgba(250,247,242,0.52)';
+        const bLines = wrapText(ctx2, line, W - 180, '400 24px Outfit, sans-serif');
+        bLines.forEach(bl => { if (y2 <= MAX_NOTE_Y) { ctx2.fillText(bl, 80, y2); y2 += 32; } });
+        y2 += 6;
       }
-    }, 'image/png');
+    }
+
+    drawWatermark(ctx2);
+
+    /* ── Convert both canvases to blobs then share ── */
+    const [blob1, blob2] = await Promise.all([
+      canvasToBlob(c1), canvasToBlob(c2)
+    ]);
+
+    const files = [
+      new File([blob1], 'kru-combo-1-question.png', { type: 'image/png' }),
+      new File([blob2], 'kru-combo-2-answer.png',   { type: 'image/png' }),
+    ];
+
+    if (navigator.share && navigator.canShare && navigator.canShare({ files })) {
+      try {
+        await navigator.share({ files, title: "Kru's Combination", text: cname });
+      } catch (err) {
+        if (err.name !== 'AbortError') { downloadBlob(blob1, 'kru-combo-1.png'); downloadBlob(blob2, 'kru-combo-2.png'); }
+      }
+    } else {
+      downloadBlob(blob1, 'kru-combo-1-question.png');
+      setTimeout(() => downloadBlob(blob2, 'kru-combo-2-answer.png'), 400);
+      showToast('2 cards saved — share both to IG as a carousel ✨');
+    }
   }
 
   /* ── Helpers ─────────────────────────────────── */
-  function downloadBlob(blob) {
+  function canvasToBlob(canvas) {
+    return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  }
+
+  function downloadBlob(blob, filename) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'kru-combo.png';
+    a.href = url; a.download = filename || 'kru-combo.png';
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
