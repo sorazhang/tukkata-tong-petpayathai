@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kru's Combinations · Muay Thai</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700&family=Fraunces:ital,wght@0,700;0,900;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --bg2: #f2ede4;
+    --bg3: #e8e0d2;
+    --ink: #1c1710;
+    --muted: #8a7d6a;
+    --border: rgba(28,23,16,0.1);
+    --situation: #2a5c8a;
+    --kru: #8a2018;
+    --coaching: #2a6640;
+    --gold: #b87820;
+    --accent: #b83010;
+    --accent2: #7a4010;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Outfit', sans-serif; min-height: 100vh; }
+
+  header { background: var(--ink); padding: 3rem 2rem 2.2rem; position: relative; overflow: hidden; }
+  header::before { content: '🥊'; position: absolute; right: 1.5rem; bottom: -1rem; font-size: 10rem; opacity: 0.05; line-height: 1; pointer-events: none; }
+  .h-inner { max-width: 900px; margin: 0 auto; }
+  .vol-tag { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; }
+  h1 { font-family: 'Fraunces', serif; font-size: clamp(1.6rem, 4.5vw, 2.8rem); font-weight: 700; line-height: 1.1; color: #faf7f2; margin-bottom: 0.3rem; }
+  h1 i { font-style: italic; color: rgba(184,48,16,0.9); }
+  .sub { font-size: 0.82rem; color: rgba(250,247,242,0.4); font-weight: 300; margin-bottom: 1.4rem; }
+  .legend { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .leg { display: flex; align-items: center; gap: 0.4rem; font-size: 0.76rem; font-weight: 500; }
+  .lsq { width: 10px; height: 10px; border-radius: 2px; }
+  .ls { background: var(--situation); } .lk { background: var(--kru); } .lg { background: var(--gold); } .lc { background: var(--coaching); }
+  .leg-txt { color: rgba(250,247,242,0.7); }
+
+  .tabs { display: flex; overflow-x: auto; background: var(--bg2); border-bottom: 2px solid var(--bg3); padding: 0 1.2rem; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; -webkit-overflow-scrolling: touch; }
+  .tab { padding: 0.9rem 1.1rem; font-size: 0.79rem; font-weight: 600; color: var(--muted); cursor: pointer; white-space: nowrap; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.15s; letter-spacing: 0.02em; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Outfit', sans-serif; }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .content { max-width: 900px; margin: 0 auto; padding: 2rem 1.4rem 5rem; }
+  .section { display: none; } .section.active { display: block; }
+
+  .intro { font-size: 0.82rem; line-height: 1.72; color: var(--muted); padding: 0.85rem 1.1rem; margin-bottom: 1.8rem; border-left: 3px solid var(--accent); background: rgba(184,48,16,0.05); border-radius: 0 4px 4px 0; }
+  .intro strong { color: var(--ink); }
+  .intro em { color: var(--kru); font-style: italic; }
+
+  .grp { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin: 2.2rem 0 0.9rem; display: flex; align-items: center; gap: 0.8rem; }
+  .grp::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .grp:first-of-type { margin-top: 0; }
+
+  /* ── COMBO CARD ── */
+  .card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.3rem; margin-bottom: 0.65rem; cursor: pointer; transition: all 0.18s; position: relative; }
+  .card:hover { border-color: rgba(184,48,16,0.3); box-shadow: 0 3px 14px rgba(0,0,0,0.07); transform: translateY(-1px); }
+  .card.on { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(184,48,16,0.15); background: #fffcfa; }
+  .card.sig { border-color: rgba(184,120,32,0.28); }
+  .card.sig:hover { border-color: rgba(184,120,32,0.55); }
+  .card.sig.on { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(184,120,32,0.18); }
+
+  .cnum { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.15rem; }
+  .card.sig .cnum { color: var(--gold); }
+  .cname { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 0.7rem; line-height: 1.25; }
+
+  /* ── STRIKE SEQUENCE ── */
+  .seq { display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.55rem; }
+  .arr { font-size: 0.68rem; color: var(--muted); }
+  .s { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 3px; white-space: nowrap; }
+  .s.jab   { background: rgba(42,92,138,0.1);  color: var(--situation); border: 1px solid rgba(42,92,138,0.22); }
+  .s.cross { background: rgba(42,92,138,0.17); color: var(--situation); border: 1px solid rgba(42,92,138,0.3); }
+  .s.hook  { background: rgba(42,92,138,0.12); color: var(--situation); border: 1px solid rgba(42,92,138,0.25); }
+  .s.kick  { background: rgba(138,32,24,0.09); color: var(--kru);       border: 1px solid rgba(138,32,24,0.2); }
+  .s.kick.h{ background: rgba(138,32,24,0.18); }
+  .s.elbow { background: rgba(184,120,32,0.1); color: var(--gold);      border: 1px solid rgba(184,120,32,0.28); }
+  .s.knee  { background: rgba(42,102,64,0.1);  color: var(--coaching);  border: 1px solid rgba(42,102,64,0.24); }
+  .s.block { background: rgba(28,23,16,0.05);  color: var(--muted);     border: 1px solid var(--border); }
+  .s.catch { background: rgba(28,23,16,0.07);  color: var(--muted);     border: 1px solid var(--border); }
+  .s.feint { background: rgba(28,23,16,0.04);  color: var(--muted);     border: 1px solid var(--border); font-style: italic; }
+  .s.move  { background: rgba(42,102,64,0.07); color: var(--coaching);  border: 1px solid rgba(42,102,64,0.18); font-style: italic; }
+  .s.turn  { background: rgba(122,64,16,0.1);  color: var(--accent2);   border: 1px solid rgba(122,64,16,0.22); }
+
+  .ctag { font-size: 0.64rem; color: var(--muted); letter-spacing: 0.04em; }
+
+  /* ── EXPAND ── */
+  .expand { max-height: 0; overflow: hidden; transition: max-height 0.38s ease; }
+  .card.on .expand { max-height: 600px; }
+
+  .expand-inner { padding-top: 0.8rem; border-top: 1px dashed var(--border); margin-top: 0.65rem; display: flex; flex-direction: column; gap: 0.38rem; }
+
+  .bq { align-self: flex-start; max-width: 88%; background: var(--bg2); border: 1px solid var(--border); border-radius: 0 8px 8px 8px; padding: 0.48rem 0.75rem; }
+  .bq-lbl { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--situation); margin-bottom: 0.1rem; }
+  .bq-txt { font-size: 0.85rem; color: var(--situation); font-style: italic; line-height: 1.4; }
+
+  .ba { align-self: flex-end; max-width: 88%; background: var(--ink); border-radius: 8px 0 8px 8px; padding: 0.48rem 0.75rem; }
+  .ba-lbl { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(250,247,242,0.32); margin-bottom: 0.1rem; }
+  .ba-txt { font-family: 'Fraunces', serif; font-size: 0.95rem; color: #faf7f2; font-style: italic; line-height: 1.4; }
+
+  .note { font-size: 0.75rem; color: var(--muted); line-height: 1.58; border-left: 2px solid var(--coaching); padding: 0.32rem 0.62rem; margin-top: 0.08rem; }
+  .note b { color: var(--ink); }
+  .note .ke { color: var(--accent); font-weight: 600; }
+  .note .kc { color: var(--coaching); font-weight: 600; }
+
+  /* hbox */
+  .hbox { background: rgba(122,64,16,0.07); border: 1px solid rgba(122,64,16,0.2); border-radius: 8px; padding: 1rem 1.2rem; margin-bottom: 0.7rem; }
+  .hbox-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent2); margin-bottom: 0.55rem; }
+  .hbox p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+  .hbox p b { color: var(--ink); }
+  .hbox .kru-q { font-family: 'Fraunces', serif; font-size: 1rem; color: var(--kru); font-style: italic; line-height: 1.5; }
+
+  /* table */
+  .tw { overflow-x: auto; margin-bottom: 0.7rem; }
+  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; font-size: 0.85rem; }
+  thead tr { background: var(--ink); }
+  thead th { padding: 0.6rem 1rem; text-align: left; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(250,247,242,0.7); }
+  tbody tr { border-bottom: 1px solid var(--border); } tbody tr:last-child { border-bottom: none; } tbody tr:hover { background: var(--bg); }
+  td { padding: 0.65rem 1rem; vertical-align: top; line-height: 1.5; }
+  .tp { color: var(--situation); font-style: italic; font-size: 0.83rem; }
+  .tk { font-family: 'Fraunces', serif; color: var(--kru); font-style: italic; font-size: 0.93rem; }
+  .tn { color: var(--muted); font-size: 0.75rem; }
+
+  footer { text-align: center; padding: 1.5rem; font-size: 0.74rem; color: var(--muted); border-top: 1px solid var(--border); }
+  @media (max-width: 560px) { header::before { display: none; } .bq, .ba { max-width: 95%; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-inner">
+    <div class="vol-tag">🥊 Kru · Muay Thai Combinations</div>
+    <h1>Kru's <i>Combinations</i></h1>
+    <p class="sub">Techniques with a reason behind them · click any combo to hear the thinking</p>
+    <div class="legend">
+      <div class="leg"><div class="lsq ls"></div><span class="leg-txt">Punch</span></div>
+      <div class="leg"><div class="lsq lk"></div><span class="leg-txt">Kick</span></div>
+      <div class="leg"><div class="lsq lg"></div><span class="leg-txt">Elbow</span></div>
+      <div class="leg"><div class="lsq lc"></div><span class="leg-txt">Knee</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" onclick="sw('foundation')">🔵 Foundation</button>
+  <button class="tab" onclick="sw('counter')">⚡ Counter</button>
+  <button class="tab" onclick="sw('clinch')">🤼 Clinch</button>
+  <button class="tab" onclick="sw('signature')">⭐ Kru's Own</button>
+  <button class="tab" onclick="sw('principles')">📐 Principles</button>
+</nav>
+
+<div class="content">
+
+  <!-- ── FOUNDATION ── -->
+  <div id="foundation" class="section active">
+    <p class="intro"><strong>Every technique has a job.</strong> The combos here aren't just sequences — each one teaches something about distance, timing, or reading the opponent. Click any card to hear the reasoning behind the moves.</p>
+
+    <div class="grp">Long Range — Control &amp; Measure</div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">01 · The Opener</div>
+      <div class="cname">Jab → Cross → Teep</div>
+      <div class="seq"><span class="s jab">Jab</span><div class="arr">→</div><span class="s cross">Cross</span><div class="arr">→</div><span class="s kick">Teep</span></div>
+      <div class="ctag">Long range · Safe entry · Tests the guard</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"Why jab-cross-teep instead of going straight to the body kick?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"The jab-cross isn't the attack. It's the question. The teep is the answer."</div></div>
+        <div class="note">The jab-cross checks if their hands come up. If they do — the teep finds the body open. If they don't — the cross scores. The teep resets distance: <i>don't come in.</i> <b>Nothing here is decoration. Every move has a purpose.</b></div>
+      </div></div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">02 · The Pauser</div>
+      <div class="cname">Teep → Step back → Teep</div>
+      <div class="seq"><span class="s kick">Teep</span><div class="arr">→</div><span class="s move">Step back</span><div class="arr">→</div><span class="s kick">Teep</span></div>
+      <div class="ctag">Rhythm break · Frustrate · Distance as a weapon</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"What's the point of teeping and stepping back — am I just running?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"You're not running. You're changing the beat. The second teep lands when they think you've given them space."</div></div>
+        <div class="note">Fighters get into rhythms. They start to time you. The step back breaks the expectation — they think you're retreating, they start to step in, and the second teep meets them halfway. <b>This is how you use distance as a weapon, not just safety.</b></div>
+      </div></div>
+    </div>
+
+    <div class="grp">Mid Range — Score &amp; Setup</div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">03 · The Setup</div>
+      <div class="cname">Body kick → Body kick → Head kick</div>
+      <div class="seq"><span class="s kick">Body kick</span><div class="arr">→</div><span class="s kick">Body kick</span><div class="arr">→</div><span class="s kick h">Head kick</span></div>
+      <div class="ctag">Pattern building · High value score · Patience required</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"Why repeat the body kick before going to the head? Why not go for the head kick straight away?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"You're not throwing the same kick three times. You're training their arms to come down."</div></div>
+        <div class="note">Two body kicks make the guard drift low — the arms get used to protecting the ribs. The third kick goes where the guard no longer is. <b>The first two aren't scoring techniques. They're coaching the opponent to make a mistake.</b></div>
+      </div></div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">04 · The Closer</div>
+      <div class="cname">Body kick → Cross → Elbow → Teep out</div>
+      <div class="seq"><span class="s kick">Body kick</span><div class="arr">→</div><span class="s cross">Cross</span><div class="arr">→</div><span class="s elbow">Elbow</span><div class="arr">→</div><span class="s kick">Teep out</span></div>
+      <div class="ctag">Pressure · Score · Clean exit</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"What's the teep doing at the end of an attack? Isn't that the moment to keep going?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"You scored. Now you leave. The teep is the full stop at the end of the sentence."</div></div>
+        <div class="note">The teep resets distance, kills their momentum, and returns you to safety. <b>Score — then make them come to you again. This is how you win rounds, not just exchanges.</b></div>
+      </div></div>
+    </div>
+
+    <div class="grp">Deception</div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">05 · The Fake</div>
+      <div class="cname">Feint kick → Jab → Round kick</div>
+      <div class="seq"><span class="s feint">Feint kick</span><div class="arr">→</div><span class="s jab">Jab</span><div class="arr">→</div><span class="s kick">Round kick</span></div>
+      <div class="ctag">Deception · Must be earned · Timing</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"Faking always feels obvious when I do it. When does it actually work?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"A feint works when they've already seen the real thing. Teach them to respect the kick first. Then fake it."</div></div>
+        <div class="note">You need to have already landed that kick for the fake to cause a real reaction. <b>Deception is built on a history of truth. Throw the real kick many times first. Then the feint becomes a weapon.</b></div>
+      </div></div>
+    </div>
+
+  </div><!-- /foundation -->
+
+
+  <!-- ── COUNTER ── -->
+  <div id="counter" class="section">
+    <p class="intro"><strong>The best scoring moments come after the opponent attacks.</strong> Countering requires patience, reading, and knowing exactly what to do in the small window you're given.</p>
+
+    <div class="grp">Catching &amp; Countering</div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">06 · The Double Problem</div>
+      <div class="cname">Catch kick → Cross → Body kick</div>
+      <div class="seq"><span class="s catch">Catch kick</span><div class="arr">→</div><span class="s cross">Cross</span><div class="arr">→</div><span class="s kick">Body kick</span></div>
+      <div class="ctag">Reactive · Off-balance · High value</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"Why not just sweep when you catch the kick? That's what everyone expects."</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"The sweep is predictable. Everyone trains for it. The cross first — now they're thinking about the punch while the kick comes."</div></div>
+        <div class="note">Catching a kick gives one free second of imbalance. The cross disrupts guard AND thinking. The body kick arrives to a mind processing two problems at once. <b>Always give them two things to deal with. They can only solve one.</b></div>
+      </div></div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">07 · Slip &amp; Strike</div>
+      <div class="cname">Slip outside → Cross → Body kick</div>
+      <div class="seq"><span class="s move">Slip outside</span><div class="arr">→</div><span class="s cross">Cross</span><div class="arr">→</div><span class="s kick">Body kick</span></div>
+      <div class="ctag">Angle change · Safe counter · Reactive</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"I know I should slip but I always block instead. How do I make slipping feel natural?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"Drill the slip not as defence — drill it as the first step of the counter. If the counter doesn't come, you didn't really slip."</div></div>
+        <div class="note">The slip alone is worthless. It only has value when it puts you in position to counter. Drill slip → cross as one single movement. <b>The defence and the offence are the same action.</b></div>
+      </div></div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">08 · The Patience Counter</div>
+      <div class="cname">Block → Teep → Round kick</div>
+      <div class="seq"><span class="s block">Block</span><div class="arr">→</div><span class="s kick">Teep</span><div class="arr">→</div><span class="s kick">Round kick</span></div>
+      <div class="ctag">Low risk · Controlled · High efficiency</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"This seems too simple. Surely they see the teep coming after I block?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"They see it. But they're still resetting from the attack. Seeing it and stopping it are different things."</div></div>
+        <div class="note">Right after an attack, the opponent's mind is registering failure, their body is recovering. The teep catches that window. The kick follows while they're still adjusting. <b>Simple combos win in Muay Thai. Complicated ones create their own problems.</b></div>
+      </div></div>
+    </div>
+
+  </div><!-- /counter -->
+
+
+  <!-- ── CLINCH ── -->
+  <div id="clinch" class="section">
+    <p class="intro"><strong>The clinch is where Muay Thai becomes chess.</strong> Outside is about power and distance. Inside is about control, balance, and position. These combos are for when staying outside isn't working.</p>
+
+    <div class="grp">Entry &amp; Control</div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">09 · The Clinch Entry</div>
+      <div class="cname">Jab → Elbow → Knee</div>
+      <div class="seq"><span class="s jab">Jab</span><div class="arr">→</div><span class="s elbow">Elbow</span><div class="arr">→</div><span class="s knee">Knee</span></div>
+      <div class="ctag">Close range · Thai classic · Dominant</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"When do you choose to go into the clinch instead of staying outside?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"When they're bigger and stronger at range. You take away their space. Make the fight yours."</div></div>
+        <div class="note">The jab covers entry into close range. The elbow scores and occupies their defence simultaneously. The knee drives while their arms are busy. <b>Outside Muay Thai is power fighting. Clinch Muay Thai is chess. Use it when they're winning the power game.</b></div>
+      </div></div>
+    </div>
+
+    <div class="card" onclick="this.classList.toggle('on')">
+      <div class="cnum">10 · Knee &amp; Exit</div>
+      <div class="cname">Knee → Knee → Push out → Round kick</div>
+      <div class="seq"><span class="s knee">Knee</span><div class="arr">→</div><span class="s knee">Knee</span><div class="arr">→</div><span class="s block">Push out</span><div class="arr">→</div><span class="s kick">Round kick</span></div>
+      <div class="ctag">Clinch work · Score · Clean exit into kick</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"How do I get a clean kick after the clinch? Every time I separate I'm off-balance."</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"The push creates the distance. The kick uses their stumble. You don't separate and then kick — you separate with the kick."</div></div>
+        <div class="note">Two knees weaken the body and occupy attention. The push exits while also sending them backward — that stumble is a half-second of imbalance. The kick arrives in exactly that window. <b>The exit and the attack are the same movement.</b></div>
+      </div></div>
+    </div>
+
+  </div><!-- /clinch -->
+
+
+  <!-- ── SIGNATURE ── -->
+  <div id="signature" class="section">
+    <p class="intro">
+      <strong>These two are Kru's own.</strong> Not from a textbook — from thousands of rounds finding what actually works. The principle in both is the same: <em>two jabs create a predictable reaction. Then you control that reaction.</em>
+    </p>
+
+    <div class="grp">🥊 Kru's Signature — Left Stance</div>
+
+    <div class="card sig" onclick="this.classList.toggle('on')">
+      <div class="cnum">★ Left Combo</div>
+      <div class="cname">Jab Jab → R. block → L. catch drops hand → Punch → R. knee → Move left → Kick</div>
+      <div class="seq">
+        <span class="s jab">Jab</span><div class="arr">→</div>
+        <span class="s jab">Jab</span><div class="arr">→</div>
+        <span class="s block">R. block</span><div class="arr">→</div>
+        <span class="s catch">L. catch + drop</span><div class="arr">→</div>
+        <span class="s cross">Punch</span><div class="arr">→</div>
+        <span class="s knee">R. knee</span><div class="arr">→</div>
+        <span class="s move">Move left</span><div class="arr">→</div>
+        <span class="s kick">Kick</span>
+      </div>
+      <div class="ctag">Left stance · Catch and control · Kru's personal sequence</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"Walk me through this step by step — why two jabs first?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"The first jab measures the distance. The second commits them to block right. Now I know exactly where their hand is going."</div></div>
+        <div class="note">
+          <span class="ke">Step by step:</span><br>
+          <b>Jab → Jab</b> — forces the right block. You've created a predictable reaction.<br>
+          <b>Left hand catches</b> their blocking arm and drops it down, opening the centreline.<br>
+          <b>Punch</b> enters the gap while their guard is controlled by your left hand.<br>
+          <b>Right knee</b> drives into a body that can no longer protect itself.<br>
+          <b>Move left</b> — the key step. Already angled and loaded for the kick before they've recovered.<br>
+          <b>Kick</b> is the natural conclusion. <b>The exit angle was built into the combo from the beginning. The move left is not after the combo — it is the combo.</b>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="grp">🥊 Kru's Signature — Right Stance</div>
+
+    <div class="card sig" onclick="this.classList.toggle('on')">
+      <div class="cnum">★ Right Combo</div>
+      <div class="cname">Jab Jab → L. block → L. catch + R. side push → Turn opponent → Punch → Kick</div>
+      <div class="seq">
+        <span class="s jab">Jab</span><div class="arr">→</div>
+        <span class="s jab">Jab</span><div class="arr">→</div>
+        <span class="s block">L. block</span><div class="arr">→</div>
+        <span class="s catch">L. catch</span><div class="arr">→</div>
+        <span class="s turn">R. push + turn</span><div class="arr">→</div>
+        <span class="s cross">Punch</span><div class="arr">→</div>
+        <span class="s kick">Kick</span>
+      </div>
+      <div class="ctag">Right side · Off-balance · Turn opponent · Kru's personal sequence</div>
+      <div class="expand"><div class="expand-inner">
+        <div class="bq"><div class="bq-lbl">Question</div><div class="bq-txt">"What's the difference between this and just catching and sweeping? Why go to the trouble of turning them?"</div></div>
+        <div class="ba"><div class="ba-lbl">Kru</div><div class="ba-txt">"A sweep takes them down. A turn takes away their whole body. They're facing the wrong direction. Everything they have is pointed away from you."</div></div>
+        <div class="note">
+          <span class="ke">Step by step:</span><br>
+          <b>Jab → Jab</b> — draws the left block. Same opening as the left combo.<br>
+          <b>Left hand catches</b> their blocking arm on the right side of their body.<br>
+          <b>Right hand pushes</b> the right side simultaneously — catching one side, pushing the other rotates them.<br>
+          <b>The turn</b> — off-balance and rotating, they cannot punch, cannot kick, cannot block.<br>
+          <b>Punch</b> arrives while they're still turning — they can't see it coming.<br>
+          <b>Kick</b> lands on a body still reorganising.<br>
+          <b>This is not a power combo. It's a control combo. The damage comes from the position, not the force.</b>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="hbox">
+      <div class="hbox-label">🔑 The shared principle</div>
+      <div class="kru-q">"Both combos start the same. Two jabs. Opponent blocks. Now you own that block. The question is what you do with it."</div>
+      <p style="margin-top:0.5rem">The left combo drops the block and enters the centreline. The right combo uses the block to rotate the whole body. Same opening — completely different problems for the opponent. <b>Once they've seen one, they don't know which is coming. That uncertainty is the third weapon.</b></p>
+    </div>
+
+  </div><!-- /signature -->
+
+
+  <!-- ── PRINCIPLES ── -->
+  <div id="principles" class="section">
+    <p class="intro"><strong>The thinking behind all the techniques.</strong> These principles apply to every combo on this page — and every combo not yet invented. If you understand these, you can build your own.</p>
+
+    <div class="grp">Kru's Core Principles</div>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>Principle</th><th>What Kru Says</th><th>What It Means in Practice</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="tp">Every move has a purpose</td>
+            <td class="tk">"Nothing is decoration."</td>
+            <td class="tn">If you can't explain why a move is in a combination, it shouldn't be there. Each strike is either scoring, setting up, or controlling.</td>
+          </tr>
+          <tr>
+            <td class="tp">Create the reaction, then use it</td>
+            <td class="tk">"Don't wait for an opening. Make one."</td>
+            <td class="tn">Every jab, feint, or teep is a question asked to the opponent. Champions don't react to openings — they engineer them.</td>
+          </tr>
+          <tr>
+            <td class="tp">Two problems beat one defence</td>
+            <td class="tk">"Always give them two things at once. They can only solve one."</td>
+            <td class="tn">A block handles one attack. It can't handle two simultaneous ones. The cross after catching a kick works because the mind processes one threat at a time.</td>
+          </tr>
+          <tr>
+            <td class="tp">The exit is part of the combo</td>
+            <td class="tk">"Score — then make them come to you again."</td>
+            <td class="tn">Attackers who stay in range after scoring get countered. The teep out, the step left, the push — these are built in from the start, not added at the end.</td>
+          </tr>
+          <tr>
+            <td class="tp">Deception must be earned</td>
+            <td class="tk">"Feints only work after the real thing."</td>
+            <td class="tn">A feint not preceded by the genuine technique does nothing. Teach the opponent to respect it first.</td>
+          </tr>
+          <tr>
+            <td class="tp">Position over power</td>
+            <td class="tk">"The damage comes from the position, not the force."</td>
+            <td class="tn">Turning an opponent, angling after the knee, catching and controlling — these create damage without extra power. Good position multiplies every technique.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /principles -->
+
+</div>
+
+<footer>
+  Click any card to expand · <strong>Tukkatatong Petpayathai</strong> · Kru's Combinations 🥊<br>
+  Part of the English ↔ Thai · More Learning Together collection
+</footer>
+
+<script>
+  function sw(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>
