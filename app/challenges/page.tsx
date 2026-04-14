@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default async function ChallengesPage() {
   const challenges = await getChallenges()
   const tracks = getTracks(challenges)
-  const standalones = challenges.filter((c) => !c.track)
+  const standalones = challenges.filter((c) => c.tracks.length === 0)
 
   return (
     <main>

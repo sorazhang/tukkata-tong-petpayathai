@@ -6,6 +6,11 @@ import matter from 'gray-matter'
 
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced'
 
+export interface TrackMembership {
+  name: string
+  order: number
+}
+
 export interface Challenge {
   slug: string
   title: string
@@ -18,10 +23,8 @@ export interface Challenge {
   isFree: boolean
   /** Raw MDX string — split on "## Solution" for gating */
   content: string
-  /** Named learning sequence this challenge belongs to */
-  track?: string
-  /** Position within the track (1-based) */
-  trackOrder?: number
+  /** All tracks this challenge belongs to, each with its own position */
+  tracks: TrackMembership[]
 }
 
 export interface Track {
@@ -29,18 +32,19 @@ export interface Track {
   challenges: Challenge[]
 }
 
-/** Group and sort a challenge list into tracks. Pure — no I/O. */
+/** Group challenges into tracks. A challenge may appear in multiple tracks. Pure — no I/O. */
 export function getTracks(challenges: Challenge[]): Track[] {
-  const map = new Map<string, Challenge[]>()
+  const map = new Map<string, { challenge: Challenge; order: number }[]>()
   for (const c of challenges) {
-    if (!c.track) continue
-    if (!map.has(c.track)) map.set(c.track, [])
-    map.get(c.track)!.push(c)
+    for (const t of c.tracks) {
+      if (!map.has(t.name)) map.set(t.name, [])
+      map.get(t.name)!.push({ challenge: c, order: t.order })
+    }
   }
-  for (const [, chs] of map) {
-    chs.sort((a, b) => (a.trackOrder ?? 0) - (b.trackOrder ?? 0))
-  }
-  return Array.from(map.entries()).map(([name, chs]) => ({ name, challenges: chs }))
+  return Array.from(map.entries()).map(([name, items]) => ({
+    name,
+    challenges: items.sort((a, b) => a.order - b.order).map((i) => i.challenge),
+  }))
 }
 
 export interface CultureStory {
@@ -114,8 +118,7 @@ export async function getChallenges(): Promise<Challenge[]> {
       publishedAt: data.publishedAt as string,
       isFree: (data.isFree as boolean) ?? false,
       content,
-      track: data.track as string | undefined,
-      trackOrder: data.trackOrder as number | undefined,
+      tracks: (data.tracks ?? []) as TrackMembership[],
     } satisfies Challenge
   })
 
@@ -141,8 +144,7 @@ export async function getChallenge(slug: string): Promise<Challenge | null> {
     publishedAt: data.publishedAt as string,
     isFree: (data.isFree as boolean) ?? false,
     content,
-    track: data.track as string | undefined,
-    trackOrder: data.trackOrder as number | undefined,
+    tracks: (data.tracks ?? []) as TrackMembership[],
   }
 }
 
