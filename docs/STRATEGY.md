@@ -108,6 +108,33 @@ The collaboration model is designed for a busy coach:
 
 ---
 
+## Fight Footage
+
+Kru owns footage of his championship fights. That is exactly what the platform
+needs — and nothing else can replace it.
+
+It is the most credible content on the site. Anyone can write about Muay Thai.
+Only Kru can explain what he was thinking in his own championship fight.
+
+**What to build with it:**
+
+The Real Fights section comes alive when Kru breaks down one round, one moment,
+one decision from his own footage. "Watch what happens at 1:32. This is what I
+was reading. This is why I moved there." That content is irreplaceable because
+no one else was inside that fight.
+
+**Before using the footage, confirm:**
+- Does Kru own it outright, or does the championship organisation hold broadcast rights?
+- What format is it in? (VHS, DVD, phone recording — quality does not need to be perfect)
+- Is it a full fight or key clips? Even 3–4 minutes of key moments is enough to launch with.
+
+**If the footage is free to use:**
+
+It becomes the centrepiece of the launch. A world champion explaining his own
+fights in his own words is the fastest credibility builder the platform has.
+
+---
+
 ## Immediate Priorities
 
 1. Capture Kru's voice — one question answered on voice note after class
