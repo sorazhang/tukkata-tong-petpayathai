@@ -18,6 +18,29 @@ export interface Challenge {
   isFree: boolean
   /** Raw MDX string — split on "## Solution" for gating */
   content: string
+  /** Named learning sequence this challenge belongs to */
+  track?: string
+  /** Position within the track (1-based) */
+  trackOrder?: number
+}
+
+export interface Track {
+  name: string
+  challenges: Challenge[]
+}
+
+/** Group and sort a challenge list into tracks. Pure — no I/O. */
+export function getTracks(challenges: Challenge[]): Track[] {
+  const map = new Map<string, Challenge[]>()
+  for (const c of challenges) {
+    if (!c.track) continue
+    if (!map.has(c.track)) map.set(c.track, [])
+    map.get(c.track)!.push(c)
+  }
+  for (const [, chs] of map) {
+    chs.sort((a, b) => (a.trackOrder ?? 0) - (b.trackOrder ?? 0))
+  }
+  return Array.from(map.entries()).map(([name, chs]) => ({ name, challenges: chs }))
 }
 
 export interface CultureStory {
@@ -91,6 +114,8 @@ export async function getChallenges(): Promise<Challenge[]> {
       publishedAt: data.publishedAt as string,
       isFree: (data.isFree as boolean) ?? false,
       content,
+      track: data.track as string | undefined,
+      trackOrder: data.trackOrder as number | undefined,
     } satisfies Challenge
   })
 
@@ -116,6 +141,8 @@ export async function getChallenge(slug: string): Promise<Challenge | null> {
     publishedAt: data.publishedAt as string,
     isFree: (data.isFree as boolean) ?? false,
     content,
+    track: data.track as string | undefined,
+    trackOrder: data.trackOrder as number | undefined,
   }
 }
 

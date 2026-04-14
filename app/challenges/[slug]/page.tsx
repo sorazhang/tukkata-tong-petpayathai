@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import { getChallenge, getChallenges, splitChallenge } from '@/lib/content'
+import { getChallenge, getChallenges, splitChallenge, type Challenge } from '@/lib/content'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -27,6 +27,20 @@ export default async function ChallengePage({ params }: Props) {
   const { slug } = await params
   const challenge = await getChallenge(slug)
   if (!challenge) notFound()
+
+  const allChallenges = await getChallenges()
+
+  // Track context
+  const trackChallenges: Challenge[] = challenge.track
+    ? allChallenges
+        .filter((c) => c.track === challenge.track)
+        .sort((a, b) => (a.trackOrder ?? 0) - (b.trackOrder ?? 0))
+    : []
+  const trackIndex = trackChallenges.findIndex((c) => c.slug === slug)
+  const nextChallenge =
+    trackIndex >= 0 && trackIndex < trackChallenges.length - 1
+      ? trackChallenges[trackIndex + 1]
+      : null
 
   const { situation, yourTurn, solution } = splitChallenge(challenge.content)
   const isLocked = !challenge.isFree && solution !== null
@@ -53,6 +67,17 @@ export default async function ChallengePage({ params }: Props) {
       <div className="max-w-3xl mx-auto px-6 py-14">
         {/* Title */}
         <div className="mb-10">
+          {challenge.track && (
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-medium text-brand-red uppercase tracking-widest">
+                {challenge.track}
+              </span>
+              <span className="text-gray-300 text-xs">·</span>
+              <span className="text-xs text-gray-400">
+                {trackIndex + 1} of {trackChallenges.length}
+              </span>
+            </div>
+          )}
           <div className="flex items-center gap-3 mb-4">
             <span className="text-xs font-medium text-brand-red uppercase tracking-widest">
               {challenge.category}
@@ -160,19 +185,42 @@ export default async function ChallengePage({ params }: Props) {
         )}
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-gray-100 flex justify-between items-center">
-          <Link
-            href="/challenges"
-            className="text-sm text-gray-400 hover:text-brand-red transition-colors"
-          >
-            ← All Challenges
-          </Link>
-          <Link
-            href="/book"
-            className="text-sm text-brand-red font-medium hover:underline"
-          >
-            Work 1-on-1 with Tukkatatong →
-          </Link>
+        <div className="mt-16 pt-8 border-t border-gray-100">
+          {nextChallenge && (
+            <Link
+              href={`/challenges/${nextChallenge.slug}`}
+              className="block group mb-8"
+            >
+              <div className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors">
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">
+                  Next in {challenge.track}
+                </p>
+                <div className="flex items-center justify-between gap-4">
+                  <h3 className="font-semibold text-brand-black group-hover:text-brand-red transition-colors">
+                    {nextChallenge.title}
+                  </h3>
+                  <span className="text-brand-red shrink-0">→</span>
+                </div>
+                <p className="text-sm text-gray-500 mt-1 line-clamp-1">
+                  {nextChallenge.situation}
+                </p>
+              </div>
+            </Link>
+          )}
+          <div className="flex justify-between items-center">
+            <Link
+              href="/challenges"
+              className="text-sm text-gray-400 hover:text-brand-red transition-colors"
+            >
+              ← All Challenges
+            </Link>
+            <Link
+              href="/book"
+              className="text-sm text-brand-red font-medium hover:underline"
+            >
+              Work 1-on-1 with Tukkatatong →
+            </Link>
+          </div>
         </div>
       </div>
     </main>
