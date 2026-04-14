@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { getChallenge, getChallenges, splitChallenge } from '@/lib/content'
+import PixelFighter from '@/components/PixelFighter'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -70,7 +71,11 @@ export default async function ChallengePage({ params }: Props) {
         </div>
 
         {/* ── 01 · The Situation ── */}
-        <div className="bg-brand-black rounded-xl p-8 mb-6">
+        <div className="bg-brand-black rounded-xl p-8 mb-6 relative overflow-hidden">
+          {/* Decorative pixel fighter — bottom-right corner */}
+          <div className="absolute bottom-0 right-0 opacity-[0.07] pointer-events-none select-none">
+            <PixelFighter pixelSize={5} variant="light" />
+          </div>
           <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
             01 · The Situation
           </p>

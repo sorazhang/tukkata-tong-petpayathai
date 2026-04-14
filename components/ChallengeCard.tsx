@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { Challenge } from '@/lib/content'
+import PixelCategoryIcon from '@/components/PixelCategoryIcon'
 
 const categoryColors: Record<string, string> = {
   Striking: 'bg-red-50 text-red-700',
@@ -23,8 +24,9 @@ export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
       <article className="border border-gray-200 rounded-lg p-6 h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div className="flex items-center justify-between mb-4">
           <span
-            className={`text-xs font-medium px-2.5 py-1 rounded-full ${colorClass}`}
+            className={`text-xs font-medium px-2.5 py-1 rounded-full inline-flex items-center gap-1.5 ${colorClass}`}
           >
+            <PixelCategoryIcon category={challenge.category} pixelSize={2} />
             {challenge.category}
           </span>
           <span className="text-xs text-gray-400">
