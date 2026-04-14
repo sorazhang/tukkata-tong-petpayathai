@@ -65,3 +65,35 @@ export async function saveChallenge(
     return { ok: false, error: 'Failed to save. Check the server console.' }
   }
 }
+
+export async function saveNote(
+  slug: string,
+  note: string,
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const filePath = path.join(
+      process.cwd(),
+      'content',
+      'challenges',
+      `${slug}.mdx`,
+    )
+
+    if (!fs.existsSync(filePath)) {
+      return { ok: false, error: 'Challenge file not found.' }
+    }
+
+    const raw = fs.readFileSync(filePath, 'utf8')
+    const { data, content } = matter(raw)
+
+    // Update or add the note field in frontmatter
+    data.note = note.trim() || undefined
+
+    const updated = matter.stringify(content, data)
+    fs.writeFileSync(filePath, updated, 'utf8')
+
+    return { ok: true }
+  } catch (err) {
+    console.error('saveNote error:', err)
+    return { ok: false, error: 'Failed to save note.' }
+  }
+}

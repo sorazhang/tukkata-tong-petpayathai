@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { saveChallenge } from '@/lib/actions'
+import { saveChallenge, saveNote } from '@/lib/actions'
 
 interface Props {
   slug: string
   initialSituation: string
   initialYourTurn: string
   initialSolution: string
+  initialNote: string
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
@@ -17,18 +18,24 @@ export default function ChallengeEditor({
   initialSituation,
   initialYourTurn,
   initialSolution,
+  initialNote,
 }: Props) {
   const [situation, setSituation] = useState(initialSituation)
   const [yourTurn, setYourTurn]   = useState(initialYourTurn)
   const [solution, setSolution]   = useState(initialSolution)
+  const [note, setNote]           = useState(initialNote)
   const [saveState, setSaveState] = useState<SaveState>('idle')
+  const [noteSaveState, setNoteSaveState] = useState<SaveState>('idle')
   const [errorMsg, setErrorMsg]   = useState('')
   const [isPending, startTransition] = useTransition()
+  const [isNotePending, startNoteTransition] = useTransition()
 
   const isDirty =
     situation !== initialSituation ||
     yourTurn  !== initialYourTurn  ||
     solution  !== initialSolution
+
+  const isNoteDirty = note !== initialNote
 
   function handleSave() {
     setSaveState('saving')
@@ -119,6 +126,60 @@ export default function ChallengeEditor({
         >
           {isPending ? 'Saving…' : 'Save'}
         </button>
+      </div>
+
+      {/* Internal notes — never shown to readers */}
+      <div className="px-5 py-4 bg-amber-50 border-t border-amber-100">
+        <label className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1 block">
+          Internal note — not visible to readers
+        </label>
+        <p className="text-xs text-amber-500 mb-2">
+          Leave a comment, flag a correction, or ask a question. Only you and Kru see this.
+        </p>
+        <textarea
+          value={note}
+          onChange={(e) => { setNote(e.target.value); setNoteSaveState('idle') }}
+          rows={3}
+          placeholder="e.g. Kru — does this situation feel right to you? Or: needs a clearer drill…"
+          className="w-full text-sm text-amber-900 leading-relaxed border border-amber-200 rounded-lg p-3 focus:outline-none focus:border-amber-400 resize-y font-sans bg-white placeholder:text-amber-300"
+        />
+        <div className="flex items-center justify-between mt-2">
+          <div className="text-xs">
+            {noteSaveState === 'saved' && (
+              <span className="text-green-600 font-medium">Note saved.</span>
+            )}
+            {noteSaveState === 'error' && (
+              <span className="text-red-600 font-medium">Failed to save note.</span>
+            )}
+            {noteSaveState === 'idle' && isNoteDirty && (
+              <span className="text-amber-400">Unsaved note</span>
+            )}
+          </div>
+          <button
+            onClick={() => {
+              setNoteSaveState('saving')
+              startNoteTransition(async () => {
+                const res = await saveNote(slug, note)
+                if (res.ok) {
+                  setNoteSaveState('saved')
+                  setTimeout(() => setNoteSaveState('idle'), 3000)
+                } else {
+                  setNoteSaveState('error')
+                }
+              })
+            }}
+            disabled={isNotePending || !isNoteDirty}
+            className={`px-4 py-1.5 rounded text-xs font-semibold transition-all ${
+              isNotePending
+                ? 'bg-amber-100 text-amber-300 cursor-not-allowed'
+                : isNoteDirty
+                ? 'bg-amber-500 text-white hover:bg-amber-600'
+                : 'bg-amber-100 text-amber-300 cursor-not-allowed'
+            }`}
+          >
+            {isNotePending ? 'Saving…' : 'Save note'}
+          </button>
+        </div>
       </div>
     </div>
   )

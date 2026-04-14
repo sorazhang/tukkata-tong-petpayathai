@@ -50,6 +50,8 @@ export interface Challenge {
   content: string
   /** All tracks this challenge belongs to, each with its own position */
   tracks: TrackMembership[]
+  /** Internal note between collaborators — never shown to readers */
+  note?: string
 }
 
 export interface Track {
@@ -143,6 +145,7 @@ export async function getArticles(section: SectionId): Promise<Challenge[]> {
       isFree: (data.isFree as boolean) ?? false,
       content,
       tracks: (data.tracks ?? []) as TrackMembership[],
+      note: (data.note as string) ?? '',
     } satisfies Challenge
   })
 
@@ -172,6 +175,7 @@ export async function getArticle(
     isFree: (data.isFree as boolean) ?? false,
     content,
     tracks: (data.tracks ?? []) as TrackMembership[],
+    note: (data.note as string) ?? '',
   }
 }
 
