@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { getChallenges, getCultureStories } from '@/lib/content'
 import ChallengeCard from '@/components/ChallengeCard'
-import PixelFighter from '@/components/PixelFighter'
 
 export default async function Home() {
   const [challenges, stories] = await Promise.all([
@@ -15,38 +14,31 @@ export default async function Home() {
   return (
     <main>
       {/* ── Hero ── */}
-      <section className="bg-brand-black text-white py-24 px-6">
-        <div className="max-w-5xl mx-auto flex items-center gap-12">
-          {/* Text */}
-          <div className="flex-1">
-            <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-5">
-              Lumpinee Stadium Champion · Channel 7 World Title Holder
-            </p>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-              The art<br />behind the art.
-            </h1>
-            <p className="text-gray-300 text-xl leading-relaxed max-w-xl mb-10">
-              Not technique lists. Not highlight reels. Real problems from the
-              ring — with a real challenge that builds real understanding.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/challenges"
-                className="bg-brand-red text-white px-7 py-3.5 rounded font-medium hover:bg-brand-red-dark transition-colors"
-              >
-                See the Challenges
-              </Link>
-              <Link
-                href="/culture"
-                className="border border-gray-600 text-gray-300 px-7 py-3.5 rounded font-medium hover:border-white hover:text-white transition-colors"
-              >
-                Read the Stories
-              </Link>
-            </div>
-          </div>
-          {/* Pixel fighter — hidden on small screens */}
-          <div className="hidden md:block shrink-0">
-            <PixelFighter pixelSize={8} variant="light" />
+      <section className="bg-brand-black text-white py-28 px-6">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-5">
+            Lumpinee Stadium Champion · Channel 7 World Title Holder
+          </p>
+          <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+            The art<br />behind the art.
+          </h1>
+          <p className="text-gray-300 text-xl leading-relaxed max-w-xl mb-10">
+            Not technique lists. Not highlight reels. Real problems from the
+            ring — with a real challenge that builds real understanding.
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="/challenges"
+              className="bg-brand-red text-white px-7 py-3.5 rounded font-medium hover:bg-brand-red-dark transition-colors"
+            >
+              See the Challenges
+            </Link>
+            <Link
+              href="/culture"
+              className="border border-gray-600 text-gray-300 px-7 py-3.5 rounded font-medium hover:border-white hover:text-white transition-colors"
+            >
+              Read the Stories
+            </Link>
           </div>
         </div>
       </section>
