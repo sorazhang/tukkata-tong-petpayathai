@@ -6,6 +6,31 @@ import matter from 'gray-matter'
 
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced'
 
+export type SectionId = 'challenges' | 'real-fights' | 'opponents' | 'scoring'
+
+export const SECTION_META: Record<SectionId, { title: string; description: string }> = {
+  challenges: {
+    title: 'Challenges',
+    description:
+      'Real problems from the ring. Read the situation, take Your Turn in training, come back for the solution when you are ready.',
+  },
+  'real-fights': {
+    title: 'Real Fights',
+    description:
+      'Real fights broken down from the inside. What was seen, what was decided, and why — round by round.',
+  },
+  opponents: {
+    title: 'Opponent Types',
+    description:
+      'Every fighter has a type. Learn how to read them before the first bell.',
+  },
+  scoring: {
+    title: 'Scoring Game',
+    description:
+      'Fights are won and lost on the cards. Learn what the judges actually watch.',
+  },
+}
+
 export interface TrackMembership {
   name: string
   order: number
@@ -97,16 +122,15 @@ function readDir(dir: string): string[] {
   return fs.readdirSync(dir).filter((f) => f.endsWith('.mdx'))
 }
 
-// ─── Challenges ───────────────────────────────────────────────────────────────
+// ─── Generic article loaders (all paid sections share the same shape) ─────────
 
-const challengesDir = path.join(process.cwd(), 'content/challenges')
+export async function getArticles(section: SectionId): Promise<Challenge[]> {
+  const dir = path.join(process.cwd(), 'content', section)
+  const files = readDir(dir)
 
-export async function getChallenges(): Promise<Challenge[]> {
-  const files = readDir(challengesDir)
-
-  const challenges = files.map((file) => {
+  const articles = files.map((file) => {
     const slug = file.replace('.mdx', '')
-    const raw = fs.readFileSync(path.join(challengesDir, file), 'utf8')
+    const raw = fs.readFileSync(path.join(dir, file), 'utf8')
     const { data, content } = matter(raw)
 
     return {
@@ -122,14 +146,17 @@ export async function getChallenges(): Promise<Challenge[]> {
     } satisfies Challenge
   })
 
-  return challenges.sort(
+  return articles.sort(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   )
 }
 
-export async function getChallenge(slug: string): Promise<Challenge | null> {
-  const filePath = path.join(challengesDir, `${slug}.mdx`)
+export async function getArticle(
+  section: SectionId,
+  slug: string,
+): Promise<Challenge | null> {
+  const filePath = path.join(process.cwd(), 'content', section, `${slug}.mdx`)
   if (!fs.existsSync(filePath)) return null
 
   const raw = fs.readFileSync(filePath, 'utf8')
@@ -146,6 +173,16 @@ export async function getChallenge(slug: string): Promise<Challenge | null> {
     content,
     tracks: (data.tracks ?? []) as TrackMembership[],
   }
+}
+
+// ─── Challenges (thin wrappers kept for backward compat) ──────────────────────
+
+export async function getChallenges(): Promise<Challenge[]> {
+  return getArticles('challenges')
+}
+
+export async function getChallenge(slug: string): Promise<Challenge | null> {
+  return getArticle('challenges', slug)
 }
 
 // ─── Culture Stories ──────────────────────────────────────────────────────────

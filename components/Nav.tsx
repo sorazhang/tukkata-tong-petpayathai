@@ -3,8 +3,10 @@ import Link from 'next/link'
 const links = [
   { href: '/', label: 'Home' },
   { href: '/challenges', label: 'Challenges' },
+  { href: '/real-fights', label: 'Real Fights' },
+  { href: '/opponents', label: 'Opponent Types' },
+  { href: '/scoring', label: 'Scoring Game' },
   { href: '/culture', label: 'Culture' },
-  { href: '/about', label: 'About' },
 ]
 
 export default function Nav() {

@@ -23,6 +23,21 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/real-fights" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Real Fights
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/opponents" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Opponent Types
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/scoring" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Scoring Game
+                  </Link>
+                </li>
+                <li>
                   <Link href="/book" className="text-sm text-gray-400 hover:text-white transition-colors">
                     Book a Session
                   </Link>

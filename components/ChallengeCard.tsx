@@ -14,12 +14,18 @@ const difficultyLabel: Record<string, string> = {
   advanced: 'Advanced',
 }
 
-export default function ChallengeCard({ challenge }: { challenge: Challenge }) {
+export default function ChallengeCard({
+  challenge,
+  basePath = '/challenges',
+}: {
+  challenge: Challenge
+  basePath?: string
+}) {
   const colorClass =
     categoryColors[challenge.category] ?? 'bg-gray-100 text-gray-600'
 
   return (
-    <Link href={`/challenges/${challenge.slug}`} className="block group">
+    <Link href={`${basePath}/${challenge.slug}`} className="block group">
       <article className="border border-gray-200 rounded-lg p-6 h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div className="flex items-center justify-between mb-4">
           <span
