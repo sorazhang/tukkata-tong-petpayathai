@@ -5,7 +5,7 @@ import ChallengeCard from '@/components/ChallengeCard'
 export const metadata: Metadata = {
   title: 'Challenges',
   description:
-    'Real problems from the ring. Try the homework first. Unlock the solution when you are ready.',
+    'Real problems from the ring. Try Your Turn first. Unlock the solution when you are ready.',
 }
 
 export default async function ChallengesPage() {
@@ -23,7 +23,7 @@ export default async function ChallengesPage() {
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Challenges</h1>
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
-            Real problems from the ring. Read the situation, try the homework in
+            Real problems from the ring. Read the situation, take Your Turn in
             training, come back for the solution when you are ready.
           </p>
         </div>

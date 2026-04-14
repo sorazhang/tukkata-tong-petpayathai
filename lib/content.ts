@@ -30,17 +30,38 @@ export interface CultureStory {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+const SITUATION_MARKER = '## The Situation'
+const YOUR_TURN_MARKER = '## Your Turn'
 const SOLUTION_MARKER = '## Solution'
 
+/** Extract body text after a section heading, up to the next heading. */
+function extractSection(
+  content: string,
+  marker: string,
+  until?: string,
+): string | null {
+  const idx = content.indexOf(marker)
+  if (idx === -1) return null
+  const after = content.slice(idx + marker.length).replace(/^\n+/, '')
+  if (until) {
+    const end = after.indexOf(until)
+    return end === -1 ? after.trim() : after.slice(0, end).trim()
+  }
+  return after.trim()
+}
+
 export function splitChallenge(content: string): {
-  free: string
+  situation: string
+  yourTurn: string | null
   solution: string | null
 } {
-  const idx = content.indexOf(SOLUTION_MARKER)
-  if (idx === -1) return { free: content, solution: null }
   return {
-    free: content.slice(0, idx).trim(),
-    solution: content.slice(idx).trim(),
+    situation:
+      extractSection(content, SITUATION_MARKER, YOUR_TURN_MARKER) ??
+      extractSection(content, SITUATION_MARKER, SOLUTION_MARKER) ??
+      content.trim(),
+    yourTurn: extractSection(content, YOUR_TURN_MARKER, SOLUTION_MARKER),
+    solution: extractSection(content, SOLUTION_MARKER),
   }
 }
 

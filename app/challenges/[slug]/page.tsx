@@ -28,7 +28,7 @@ export default async function ChallengePage({ params }: Props) {
   const challenge = await getChallenge(slug)
   if (!challenge) notFound()
 
-  const { free, solution } = splitChallenge(challenge.content)
+  const { situation, yourTurn, solution } = splitChallenge(challenge.content)
   const isLocked = !challenge.isFree && solution !== null
 
   const formattedDate = new Date(challenge.publishedAt).toLocaleDateString(
@@ -50,8 +50,8 @@ export default async function ChallengePage({ params }: Props) {
         </div>
       </div>
 
-      <article className="max-w-3xl mx-auto px-6 py-14">
-        {/* Meta */}
+      <div className="max-w-3xl mx-auto px-6 py-14">
+        {/* Title */}
         <div className="mb-10">
           <div className="flex items-center gap-3 mb-4">
             <span className="text-xs font-medium text-brand-red uppercase tracking-widest">
@@ -69,26 +69,51 @@ export default async function ChallengePage({ params }: Props) {
           </h1>
         </div>
 
-        {/* Free content: Situation + Homework */}
-        <div className="prose prose-lg max-w-none">
-          <MDXRemote source={free} />
+        {/* ── 01 · The Situation ── */}
+        <div className="bg-brand-black rounded-xl p-8 mb-6">
+          <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
+            01 · The Situation
+          </p>
+          <div className="prose prose-lg prose-invert max-w-none
+            prose-p:text-gray-200 prose-p:leading-relaxed
+            prose-strong:text-white prose-em:text-gray-300
+            prose-hr:border-gray-700">
+            <MDXRemote source={situation} />
+          </div>
         </div>
 
-        {/* Solution */}
+        {/* ── 02 · Your Turn ── */}
+        {yourTurn && (
+          <div className="border-l-4 border-brand-red bg-gray-50 rounded-r-xl p-8 mb-6">
+            <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
+              02 · Your Turn
+            </p>
+            <div className="prose prose-lg max-w-none
+              prose-p:text-gray-700 prose-p:leading-relaxed
+              prose-strong:text-brand-black prose-em:text-gray-500
+              prose-ol:text-gray-700 prose-ul:text-gray-700
+              prose-hr:border-gray-200">
+              <MDXRemote source={yourTurn} />
+            </div>
+          </div>
+        )}
+
+        {/* ── 03 · Solution ── */}
         {solution && (
-          <div className="mt-14">
+          <div className="mt-2">
             {isLocked ? (
-              /* ── Gated state ── */
               <div className="relative rounded-xl overflow-hidden border border-gray-200">
                 {/* Blurred preview */}
-                <div className="blur-sm pointer-events-none select-none p-8 opacity-60">
+                <div className="blur-sm pointer-events-none select-none p-8 opacity-50">
+                  <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
+                    03 · Solution
+                  </p>
                   <div className="prose prose-lg max-w-none">
                     <MDXRemote source={solution} />
                   </div>
                 </div>
-
                 {/* Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-white via-white/90 to-transparent">
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-white via-white/95 to-transparent">
                   <div className="text-center px-8 py-10 max-w-sm">
                     <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                       <svg
@@ -106,11 +131,11 @@ export default async function ChallengePage({ params }: Props) {
                       </svg>
                     </div>
                     <h3 className="font-bold text-brand-black text-xl mb-2">
-                      Did you try the homework?
+                      Did you try Your Turn?
                     </h3>
                     <p className="text-gray-500 text-sm leading-relaxed mb-6">
-                      The solution means more after you have spent time in
-                      training trying to figure it out yourself.
+                      The solution lands differently after you have felt the
+                      problem in your own body.
                     </p>
                     <button className="w-full bg-brand-red text-white py-3 rounded font-medium hover:bg-brand-red-dark transition-colors">
                       Unlock the Solution
@@ -122,15 +147,10 @@ export default async function ChallengePage({ params }: Props) {
                 </div>
               </div>
             ) : (
-              /* ── Unlocked state ── */
-              <div className="border-t-2 border-brand-red pt-10">
-                <div className="flex items-center gap-2 mb-6">
-                  <div className="h-0.5 flex-1 bg-brand-red/20" />
-                  <span className="text-brand-red text-xs font-medium uppercase tracking-widest px-2">
-                    Solution
-                  </span>
-                  <div className="h-0.5 flex-1 bg-brand-red/20" />
-                </div>
+              <div className="border border-gray-200 rounded-xl p-8">
+                <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
+                  03 · Solution
+                </p>
                 <div className="prose prose-lg max-w-none">
                   <MDXRemote source={solution} />
                 </div>
@@ -154,7 +174,7 @@ export default async function ChallengePage({ params }: Props) {
             Work 1-on-1 with Tukkatatong →
           </Link>
         </div>
-      </article>
+      </div>
     </main>
   )
 }

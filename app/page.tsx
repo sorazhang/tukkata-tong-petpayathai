@@ -24,7 +24,7 @@ export default async function Home() {
           </h1>
           <p className="text-gray-300 text-xl leading-relaxed max-w-xl mb-10">
             Not technique lists. Not highlight reels. Real problems from the
-            ring — with homework that builds real understanding.
+            ring — with a real challenge that builds real understanding.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
@@ -58,8 +58,8 @@ export default async function Home() {
               },
               {
                 step: '02',
-                title: 'Your Homework',
-                body: 'Go train it. Try to figure it out with your own body first. Come back when you are stuck.',
+                title: 'Your Turn',
+                body: 'Go train it. Try to figure it out with your own body. Come back when you are stuck.',
               },
               {
                 step: '03',
