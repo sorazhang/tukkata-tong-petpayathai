@@ -51,40 +51,115 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── How it works ── */}
+      {/* ── Two ways to learn ── */}
       <section className="py-20 px-6 bg-white border-b border-gray-100">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-brand-black mb-14 text-center">
-            How it works
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl font-bold text-brand-black mb-2 text-center">
+            Two ways to learn
           </h2>
-          <div className="grid md:grid-cols-3 gap-10">
-            {[
-              {
-                step: '01',
-                title: 'The Situation',
-                body: 'A real problem from the ring. Specific, short, something you will recognise from your own training.',
-              },
-              {
-                step: '02',
-                title: 'Your Turn',
-                body: 'Go train it. Try to figure it out with your own body. Come back when you are stuck.',
-              },
-              {
-                step: '03',
-                title: 'The Solution',
-                body: "What Tukkatatong actually does. Why it works. The detail most coaches never explain.",
-              },
-            ].map(({ step, title, body }) => (
-              <div key={step} className="text-center">
-                <div className="text-5xl font-bold text-gray-100 mb-3">
-                  {step}
-                </div>
-                <h3 className="font-semibold text-brand-black text-lg mb-2">
-                  {title}
-                </h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
+          <p className="text-center text-gray-400 text-sm mb-14">
+            One requires your body. One requires your mind.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6">
+
+            {/* Challenges */}
+            <div className="border-2 border-brand-black rounded-xl p-8">
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
+                Challenges
+              </p>
+              <h3 className="text-xl font-bold text-brand-black mb-2">
+                Your body has to figure it out.
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed mb-8">
+                You cannot get the answer by reading. You have to move, feel,
+                and try. The answer arrives through your body, not through words.
+              </p>
+              <div className="space-y-5 mb-8">
+                {[
+                  {
+                    step: '01',
+                    title: 'The Situation',
+                    body: 'A problem you recognise from your own training. Specific enough that you feel it when you read it.',
+                  },
+                  {
+                    step: '02',
+                    title: 'Your Turn',
+                    body: 'Go try it. In the gym, on the bag, in sparring. Come back when your body has felt something.',
+                  },
+                  {
+                    step: '03',
+                    title: 'The Solution',
+                    body: "What Tukkatatong actually does. Why it works. The understanding most coaches never put into words.",
+                  },
+                ].map(({ step, title, body }) => (
+                  <div key={step} className="flex gap-4">
+                    <span className="text-2xl font-bold text-gray-100 leading-none shrink-0 w-8">
+                      {step}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-brand-black text-sm mb-0.5">{title}</p>
+                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+              <Link
+                href="/challenges"
+                className="inline-block bg-brand-red text-white px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+              >
+                See the Challenges →
+              </Link>
+            </div>
+
+            {/* Knowledge */}
+            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
+                Knowledge
+              </p>
+              <h3 className="text-xl font-bold text-brand-black mb-2">
+                Your mind understands it.
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed mb-8">
+                Things you can understand without physically doing them. Read,
+                watch, think. Then bring it to the gym.
+              </p>
+              <ul className="space-y-4 mb-8">
+                {[
+                  {
+                    label: 'Real Fights',
+                    body: 'What was actually happening in that specific moment.',
+                  },
+                  {
+                    label: 'Opponent Types',
+                    body: 'How this kind of fighter thinks, moves, and where they are vulnerable.',
+                  },
+                  {
+                    label: 'Scoring Game',
+                    body: 'What Muay Thai judges look for. How fights are won on the cards.',
+                  },
+                  {
+                    label: 'Culture',
+                    body: 'The Wai Kru, the Mongkol, the meaning behind the art.',
+                  },
+                ].map(({ label, body }) => (
+                  <li key={label} className="flex gap-3">
+                    <span className="text-gray-300 mt-0.5 shrink-0">→</span>
+                    <div>
+                      <p className="font-semibold text-brand-black text-sm mb-0.5">{label}</p>
+                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/knowledge"
+                className="inline-block border border-gray-300 text-gray-700 px-5 py-2.5 rounded font-medium text-sm hover:border-brand-black transition-colors"
+              >
+                Explore Knowledge →
+              </Link>
+            </div>
+
           </div>
         </div>
       </section>
@@ -94,14 +169,19 @@ export default async function Home() {
         <section className="py-20 px-6 bg-gray-50">
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between mb-10">
-              <h2 className="text-2xl font-bold text-brand-black">
-                Recent Challenges
-              </h2>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
+                  Challenges
+                </p>
+                <h2 className="text-2xl font-bold text-brand-black">
+                  Try one. See what your body finds.
+                </h2>
+              </div>
               <Link
                 href="/challenges"
-                className="text-brand-red text-sm hover:underline font-medium"
+                className="text-brand-red text-sm hover:underline font-medium shrink-0 ml-6"
               >
-                View all →
+                All challenges →
               </Link>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
@@ -118,19 +198,22 @@ export default async function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-10">
             <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
+                Knowledge — Culture
+              </p>
               <h2 className="text-2xl font-bold text-brand-black mb-2">
                 Muay Thai is more than fighting
               </h2>
               <p className="text-gray-500 max-w-xl leading-relaxed">
-                Stories about the Wai Kru, the Mongkol, the music, the gyms of
-                Isaan. The art behind the violence.
+                The Wai Kru, the Mongkol, the music, the gyms of Isaan.
+                Things you understand by reading, not by drilling.
               </p>
             </div>
             <Link
-              href="/culture"
+              href="/knowledge"
               className="hidden md:block text-brand-red text-sm hover:underline font-medium shrink-0"
             >
-              Read the stories →
+              All Knowledge →
             </Link>
           </div>
 
