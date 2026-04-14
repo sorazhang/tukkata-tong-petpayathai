@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getChallenges, getTracks } from '@/lib/content'
 import ChallengesGrouped from '@/components/ChallengesGrouped'
+import SurveyWidget from '@/components/SurveyWidget'
 
 export const metadata: Metadata = {
   title: 'Challenges',
@@ -67,6 +68,19 @@ export default async function ChallengesPage() {
           </div>
         </section>
       )}
+
+      {/* ── Survey ── */}
+      <section className="py-14 px-6 bg-gray-50 border-b border-gray-100">
+        <div className="max-w-xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 text-center">
+            Not sure where to start?
+          </p>
+          <h2 className="text-xl font-bold text-brand-black mb-6 text-center">
+            Three questions. One clear starting point.
+          </h2>
+          <SurveyWidget challenges={challengeItems.map(({ slug, title }) => ({ slug, title }))} />
+        </div>
+      </section>
 
       {/* ── Find Your Problem ── */}
       <section className="py-16 px-6 border-b border-gray-100">

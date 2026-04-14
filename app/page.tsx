@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getChallenges, getCultureStories } from '@/lib/content'
 import ChallengeCard from '@/components/ChallengeCard'
+import SurveyWidget from '@/components/SurveyWidget'
 
 export default async function Home() {
   const [challenges, stories] = await Promise.all([
@@ -147,6 +148,19 @@ export default async function Home() {
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* ── Survey ── */}
+      <section className="py-16 px-6 bg-gray-50 border-b border-gray-100">
+        <div className="max-w-xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 text-center">
+            Not sure where to start?
+          </p>
+          <h2 className="text-2xl font-bold text-brand-black mb-8 text-center">
+            Tell us where you are.
+          </h2>
+          <SurveyWidget challenges={challenges.map(({ slug, title }) => ({ slug, title }))} />
         </div>
       </section>
 
