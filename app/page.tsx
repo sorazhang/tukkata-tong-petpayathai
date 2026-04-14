@@ -16,8 +16,11 @@ export default async function Home() {
       {/* ── Hero ── */}
       <section className="bg-brand-black text-white py-28 px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-5">
+          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
             Lumpinee Stadium Champion · Channel 7 World Title Holder
+          </p>
+          <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
+            ตุ๊กกะต้อง เพชรพยาไทย
           </p>
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
             The art<br />behind the art.

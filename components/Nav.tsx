@@ -15,9 +15,14 @@ export default function Nav() {
       <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link
           href="/"
-          className="text-white font-semibold text-base tracking-tight hover:text-gray-300 transition-colors"
+          className="flex flex-col leading-tight hover:opacity-80 transition-opacity"
         >
-          Tukkatatong Petpayathai
+          <span className="text-white font-semibold text-base tracking-tight">
+            Tukkatatong Petpayathai
+          </span>
+          <span className="font-thai text-gray-500 text-xs" lang="th">
+            ตุ๊กกะต้อง เพชรพยาไทย
+          </span>
         </Link>
 
         <ul className="hidden md:flex items-center gap-8 list-none m-0 p-0">

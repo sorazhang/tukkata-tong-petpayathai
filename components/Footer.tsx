@@ -6,7 +6,8 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-start gap-8">
           <div>
-            <p className="text-white font-semibold mb-2">Tukkatatong Petpayathai</p>
+            <p className="text-white font-semibold mb-1">Tukkatatong Petpayathai</p>
+            <p className="font-thai text-gray-500 text-sm mb-3" lang="th">ตุ๊กกะต้อง เพชรพยาไทย</p>
             <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
               Lumpinee Stadium champion. Channel 7 World title holder.
               Sharing the knowledge that took 30 years to build.

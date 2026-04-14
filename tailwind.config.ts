@@ -21,6 +21,7 @@ const config: Config = {
           'Roboto',
           'sans-serif',
         ],
+        thai: ['"Noto Sans Thai"', '"TH Sarabun New"', '"Leelawadee UI"', 'sans-serif'],
       },
       typography: {
         DEFAULT: {
