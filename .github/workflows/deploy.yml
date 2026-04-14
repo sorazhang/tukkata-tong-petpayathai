@@ -35,6 +35,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          STATIC_EXPORT: 'true'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

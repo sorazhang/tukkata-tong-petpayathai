@@ -1,4 +1,5 @@
 import { getChallenges, splitChallenge } from '@/lib/content'
+import ChallengeEditor from '@/components/ChallengeEditor'
 
 export const metadata = { title: 'Content Review — Kru' }
 
@@ -20,13 +21,12 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default async function ReviewPage() {
   const challenges = await getChallenges()
 
-  // Attach split content to each challenge
   const withContent = challenges.map((c) => ({
     ...c,
     sections: splitChallenge(c.content),
   }))
 
-  const done = withContent.filter((c) => c.sections.solution).length
+  const done         = withContent.filter((c) => c.sections.solution).length
   const placeholders = withContent.length - done
 
   const grouped = CATEGORY_ORDER.map((cat) => ({
@@ -50,12 +50,12 @@ export default async function ReviewPage() {
           All Challenges — Kru Review
         </h1>
         <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-xl">
-          Every challenge is listed below. Click any title to expand and read the
-          full situation, Your Turn, and solution. Challenges that still need
-          your answer are marked in orange.
+          Click any challenge title to expand it. Type directly into the fields
+          and hit <strong>Save</strong> — the file updates immediately. Orange
+          badges show which ones still need your answer.
         </p>
 
-        {/* Summary bar */}
+        {/* Summary */}
         <div className="flex gap-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
           <div>
             <p className="text-2xl font-bold text-brand-black">{challenges.length}</p>
@@ -78,7 +78,10 @@ export default async function ReviewPage() {
           <section key={category}>
             <h2
               className="text-sm font-bold uppercase tracking-widest mb-6 pb-3 border-b-2"
-              style={{ color: CATEGORY_COLORS[category] ?? '#6b7280', borderColor: CATEGORY_COLORS[category] ?? '#e5e7eb' }}
+              style={{
+                color: CATEGORY_COLORS[category] ?? '#6b7280',
+                borderColor: CATEGORY_COLORS[category] ?? '#e5e7eb',
+              }}
             >
               {category}
             </h2>
@@ -93,7 +96,10 @@ export default async function ReviewPage() {
                     {items.map((c) => {
                       const isPlaceholder = !c.sections.solution
                       return (
-                        <details key={c.slug} className="group border border-gray-200 rounded-xl overflow-hidden">
+                        <details
+                          key={c.slug}
+                          className="group border border-gray-200 rounded-xl overflow-hidden"
+                        >
                           <summary className="flex items-start justify-between gap-4 p-5 cursor-pointer [&::-webkit-details-marker]:hidden [&::marker]:hidden select-none hover:bg-gray-50 transition-colors">
                             <div className="flex-1 min-w-0">
                               <p className="font-semibold text-brand-black text-sm leading-snug">
@@ -119,59 +125,13 @@ export default async function ReviewPage() {
                             </div>
                           </summary>
 
-                          <div className="border-t border-gray-100 divide-y divide-gray-100">
-                            {/* Situation */}
-                            <div className="px-5 py-4">
-                              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
-                                Situation
-                              </p>
-                              <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                {c.sections.situation || (
-                                  <span className="text-gray-300 italic">No situation written yet.</span>
-                                )}
-                              </div>
-                            </div>
-
-                            {/* Your Turn */}
-                            <div className="px-5 py-4">
-                              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
-                                Your Turn
-                              </p>
-                              {c.sections.yourTurn ? (
-                                <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                  {c.sections.yourTurn}
-                                </div>
-                              ) : (
-                                <p className="text-sm text-gray-300 italic">Not written yet.</p>
-                              )}
-                            </div>
-
-                            {/* Solution */}
-                            <div className="px-5 py-4">
-                              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
-                                Solution
-                              </p>
-                              {c.sections.solution ? (
-                                <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-                                  {c.sections.solution}
-                                </div>
-                              ) : (
-                                <div className="flex items-center gap-3 py-3 px-4 bg-orange-50 rounded-lg">
-                                  <span className="text-orange-400 text-lg">✎</span>
-                                  <p className="text-sm text-orange-600 font-medium">
-                                    Waiting for Kru&apos;s answer.
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Footer: slug for reference */}
-                            <div className="px-5 py-3 bg-gray-50">
-                              <p className="text-xs text-gray-300 font-mono">
-                                {c.slug} · {c.isFree ? 'Free' : 'Locked'} · {c.difficulty}
-                              </p>
-                            </div>
-                          </div>
+                          {/* Editable fields */}
+                          <ChallengeEditor
+                            slug={c.slug}
+                            initialSituation={c.sections.situation ?? ''}
+                            initialYourTurn={c.sections.yourTurn ?? ''}
+                            initialSolution={c.sections.solution ?? ''}
+                          />
                         </details>
                       )
                     })}
