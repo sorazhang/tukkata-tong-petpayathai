@@ -25,9 +25,14 @@ export default async function Home() {
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
             The art<br />behind the art.
           </h1>
-          <p className="text-gray-300 text-xl leading-relaxed max-w-xl mb-10">
-            Not technique lists. Not highlight reels. Real problems from the
-            ring — with a real challenge that builds real understanding.
+          <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
+            We speak to someone who trains — who has felt confusion in sparring,
+            who has thrown a kick that didn&apos;t land right and didn&apos;t know why,
+            who has been told to relax under pressure and had no idea how to do that.
+          </p>
+          <p className="text-gray-500 text-lg leading-relaxed max-w-xl mb-10">
+            We do not explain at them. We point at something and ask them to go
+            find it themselves.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
