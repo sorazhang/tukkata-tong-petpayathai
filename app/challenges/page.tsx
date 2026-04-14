@@ -70,10 +70,12 @@ export default async function ChallengesPage() {
       )}
 
       {/* ── Survey ── */}
-      <section className="py-14 px-6 bg-gray-50 border-b border-gray-100">
-        <div className="max-w-xl mx-auto">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 text-center">
+      <section className="py-14 px-6 bg-gray-50 border-b border-gray-100 hover:bg-white transition-colors duration-500 group/survey">
+        <div className="max-w-xl mx-auto group-hover/survey:-translate-y-0.5 transition-transform duration-300">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 text-center flex items-center justify-center gap-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse shrink-0" />
             Not sure where to start?
+            <span className="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse shrink-0" />
           </p>
           <h2 className="text-xl font-bold text-brand-black mb-6 text-center">
             Three questions. One clear starting point.
