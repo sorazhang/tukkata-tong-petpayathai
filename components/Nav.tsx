@@ -6,10 +6,8 @@ import { usePathname } from 'next/navigation'
 
 const links = [
   { href: '/challenges', label: 'Challenges' },
-  { href: '/real-fights', label: 'Real Fights' },
-  { href: '/opponents', label: 'Opponent Types' },
-  { href: '/scoring', label: 'Scoring Game' },
-  { href: '/culture', label: 'Culture' },
+  { href: '/knowledge', label: 'Knowledge' },
+  { href: '/about', label: 'About' },
 ]
 
 export default function Nav() {

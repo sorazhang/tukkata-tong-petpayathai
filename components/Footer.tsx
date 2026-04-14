@@ -25,13 +25,23 @@ export default function Footer() {
 
           <nav className="flex gap-12">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Learn</p>
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Challenges</p>
               <ul className="space-y-2 list-none p-0 m-0">
                 <li>
                   <Link href="/challenges" className="text-sm text-gray-400 hover:text-white transition-colors">
-                    Challenges
+                    All Challenges
                   </Link>
                 </li>
+                <li>
+                  <Link href="/book" className="text-sm text-gray-400 hover:text-white transition-colors">
+                    Book a Session
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Knowledge</p>
+              <ul className="space-y-2 list-none p-0 m-0">
                 <li>
                   <Link href="/real-fights" className="text-sm text-gray-400 hover:text-white transition-colors">
                     Real Fights
@@ -47,16 +57,6 @@ export default function Footer() {
                     Scoring Game
                   </Link>
                 </li>
-                <li>
-                  <Link href="/book" className="text-sm text-gray-400 hover:text-white transition-colors">
-                    Book a Session
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Explore</p>
-              <ul className="space-y-2 list-none p-0 m-0">
                 <li>
                   <Link href="/culture" className="text-sm text-gray-400 hover:text-white transition-colors">
                     Culture
