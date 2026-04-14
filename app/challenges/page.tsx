@@ -16,8 +16,8 @@ export default async function ChallengesPage() {
   const startHere = challenges.find((c) => c.isFree && c.difficulty === 'beginner')
 
   const challengeItems = challenges.map(
-    ({ slug, title, category, difficulty, isFree }) => ({
-      slug, title, category, difficulty, isFree,
+    ({ slug, title, situation, category, difficulty, isFree }) => ({
+      slug, title, situation, category, difficulty, isFree,
     })
   )
 

@@ -3,6 +3,7 @@ import Link from 'next/link'
 interface ChallengeItem {
   slug: string
   title: string
+  situation: string
   category: string
   difficulty: string
   isFree: boolean
@@ -57,29 +58,43 @@ export default function ChallengesGrouped({
             </span>
           </summary>
 
-          <div className="pb-8 space-y-7 pl-0">
+          <div className="pb-8 space-y-8">
             {byDifficulty.map(({ difficulty, items }) => (
               <div key={difficulty}>
-                <p className="text-xs text-gray-400 uppercase tracking-widest mb-2 font-medium">
+                <p className="text-xs text-gray-400 uppercase tracking-widest mb-3 font-medium">
                   {DIFFICULTY_LABELS[difficulty]}
                 </p>
-                <ul className="space-y-0.5">
+                <ul className="space-y-2">
                   {items.map((c) => (
                     <li key={c.slug}>
                       <Link
                         href={`/challenges/${c.slug}`}
-                        className="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-gray-50 group/item transition-colors"
+                        className="block px-4 py-4 rounded-lg border border-transparent hover:border-gray-200 hover:bg-gray-50 group/item transition-all"
                       >
-                        <span className="text-sm text-brand-black group-hover/item:text-brand-red transition-colors leading-snug pr-4">
-                          {c.title}
-                        </span>
-                        <span
-                          className={`text-xs shrink-0 font-medium ${
-                            c.isFree ? 'text-green-600' : 'text-gray-300'
-                          }`}
-                        >
-                          {c.isFree ? 'Free' : 'Locked'}
-                        </span>
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            {/* Drill label */}
+                            <p className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-medium">
+                              Try this
+                            </p>
+                            {/* Title */}
+                            <p className="text-sm font-semibold text-brand-black group-hover/item:text-brand-red transition-colors leading-snug mb-1.5">
+                              {c.title}
+                            </p>
+                            {/* Situation hint */}
+                            <p className="text-xs text-gray-400 leading-relaxed line-clamp-2">
+                              {c.situation}
+                            </p>
+                          </div>
+                          {/* Status */}
+                          <span
+                            className={`text-xs shrink-0 font-medium mt-5 ${
+                              c.isFree ? 'text-green-600' : 'text-gray-300'
+                            }`}
+                          >
+                            {c.isFree ? 'Free' : 'Locked'}
+                          </span>
+                        </div>
                       </Link>
                     </li>
                   ))}
