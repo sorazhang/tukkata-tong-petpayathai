@@ -12,9 +12,9 @@ interface ChallengeItem {
   isFree: boolean
 }
 
-type Category = 'All' | 'Striking' | 'Defense' | 'Clinch' | 'Ring IQ'
+type Category = 'All' | 'Striking' | 'Defense' | 'Clinch' | 'Ring IQ' | 'Footwork'
 
-const CATEGORIES: Category[] = ['All', 'Striking', 'Defense', 'Clinch', 'Ring IQ']
+const CATEGORIES: Category[] = ['All', 'Striking', 'Defense', 'Clinch', 'Footwork', 'Ring IQ']
 const DIFFICULTIES = ['beginner', 'intermediate', 'advanced'] as const
 const DIFFICULTY_LABELS: Record<string, string> = {
   beginner: 'Beginner',
@@ -26,6 +26,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   Striking: 'text-red-600 bg-red-50',
   Defense: 'text-green-700 bg-green-50',
   Clinch: 'text-blue-700 bg-blue-50',
+  Footwork: 'text-orange-700 bg-orange-50',
   'Ring IQ': 'text-purple-700 bg-purple-50',
 }
 

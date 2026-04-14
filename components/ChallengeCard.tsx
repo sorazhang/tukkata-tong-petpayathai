@@ -5,6 +5,7 @@ const categoryColors: Record<string, string> = {
   Striking: 'bg-red-50 text-red-700',
   Clinch: 'bg-blue-50 text-blue-700',
   Defense: 'bg-green-50 text-green-700',
+  Footwork: 'bg-orange-50 text-orange-700',
   'Ring IQ': 'bg-purple-50 text-purple-700',
 }
 
