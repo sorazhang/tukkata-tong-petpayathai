@@ -103,56 +103,76 @@ export default async function ChallengesPage() {
               {track.challenges.length} challenges in sequence — each one builds on the one before.
             </p>
 
-            <div className="flex flex-col md:flex-row md:items-stretch gap-4 md:gap-0">
-              {track.challenges.map((c, i) => (
-                <div key={c.slug} className="flex items-center flex-1 min-w-0">
-                  <Link
-                    href={`/challenges/${c.slug}`}
-                    className="flex-1 min-w-0 block group h-full"
-                  >
-                    <article
-                      className={`rounded-lg p-6 h-full hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${
-                        i === 0
-                          ? 'border-2 border-brand-red bg-white'
-                          : 'border border-gray-200 bg-white'
-                      }`}
-                    >
-                      <div className="text-3xl font-bold text-gray-100 mb-3 leading-none">
-                        {String(i + 1).padStart(2, '0')}
-                      </div>
-                      {i === 0 && (
-                        <span className="inline-block text-xs font-semibold text-brand-red bg-red-50 px-2 py-0.5 rounded mb-3">
-                          Start here
+            {track.challenges.length <= 4 ? (
+              /* Short track — horizontal sequence with arrows */
+              <div className="flex flex-col md:flex-row md:items-stretch gap-4 md:gap-0">
+                {track.challenges.map((c, i) => (
+                  <div key={c.slug} className="flex items-center flex-1 min-w-0">
+                    <Link href={`/challenges/${c.slug}`} className="flex-1 min-w-0 block group h-full">
+                      <article className={`rounded-lg p-6 h-full hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${
+                        i === 0 ? 'border-2 border-brand-red bg-white' : 'border border-gray-200 bg-white'
+                      }`}>
+                        <div className="text-3xl font-bold text-gray-100 mb-3 leading-none">
+                          {String(i + 1).padStart(2, '0')}
+                        </div>
+                        {i === 0 && (
+                          <span className="inline-block text-xs font-semibold text-brand-red bg-red-50 px-2 py-0.5 rounded mb-3">
+                            Start here
+                          </span>
+                        )}
+                        <h3 className="font-semibold text-brand-black text-base leading-snug mb-3 group-hover:text-brand-red transition-colors">
+                          {c.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-xs">
+                          <span className="capitalize text-gray-400">{c.difficulty}</span>
+                          {c.isFree ? (
+                            <><span className="text-gray-300">·</span><span className="text-green-600 font-medium">Free</span></>
+                          ) : (
+                            <><span className="text-gray-300">·</span><span className="text-gray-400">Solution locked</span></>
+                          )}
+                        </div>
+                      </article>
+                    </Link>
+                    {i < track.challenges.length - 1 && (
+                      <div className="hidden md:block w-10 text-center text-gray-300 text-xl shrink-0 select-none">→</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* Long track — numbered grid */
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {track.challenges.map((c, i) => (
+                  <Link key={c.slug} href={`/challenges/${c.slug}`} className="block group">
+                    <article className={`rounded-lg p-5 h-full hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 ${
+                      i === 0 ? 'border-2 border-brand-red bg-white' : 'border border-gray-200 bg-white'
+                    }`}>
+                      <div className="flex items-start justify-between mb-3">
+                        <span className="text-2xl font-bold text-gray-100 leading-none">
+                          {String(i + 1).padStart(2, '0')}
                         </span>
-                      )}
-                      <h3 className="font-semibold text-brand-black text-base leading-snug mb-3 group-hover:text-brand-red transition-colors">
+                        {i === 0 && (
+                          <span className="text-xs font-semibold text-brand-red bg-red-50 px-2 py-0.5 rounded">
+                            Start here
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-brand-black text-sm leading-snug mb-3 group-hover:text-brand-red transition-colors">
                         {c.title}
                       </h3>
                       <div className="flex items-center gap-2 text-xs">
                         <span className="capitalize text-gray-400">{c.difficulty}</span>
                         {c.isFree ? (
-                          <>
-                            <span className="text-gray-300">·</span>
-                            <span className="text-green-600 font-medium">Free</span>
-                          </>
+                          <><span className="text-gray-300">·</span><span className="text-green-600 font-medium">Free</span></>
                         ) : (
-                          <>
-                            <span className="text-gray-300">·</span>
-                            <span className="text-gray-400">Solution locked</span>
-                          </>
+                          <><span className="text-gray-300">·</span><span className="text-gray-400">Locked</span></>
                         )}
                       </div>
                     </article>
                   </Link>
-
-                  {i < track.challenges.length - 1 && (
-                    <div className="hidden md:block w-10 text-center text-gray-300 text-xl shrink-0 select-none">
-                      →
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       ))}
