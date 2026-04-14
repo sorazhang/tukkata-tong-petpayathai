@@ -84,6 +84,48 @@ export default function AboutPage() {
             I spent three decades building this understanding. It would be a
             waste to take it to the grave.
           </p>
+
+          <h2>What Gets Lost in Teaching</h2>
+          <p>
+            When you teach punch and kick, the student learns the pose and stops
+            there. They focus on the limb — how hard, how fast — and forget it
+            is a whole coordination of the entire body. The hip, the shoulder,
+            the weight shifting from one foot to the other. A punch is not an arm
+            doing something. It is everything arriving at the same moment through
+            the arm.
+          </p>
+          <p>
+            The second thing that gets lost is the opponent. The student becomes
+            so focused on performing the technique correctly that the other person
+            disappears. But the other person is the whole point. Their fear, their
+            habits, the way their weight shifts before they throw — all of that is
+            information. A fighter who reads this has an answer before the question
+            is finished.
+          </p>
+          <p>
+            This is what thirty years built in me. Not just the technique. The
+            whole-body coordination, and the reading. Most fighters develop one or
+            the other. Very few build both that deep.
+          </p>
+
+          <h2>Why Your Turn Comes First</h2>
+          <p>
+            The knowledge I carry was never learned through words. It came through
+            sparring, through mistakes, through watching opponents until the
+            patterns became automatic. It lives in my body — in reactions I have
+            before I think.
+          </p>
+          <p>
+            That is why every challenge here asks you to go feel it before you
+            read the answer. Not because the answer is hidden. Because the answer
+            will not land until your body has something to attach it to. You read
+            the situation, you go to training, you try it yourself. Then you come
+            back. Now the words mean something.
+          </p>
+          <p>
+            That is the only way this kind of knowledge travels. Not from mind
+            to mind. From body to body, with words as the bridge.
+          </p>
         </div>
 
         {/* CTAs */}
