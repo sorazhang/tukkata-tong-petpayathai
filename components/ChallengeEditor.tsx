@@ -15,6 +15,7 @@ interface Props {
   initialReferenceVideoNote: string
   initialIllustration: string
   initialStatus: ChallengeStatus
+  onStatusChange?: (status: ChallengeStatus) => void
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
@@ -31,6 +32,7 @@ export default function ChallengeEditor({
   initialReferenceVideoNote,
   initialIllustration,
   initialStatus,
+  onStatusChange,
 }: Props) {
   // ── Content fields ───────────────────────────────────────────
   const [situation, setSituation] = useState(initialSituation)
@@ -53,7 +55,10 @@ export default function ChallengeEditor({
       const res = await saveChallenge(slug, situation, yourTurn, solution)
       if (res.ok) {
         setSaveState('saved')
-        if (solution.trim() && status === 'needs_answer') setStatus('pending_review')
+        if (solution.trim() && status === 'needs_answer') {
+          setStatus('pending_review')
+          onStatusChange?.('pending_review')
+        }
         setTimeout(() => setSaveState('idle'), 3000)
       } else {
         setSaveState('error')
@@ -280,7 +285,10 @@ export default function ChallengeEditor({
               onClick={() => {
                 startCompleteTransition(async () => {
                   const res = await markComplete(slug)
-                  if (res.ok) setStatus('complete')
+                  if (res.ok) {
+                    setStatus('complete')
+                    onStatusChange?.('complete')
+                  }
                 })
               }}
               disabled={isCompletePending}
