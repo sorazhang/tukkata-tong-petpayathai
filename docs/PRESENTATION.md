@@ -1,10 +1,16 @@
 # Presentation Plan — Talking to Kru
 
-A guide for the conversation when you sit down with Kru to show him what has
-been built and get his buy-in.
+A guide for the conversation when you sit down with Kru to show him the
+platform.
 
-Keep it casual. This is not a pitch meeting. You are showing someone something
-made for them and asking if it feels right.
+**Context:** Kru already knows you have been building the website. The
+previous version was a simple HTML page with AI-generated placeholder content.
+This conversation is not an introduction — it is showing him the jump from
+that rough draft to something real, and asking him to put his actual knowledge
+into it.
+
+Keep it casual. You are not pitching. You are showing someone the next version
+of something they already know about.
 
 ---
 
@@ -13,10 +19,10 @@ made for them and asking if it feels right.
 Have ready on your phone or laptop:
 - The live site: tukkatatong-petpayathai.com
 - The review tool: tukkatatong-petpayathai.com/review (log in beforehand)
-- The About draft at the bottom of this document — printed or on screen
+- The About draft below — on screen or printed
 
-Keep the tech invisible. Do not explain Firebase or Vercel. None of that matters
-to him.
+Keep the tech invisible. Do not explain Firebase or Vercel. None of that
+matters to him.
 
 ---
 
@@ -24,18 +30,17 @@ to him.
 
 ---
 
-### 1. Open with the problem, not the solution
+### 1. Signal that this is different now
 
-Start here. Do not open with "I built you a website."
+He knows the old version. Your first job is to mark the shift.
 
-Say something like:
+> "Kru Tuk, you know the website I've been building — I want to show you what
+> it looks like now. It's changed a lot. Before it was just a rough idea with
+> placeholder content. Now it's actually ready for your knowledge to go in.
+> Can I show you?"
 
-> "You have been coaching for years. The fighters in the room get your
-> knowledge directly. But there are fighters everywhere who will never be in
-> that room. I want to ask you about that."
-
-Let him respond. He may already have thought about this. You are not
-presenting — you are starting a conversation.
+Short. He already has the context. You are just signalling: this is a new
+chapter.
 
 ---
 
@@ -43,60 +48,83 @@ presenting — you are starting a conversation.
 
 Open tukkatatong-petpayathai.com on your phone.
 
-Let him scroll. Do not narrate it. Give him a moment to read.
+Let him scroll. Do not narrate. Give him a moment to read.
 
-Then say:
+Then show him one challenge — the situation and "Your Turn." Let him read it.
 
-> "This is based on your teaching. The challenges come from situations real
-> fighters face. The answers will be yours — from your experience, in your
-> words."
-
-Show him one challenge. Read the situation out loud if that helps.
-
-> "This is the kind of problem you see every day. The fighter reads the
-> situation. They go to the gym and try it. Then they come back and read
-> your answer. Your knowledge travels without you needing to be there."
+> "Every challenge on here is a real situation a fighter walks into. The
+> answer section is empty right now. That's where your knowledge goes — in
+> your words, from your experience."
 
 ---
 
-### 3. Show him the review tool
+### 3. Show him the review tool — this is the key moment
 
 Open tukkatatong-petpayathai.com/review.
 
-> "This is for you. Only you can access it. Every challenge is here. You can
-> type an answer, record a voice note, or link a video. Whatever is easiest.
-> Even two minutes after class — just hit record and say what you see."
+> "Before, the answers were just placeholder text — AI-generated, nothing
+> real. Now this is empty, waiting for you. Every challenge here, your answer
+> goes in. You can type, record a voice note, or link a video. Whatever is
+> easiest. Even two minutes after class — just hit record and say what you
+> see."
 
-Show him the voice recorder on one challenge. This is usually the moment it
-becomes real for people.
+Show him the voice recorder on one challenge. This is usually when it becomes
+real for people. The shift from *AI filling the space* to *Kru filling the
+space* lands here.
 
 ---
 
-### 4. What you are asking from him
+### 4. Ask about his gym plans
+
+After he has seen the review tool and understands what the platform is
+becoming, ask the bigger question.
+
+> "Can I ask you something? Longer term — what do you want to do? Your own
+> gym, your own name on the door? What's the plan?"
+
+Let him talk. This conversation tells you everything about timing and
+direction. And by now he's just held the platform in his hands — the question
+lands differently when he's already seen the thing that could help him get
+there.
+
+---
+
+### 5. Connect the platform to that plan
+
+Once he's said something about his future:
+
+> "That's exactly why I want to build this properly now. By the time you
+> open your gym, you already have a name outside Thailand. Fighters who know
+> how you think, who trust you, who want to train with you. The platform
+> builds that before the gym exists."
+
+---
+
+### 6. What you are asking from him
 
 Be direct and specific. Do not leave this vague.
 
-> "I am not asking for a lot of your time. I need three things from you.
+> "I am not asking for a lot of your time. Three things.
 >
 > First — your answers. Start with the challenges you know best. A few
 > sentences or a voice note. Whatever feels natural.
 >
-> Second — one story. Why do you teach? There is a specific moment or reason.
-> I want to write your About page in your voice. Tell me that story and I
-> will draft it. You correct it until it sounds like you.
+> Second — one story. Why do you teach? There is a moment or a reason. I
+> want to write your About page in your voice. You tell me the story, I
+> draft it, you correct it until it sounds like you.
 >
-> Third — your footage. Your championship fights. I want to build a section
-> where you break down one moment from your own fights. Nobody else can do
-> that. That content is the most powerful thing on this site."
+> Third — your fight footage. Your championship fights. I want to build a
+> section where you break down one moment from your own fights. Nobody else
+> can do that. That is the most powerful content on this site."
 
 ---
 
-### 5. The About page draft
+### 7. The About page draft
 
-Hand him the draft (printed, or show on screen).
+Hand him the draft (printed or on screen).
 
-> "I wrote this as a starting point. Read it and tell me what is wrong. Your
-> words replacing even one sentence will make it better."
+> "I wrote this as a starting point. Tell me what is wrong. Your words
+> replacing even one sentence will make it better."
 
 **Draft:**
 
@@ -131,52 +159,42 @@ is serious enough to do the work.*
 
 ---
 
-Let him respond to it. Ask: *"Does this sound like you? What would you change?"*
+Ask: *"Does this sound like you? What would you change?"*
 
 ---
 
-### 6. The Instagram plan
+### 8. The Instagram plan
 
-Only bring this up after he has bought into the platform itself. Do not lead
-with it.
+Only after he has bought in on the platform. Do not lead with it.
 
-> "Before we tell anyone, I want to test whether the content lands. Post a
-> few challenges on Instagram — just the question, no answer, no link to the
-> site. Watch how your students respond. If they engage, we know the content
-> works."
+> "Before we tell anyone, let's test whether the content lands. Post a few
+> challenges on your Instagram — just the question, no answer, no website
+> link. Watch how your students respond. If they engage, we know it works."
 
 Then:
 
-> "After that, we invite 5 or 10 students privately. Not an announcement —
-> just ask them to try it and tell you honestly what they think. Their voices
-> become the first testimonials."
-
-Then:
-
-> "Once we have that, we open it properly. By then the content is proven and
-> the people who know you best have already said it is real."
+> "After that, we invite maybe five or ten students privately. Not an
+> announcement — just ask them to try it and tell you honestly what they
+> think. Their voices become the first testimonials."
 
 If he asks about existing students feeling left out:
 
-> "The framing is important. This is for fighters who can never be in the
-> room with you. The students who train with you already have the real thing.
-> We tell them that. They become the ones who can say: I trained with him,
-> and yes — this captures how he teaches."
+> "The framing matters. This is for fighters who can never be in the room
+> with you. The students who train with you already have the real thing. We
+> tell them that. They become the ones who can say: I trained with him, and
+> yes — this is how he teaches."
 
 ---
 
-### 7. The one thing you need him to decide today
+### 9. The one thing you need him to decide today
 
-Do not leave the meeting without a clear next action from him.
-
-Ask:
+Do not leave without a clear next action from him.
 
 > "Which challenge do you want to answer first? Pick one you feel strongly
-> about. We record it today if you have five minutes."
+> about. We can record it right now if you have five minutes."
 
-If he records one voice note in the meeting, the conversation has already
-succeeded. He has crossed from observer to contributor. Everything after that
-is easier.
+If he records one voice note in the conversation, everything after that is
+easier. He has crossed from observer to contributor.
 
 ---
 
@@ -186,7 +204,6 @@ is easier.
 - You are not asking for a time commitment up front
 - You are not asking for money
 - You are not asking him to promote anything yet
-- You are not asking for approval of the build decisions
 
 You are asking: *does this feel true to how you teach, and will you put your
 knowledge into it?*
@@ -208,16 +225,16 @@ knowledge into it?*
 > compete with anyone's classes. It builds your name independently."
 
 **"Who else knows about this?"**
-> "No one. It's yours. When you're ready to tell people, we tell them
-> together, on your terms."
+> "No one. It's yours. When you're ready to tell people, we do it together,
+> on your terms."
 
 ---
 
 ## After the Meeting
 
-Whatever he agrees to, write it down immediately after you leave.
+Write down whatever he agrees to immediately after you leave.
 
-One clear next action. One deadline, even if loose. Follow up within a week.
+One clear next action. One loose deadline. Follow up within a week.
 
 The biggest risk after a good conversation is that nothing happens. Keep the
 momentum by having something specific to follow up on.
