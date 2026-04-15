@@ -4,7 +4,7 @@
  */
 
 import { adminDb } from './firebase-admin'
-import type { Challenge, CultureStory, Track, TrackMembership, Difficulty } from './content'
+import type { Challenge, CultureStory, Track, TrackMembership, Difficulty, ChallengeStatus } from './content'
 
 // ─── Challenges ───────────────────────────────────────────────────────────────
 
@@ -22,6 +22,7 @@ export async function getChallengesFromFirestore(): Promise<Challenge[]> {
       isFree:             d.isFree ?? false,
       content:            d.content ?? '',
       tracks:             (d.tracks ?? []) as TrackMembership[],
+      status:             (d.status ?? (d.content?.includes('## Solution') ? 'pending_review' : 'needs_answer')) as ChallengeStatus,
       note:               d.note ?? '',
       voiceNote:          d.voiceNote ?? '',
       referenceVideo:     d.referenceVideo ?? '',
@@ -51,6 +52,7 @@ export async function getChallengeFromFirestore(
     isFree:             d.isFree ?? false,
     content:            d.content ?? '',
     tracks:             (d.tracks ?? []) as TrackMembership[],
+    status:             (d.status ?? (d.content?.includes('## Solution') ? 'pending_review' : 'needs_answer')) as ChallengeStatus,
     note:               d.note ?? '',
     voiceNote:          d.voiceNote ?? '',
     referenceVideo:     d.referenceVideo ?? '',
