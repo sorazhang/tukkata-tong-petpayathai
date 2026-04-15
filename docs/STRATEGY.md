@@ -108,6 +108,42 @@ The collaboration model is designed for a busy coach:
 
 ---
 
+## The Collaboration Is Invisible
+
+The platform is Kru's. Publicly, fully, without qualification.
+
+No credits. No "built by". No collaborator names anywhere on the site.
+The technical work behind it is implementation detail — the same way nobody
+asks who built a coach's website or designed a gym's signage.
+
+**Why this matters:**
+
+In a close-knit gym community, knowing that a student helped build this shifts
+the conversation from Kru's knowledge to the relationship. That is a
+distraction the platform does not need and one that is unfair to everyone
+involved.
+
+**The principle:**
+
+The only name associated with this platform is Kru Tukkatatong Petpayathai.
+The only voice is his. The only story being told is his teaching.
+
+**If anyone asks how the website came about:**
+
+Kru's natural answer is: *"I decided to put my teaching online."* That is true.
+Everything else is behind-the-scenes work that exists in every published thing
+— books have editors, gyms have architects. The knowledge is still his.
+
+**What this means in practice:**
+
+- No collaborator name on any public-facing page
+- No "built with help from" in any copy, post, or caption
+- The GitHub repository is private — keep it that way
+- If the platform is mentioned on Instagram, Kru posts it as his own initiative
+- Internal tools (review page, notes) are never shown or described publicly
+
+---
+
 ## Fight Footage
 
 Kru owns footage of his championship fights. That is exactly what the platform
