@@ -66,6 +66,51 @@ export async function saveChallenge(
   }
 }
 
+export async function saveVoiceNote(
+  slug: string,
+  base64Audio: string,
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const recordingsDir = path.join(process.cwd(), 'public', 'recordings')
+    fs.mkdirSync(recordingsDir, { recursive: true })
+
+    const audioBuffer = Buffer.from(base64Audio, 'base64')
+    const fileName = `${slug}.webm`
+    fs.writeFileSync(path.join(recordingsDir, fileName), audioBuffer)
+
+    // Update frontmatter to reference the saved file
+    const filePath = path.join(process.cwd(), 'content', 'challenges', `${slug}.mdx`)
+    const raw = fs.readFileSync(filePath, 'utf8')
+    const { data, content } = matter(raw)
+    data.voiceNote = `recordings/${fileName}`
+    fs.writeFileSync(filePath, matter.stringify(content, data), 'utf8')
+
+    return { ok: true }
+  } catch (err) {
+    console.error('saveVoiceNote error:', err)
+    return { ok: false, error: 'Failed to save voice note.' }
+  }
+}
+
+export async function saveReferenceVideo(
+  slug: string,
+  url: string,
+  note: string,
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const filePath = path.join(process.cwd(), 'content', 'challenges', `${slug}.mdx`)
+    const raw = fs.readFileSync(filePath, 'utf8')
+    const { data, content } = matter(raw)
+    data.referenceVideo = url.trim() || undefined
+    data.referenceVideoNote = note.trim() || undefined
+    fs.writeFileSync(filePath, matter.stringify(content, data), 'utf8')
+    return { ok: true }
+  } catch (err) {
+    console.error('saveReferenceVideo error:', err)
+    return { ok: false, error: 'Failed to save video link.' }
+  }
+}
+
 export async function saveNote(
   slug: string,
   note: string,

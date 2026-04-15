@@ -52,6 +52,12 @@ export interface Challenge {
   tracks: TrackMembership[]
   /** Internal note between collaborators — never shown to readers */
   note?: string
+  /** Path to voice note recording e.g. recordings/why-two-jabs.webm — review tool only */
+  voiceNote?: string
+  /** Reference video URL (YouTube etc) Kru linked as input — review tool only */
+  referenceVideo?: string
+  /** Optional note about the reference video e.g. "watch from 1:32" */
+  referenceVideoNote?: string
 }
 
 export interface Track {
@@ -146,6 +152,9 @@ export async function getArticles(section: SectionId): Promise<Challenge[]> {
       content,
       tracks: (data.tracks ?? []) as TrackMembership[],
       note: (data.note as string) ?? '',
+      voiceNote: (data.voiceNote as string) ?? '',
+      referenceVideo: (data.referenceVideo as string) ?? '',
+      referenceVideoNote: (data.referenceVideoNote as string) ?? '',
     } satisfies Challenge
   })
 
@@ -176,6 +185,9 @@ export async function getArticle(
     content,
     tracks: (data.tracks ?? []) as TrackMembership[],
     note: (data.note as string) ?? '',
+    voiceNote: (data.voiceNote as string) ?? '',
+    referenceVideo: (data.referenceVideo as string) ?? '',
+    referenceVideoNote: (data.referenceVideoNote as string) ?? '',
   }
 }
 

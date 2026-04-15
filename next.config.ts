@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb', // allow voice note uploads up to 10MB
+    },
+  },
 }
 
 export default nextConfig

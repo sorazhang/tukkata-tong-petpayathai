@@ -132,6 +132,9 @@ export default async function ReviewPage() {
                             initialYourTurn={c.sections.yourTurn ?? ''}
                             initialSolution={c.sections.solution ?? ''}
                             initialNote={c.note ?? ''}
+                            initialVoiceNote={c.voiceNote ?? ''}
+                            initialReferenceVideo={c.referenceVideo ?? ''}
+                            initialReferenceVideoNote={c.referenceVideoNote ?? ''}
                           />
                         </details>
                       )

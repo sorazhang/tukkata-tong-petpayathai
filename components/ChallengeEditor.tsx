@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useTransition } from 'react'
-import { saveChallenge, saveNote } from '@/lib/actions'
+import { useState, useTransition, useRef } from 'react'
+import { saveChallenge, saveNote, saveVoiceNote, saveReferenceVideo } from '@/lib/actions'
 
 interface Props {
   slug: string
@@ -9,9 +9,13 @@ interface Props {
   initialYourTurn: string
   initialSolution: string
   initialNote: string
+  initialVoiceNote: string
+  initialReferenceVideo: string
+  initialReferenceVideoNote: string
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
+type RecordState = 'idle' | 'recording' | 'recorded' | 'saving' | 'saved'
 
 export default function ChallengeEditor({
   slug,
@@ -19,23 +23,22 @@ export default function ChallengeEditor({
   initialYourTurn,
   initialSolution,
   initialNote,
+  initialVoiceNote,
+  initialReferenceVideo,
+  initialReferenceVideoNote,
 }: Props) {
+  // ── Content fields ───────────────────────────────────────────
   const [situation, setSituation] = useState(initialSituation)
   const [yourTurn, setYourTurn]   = useState(initialYourTurn)
   const [solution, setSolution]   = useState(initialSolution)
-  const [note, setNote]           = useState(initialNote)
   const [saveState, setSaveState] = useState<SaveState>('idle')
-  const [noteSaveState, setNoteSaveState] = useState<SaveState>('idle')
-  const [errorMsg, setErrorMsg]   = useState('')
+  const [saveError, setSaveError] = useState('')
   const [isPending, startTransition] = useTransition()
-  const [isNotePending, startNoteTransition] = useTransition()
 
   const isDirty =
     situation !== initialSituation ||
     yourTurn  !== initialYourTurn  ||
     solution  !== initialSolution
-
-  const isNoteDirty = note !== initialNote
 
   function handleSave() {
     setSaveState('saving')
@@ -46,14 +49,110 @@ export default function ChallengeEditor({
         setTimeout(() => setSaveState('idle'), 3000)
       } else {
         setSaveState('error')
-        setErrorMsg(res.error ?? 'Unknown error')
+        setSaveError(res.error ?? 'Unknown error')
       }
     })
   }
 
+  // ── Voice recorder ───────────────────────────────────────────
+  const [recordState, setRecordState] = useState<RecordState>(
+    initialVoiceNote ? 'saved' : 'idle'
+  )
+  const [voiceNote, setVoiceNote]     = useState(initialVoiceNote)
+  const [recordSeconds, setRecordSeconds] = useState(0)
+  const [audioBlob, setAudioBlob]     = useState<Blob | null>(null)
+  const [recordError, setRecordError] = useState('')
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const chunksRef        = useRef<Blob[]>([])
+  const timerRef         = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [isVoicePending, startVoiceTransition] = useTransition()
+
+  async function startRecording() {
+    setRecordError('')
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      chunksRef.current = []
+      const mr = new MediaRecorder(stream)
+      mediaRecorderRef.current = mr
+      mr.ondataavailable = (e) => { if (e.data.size > 0) chunksRef.current.push(e.data) }
+      mr.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'audio/webm' })
+        setAudioBlob(blob)
+        setRecordState('recorded')
+        stream.getTracks().forEach((t) => t.stop())
+      }
+      mr.start()
+      setRecordState('recording')
+      setRecordSeconds(0)
+      timerRef.current = setInterval(() => setRecordSeconds((s) => s + 1), 1000)
+    } catch {
+      setRecordError('Microphone access denied. Please allow microphone in your browser.')
+      setRecordState('idle')
+    }
+  }
+
+  function stopRecording() {
+    mediaRecorderRef.current?.stop()
+    if (timerRef.current) clearInterval(timerRef.current)
+  }
+
+  function saveRecording() {
+    if (!audioBlob) return
+    setRecordState('saving')
+    startVoiceTransition(async () => {
+      const reader = new FileReader()
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(',')[1]
+        const res = await saveVoiceNote(slug, base64)
+        if (res.ok) {
+          setVoiceNote(`recordings/${slug}.webm`)
+          setRecordState('saved')
+        } else {
+          setRecordError(res.error ?? 'Failed to save.')
+          setRecordState('recorded')
+        }
+      }
+      reader.readAsDataURL(audioBlob)
+    })
+  }
+
+  function formatTime(s: number) {
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+  }
+
+  // ── Video reference ──────────────────────────────────────────
+  const [videoUrl, setVideoUrl]   = useState(initialReferenceVideo)
+  const [videoNote, setVideoNote] = useState(initialReferenceVideoNote)
+  const [videoSaveState, setVideoSaveState] = useState<SaveState>('idle')
+  const [isVideoPending, startVideoTransition] = useTransition()
+
+  const isVideoDirty =
+    videoUrl  !== initialReferenceVideo ||
+    videoNote !== initialReferenceVideoNote
+
+  function handleVideoSave() {
+    setVideoSaveState('saving')
+    startVideoTransition(async () => {
+      const res = await saveReferenceVideo(slug, videoUrl, videoNote)
+      if (res.ok) {
+        setVideoSaveState('saved')
+        setTimeout(() => setVideoSaveState('idle'), 3000)
+      } else {
+        setVideoSaveState('error')
+      }
+    })
+  }
+
+  // ── Internal note ────────────────────────────────────────────
+  const [note, setNote]                   = useState(initialNote)
+  const [noteSaveState, setNoteSaveState] = useState<SaveState>('idle')
+  const [isNotePending, startNoteTransition] = useTransition()
+  const isNoteDirty = note !== initialNote
+
   return (
     <div className="border-t border-gray-100 divide-y divide-gray-100">
-      {/* Situation */}
+
+      {/* ── Situation ── */}
       <div className="px-5 py-4">
         <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">
           Situation
@@ -67,7 +166,7 @@ export default function ChallengeEditor({
         />
       </div>
 
-      {/* Your Turn */}
+      {/* ── Your Turn ── */}
       <div className="px-5 py-4">
         <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">
           Your Turn
@@ -81,10 +180,10 @@ export default function ChallengeEditor({
         />
       </div>
 
-      {/* Solution */}
+      {/* ── Solution (typed) ── */}
       <div className="px-5 py-4">
         <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
-          Solution
+          Solution — Written
           {!solution.trim() && (
             <span className="text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded text-xs normal-case tracking-normal font-semibold">
               Needs your answer
@@ -103,32 +202,155 @@ export default function ChallengeEditor({
       {/* Save bar */}
       <div className="px-5 py-4 bg-gray-50 flex items-center justify-between gap-4">
         <div className="text-sm">
-          {saveState === 'saved' && (
-            <span className="text-green-600 font-medium">Saved.</span>
-          )}
-          {saveState === 'error' && (
-            <span className="text-red-600 font-medium">{errorMsg}</span>
-          )}
-          {saveState === 'idle' && isDirty && (
-            <span className="text-gray-400 text-xs">Unsaved changes</span>
-          )}
+          {saveState === 'saved' && <span className="text-green-600 font-medium">Saved.</span>}
+          {saveState === 'error' && <span className="text-red-600 font-medium">{saveError}</span>}
+          {saveState === 'idle' && isDirty && <span className="text-gray-400 text-xs">Unsaved changes</span>}
         </div>
         <button
           onClick={handleSave}
           disabled={isPending || !isDirty}
           className={`px-5 py-2 rounded text-sm font-semibold transition-all ${
-            isPending
-              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : isDirty
-              ? 'bg-brand-red text-white hover:bg-brand-red-dark'
-              : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+            isPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            : isDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
+            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
           }`}
         >
           {isPending ? 'Saving…' : 'Save'}
         </button>
       </div>
 
-      {/* Internal notes — never shown to readers */}
+      {/* ── Solution — Voice note ── */}
+      <div className="px-5 py-4">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">
+          Solution — Voice Note
+        </label>
+        <p className="text-xs text-gray-400 mb-4">
+          Prefer to speak? Record your answer directly. No editing needed.
+        </p>
+
+        {recordError && (
+          <p className="text-xs text-red-500 mb-3">{recordError}</p>
+        )}
+
+        {/* Existing recording */}
+        {voiceNote && recordState === 'saved' && (
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 mb-1">Current recording</p>
+            <audio controls src={`/${voiceNote}`} className="w-full h-10" />
+          </div>
+        )}
+
+        <div className="flex items-center gap-3 flex-wrap">
+          {recordState === 'idle' && (
+            <button
+              onClick={startRecording}
+              className="flex items-center gap-2 px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors"
+            >
+              <span className="w-2 h-2 rounded-full bg-white inline-block" />
+              {voiceNote ? 'Re-record' : 'Record answer'}
+            </button>
+          )}
+
+          {recordState === 'recording' && (
+            <>
+              <span className="flex items-center gap-2 text-sm text-brand-red font-medium">
+                <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse inline-block" />
+                Recording — {formatTime(recordSeconds)}
+              </span>
+              <button
+                onClick={stopRecording}
+                className="px-4 py-2 bg-gray-800 text-white text-sm font-semibold rounded hover:bg-black transition-colors"
+              >
+                Stop
+              </button>
+            </>
+          )}
+
+          {recordState === 'recorded' && audioBlob && (
+            <>
+              <audio controls src={URL.createObjectURL(audioBlob)} className="h-9" />
+              <button
+                onClick={saveRecording}
+                disabled={isVoicePending}
+                className="px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors"
+              >
+                {isVoicePending ? 'Saving…' : 'Save recording'}
+              </button>
+              <button
+                onClick={() => { setAudioBlob(null); setRecordState(voiceNote ? 'saved' : 'idle') }}
+                className="text-xs text-gray-400 hover:text-gray-600"
+              >
+                Discard
+              </button>
+            </>
+          )}
+
+          {recordState === 'saving' && (
+            <span className="text-sm text-gray-400">Saving…</span>
+          )}
+        </div>
+      </div>
+
+      {/* ── Solution — Video reference ── */}
+      <div className="px-5 py-4">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">
+          Solution — Video Reference
+        </label>
+        <p className="text-xs text-gray-400 mb-4">
+          Paste a YouTube link or any video that shows the answer. Add a timestamp note if helpful.
+        </p>
+
+        <input
+          type="url"
+          value={videoUrl}
+          onChange={(e) => { setVideoUrl(e.target.value); setVideoSaveState('idle') }}
+          placeholder="https://youtube.com/watch?v=…"
+          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red mb-2 font-sans"
+        />
+        <input
+          type="text"
+          value={videoNote}
+          onChange={(e) => { setVideoNote(e.target.value); setVideoSaveState('idle') }}
+          placeholder="e.g. Watch from 1:32 — this is where I shift weight before the kick"
+          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red font-sans"
+        />
+
+        {videoUrl && (
+          <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-400 mb-1">Preview link</p>
+            <a
+              href={videoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-brand-red hover:underline break-all"
+            >
+              {videoUrl}
+            </a>
+            {videoNote && <p className="text-xs text-gray-500 mt-1">{videoNote}</p>}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between mt-3">
+          <div className="text-xs">
+            {videoSaveState === 'saved' && <span className="text-green-600 font-medium">Video link saved.</span>}
+            {videoSaveState === 'error'  && <span className="text-red-600 font-medium">Failed to save.</span>}
+            {videoSaveState === 'idle' && isVideoDirty && <span className="text-gray-400">Unsaved</span>}
+          </div>
+          <button
+            onClick={handleVideoSave}
+            disabled={isVideoPending || !isVideoDirty}
+            className={`px-4 py-1.5 rounded text-xs font-semibold transition-all ${
+              isVideoPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : isVideoDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
+              : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+            }`}
+          >
+            {isVideoPending ? 'Saving…' : 'Save link'}
+          </button>
+        </div>
+      </div>
+
+      {/* ── Internal notes ── */}
       <div className="px-5 py-4 bg-amber-50 border-t border-amber-100">
         <label className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1 block">
           Internal note — not visible to readers
@@ -145,15 +367,9 @@ export default function ChallengeEditor({
         />
         <div className="flex items-center justify-between mt-2">
           <div className="text-xs">
-            {noteSaveState === 'saved' && (
-              <span className="text-green-600 font-medium">Note saved.</span>
-            )}
-            {noteSaveState === 'error' && (
-              <span className="text-red-600 font-medium">Failed to save note.</span>
-            )}
-            {noteSaveState === 'idle' && isNoteDirty && (
-              <span className="text-amber-400">Unsaved note</span>
-            )}
+            {noteSaveState === 'saved' && <span className="text-green-600 font-medium">Note saved.</span>}
+            {noteSaveState === 'error' && <span className="text-red-600 font-medium">Failed to save note.</span>}
+            {noteSaveState === 'idle' && isNoteDirty && <span className="text-amber-400">Unsaved note</span>}
           </div>
           <button
             onClick={() => {
@@ -170,17 +386,16 @@ export default function ChallengeEditor({
             }}
             disabled={isNotePending || !isNoteDirty}
             className={`px-4 py-1.5 rounded text-xs font-semibold transition-all ${
-              isNotePending
-                ? 'bg-amber-100 text-amber-300 cursor-not-allowed'
-                : isNoteDirty
-                ? 'bg-amber-500 text-white hover:bg-amber-600'
-                : 'bg-amber-100 text-amber-300 cursor-not-allowed'
+              isNotePending ? 'bg-amber-100 text-amber-300 cursor-not-allowed'
+              : isNoteDirty ? 'bg-amber-500 text-white hover:bg-amber-600'
+              : 'bg-amber-100 text-amber-300 cursor-not-allowed'
             }`}
           >
             {isNotePending ? 'Saving…' : 'Save note'}
           </button>
         </div>
       </div>
+
     </div>
   )
 }
