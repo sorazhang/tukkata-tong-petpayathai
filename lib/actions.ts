@@ -102,5 +102,35 @@ export async function saveNote(
   }
 }
 
+// ─── Save illustration ────────────────────────────────────────────────────────
+
+export async function saveIllustration(
+  slug: string,
+  base64Image: string,
+  mimeType: string,
+): Promise<{ ok: boolean; url?: string; error?: string }> {
+  try {
+    const ext      = mimeType.split('/')[1]?.replace('jpeg', 'jpg') ?? 'jpg'
+    const bucket   = adminStorage.bucket()
+    const fileName = `illustrations/${slug}.${ext}`
+    const fileRef  = bucket.file(fileName)
+    const buffer   = Buffer.from(base64Image, 'base64')
+
+    await fileRef.save(buffer, { contentType: mimeType, resumable: false })
+    await fileRef.makePublic()
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`
+
+    await adminDb.collection('challenges').doc(slug).update({
+      illustration: publicUrl,
+      updatedAt:    new Date().toISOString(),
+    })
+
+    return { ok: true, url: publicUrl }
+  } catch (err) {
+    console.error('saveIllustration error:', err)
+    return { ok: false, error: 'Failed to save illustration.' }
+  }
+}
+
 // ─── Split helper (re-export for convenience) ─────────────────────────────────
 export { splitChallenge }

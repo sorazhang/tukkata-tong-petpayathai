@@ -133,6 +133,7 @@ export default async function ReviewPage() {
                             initialVoiceNote={c.voiceNote ?? ''}
                             initialReferenceVideo={c.referenceVideo ?? ''}
                             initialReferenceVideoNote={c.referenceVideoNote ?? ''}
+                            initialIllustration={c.illustration ?? ''}
                           />
                         </details>
                       )

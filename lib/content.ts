@@ -48,6 +48,7 @@ export interface Challenge {
   voiceNote?: string
   referenceVideo?: string
   referenceVideoNote?: string
+  illustration?: string
 }
 
 export interface Track {
@@ -126,6 +127,7 @@ function docToChallenge(slug: string, d: FirebaseFirestore.DocumentData): Challe
     voiceNote:          d.voiceNote          ?? '',
     referenceVideo:     d.referenceVideo     ?? '',
     referenceVideoNote: d.referenceVideoNote ?? '',
+    illustration:       d.illustration       ?? '',
   }
 }
 

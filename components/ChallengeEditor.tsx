@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition, useRef } from 'react'
-import { saveChallenge, saveNote, saveVoiceNote, saveReferenceVideo } from '@/lib/actions'
+import { saveChallenge, saveNote, saveVoiceNote, saveReferenceVideo, saveIllustration } from '@/lib/actions'
 
 interface Props {
   slug: string
@@ -12,6 +12,7 @@ interface Props {
   initialVoiceNote: string
   initialReferenceVideo: string
   initialReferenceVideoNote: string
+  initialIllustration: string
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
@@ -26,6 +27,7 @@ export default function ChallengeEditor({
   initialVoiceNote,
   initialReferenceVideo,
   initialReferenceVideoNote,
+  initialIllustration,
 }: Props) {
   // ── Content fields ───────────────────────────────────────────
   const [situation, setSituation] = useState(initialSituation)
@@ -140,6 +142,49 @@ export default function ChallengeEditor({
       } else {
         setVideoSaveState('error')
       }
+    })
+  }
+
+  // ── Illustration ─────────────────────────────────────────────
+  const [illustrationUrl, setIllustrationUrl] = useState(initialIllustration)
+  const [illustrationFile, setIllustrationFile] = useState<File | null>(null)
+  const [illustrationPreview, setIllustrationPreview] = useState<string | null>(null)
+  const [illustrationSaveState, setIllustrationSaveState] = useState<SaveState>('idle')
+  const [illustrationError, setIllustrationError] = useState('')
+  const [isIllustrationPending, startIllustrationTransition] = useTransition()
+
+  function handleIllustrationPick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setIllustrationFile(file)
+    setIllustrationSaveState('idle')
+    setIllustrationError('')
+    const reader = new FileReader()
+    reader.onload = () => setIllustrationPreview(reader.result as string)
+    reader.readAsDataURL(file)
+  }
+
+  function handleIllustrationSave() {
+    if (!illustrationFile) return
+    setIllustrationSaveState('saving')
+    startIllustrationTransition(async () => {
+      const reader = new FileReader()
+      reader.onload = async () => {
+        const dataUrl = reader.result as string
+        const base64  = dataUrl.split(',')[1]
+        const res = await saveIllustration(slug, base64, illustrationFile.type)
+        if (res.ok && res.url) {
+          setIllustrationUrl(res.url)
+          setIllustrationFile(null)
+          setIllustrationPreview(null)
+          setIllustrationSaveState('saved')
+          setTimeout(() => setIllustrationSaveState('idle'), 3000)
+        } else {
+          setIllustrationError(res.error ?? 'Failed to save.')
+          setIllustrationSaveState('error')
+        }
+      }
+      reader.readAsDataURL(illustrationFile)
     })
   }
 
@@ -347,6 +392,78 @@ export default function ChallengeEditor({
           >
             {isVideoPending ? 'Saving…' : 'Save link'}
           </button>
+        </div>
+      </div>
+
+      {/* ── Illustration ── */}
+      <div className="px-5 py-4">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">
+          Illustration
+        </label>
+        <p className="text-xs text-gray-400 mb-4">
+          Attach a diagram or sketch. Shows alongside the solution to explain the mechanics visually.
+        </p>
+
+        {/* Existing illustration */}
+        {illustrationUrl && !illustrationPreview && (
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 mb-2">Current illustration</p>
+            <img
+              src={illustrationUrl}
+              alt="Challenge illustration"
+              className="max-w-full rounded-lg border border-gray-200"
+            />
+          </div>
+        )}
+
+        {/* New file preview */}
+        {illustrationPreview && (
+          <div className="mb-4">
+            <p className="text-xs text-gray-400 mb-2">Preview — not yet saved</p>
+            <img
+              src={illustrationPreview}
+              alt="Preview"
+              className="max-w-full rounded-lg border border-gray-200"
+            />
+          </div>
+        )}
+
+        {illustrationError && (
+          <p className="text-xs text-red-500 mb-3">{illustrationError}</p>
+        )}
+
+        <div className="flex items-center gap-3 flex-wrap">
+          <label className="cursor-pointer px-4 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded hover:bg-gray-200 transition-colors">
+            {illustrationUrl ? 'Replace image' : 'Choose image'}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleIllustrationPick}
+            />
+          </label>
+
+          {illustrationFile && (
+            <>
+              <button
+                onClick={handleIllustrationSave}
+                disabled={isIllustrationPending}
+                className="px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors disabled:opacity-50"
+              >
+                {isIllustrationPending ? 'Saving…' : 'Save illustration'}
+              </button>
+              <button
+                onClick={() => { setIllustrationFile(null); setIllustrationPreview(null) }}
+                className="text-xs text-gray-400 hover:text-gray-600"
+              >
+                Discard
+              </button>
+            </>
+          )}
+
+          {illustrationSaveState === 'saved' && (
+            <span className="text-sm text-green-600 font-medium">Saved.</span>
+          )}
         </div>
       </div>
 
