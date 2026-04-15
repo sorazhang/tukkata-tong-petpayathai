@@ -1,8 +1,9 @@
 'use server'
 
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
+import { adminDb, adminStorage } from './firebase-admin'
+import { splitChallenge } from './content'
+
+// ─── Save challenge content ───────────────────────────────────────────────────
 
 export async function saveChallenge(
   slug: string,
@@ -11,79 +12,50 @@ export async function saveChallenge(
   solution: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const filePath = path.join(
-      process.cwd(),
-      'content',
-      'challenges',
-      `${slug}.mdx`,
-    )
+    // Rebuild the content string from sections
+    let content = ''
+    if (situation.trim()) content += `## The Situation\n\n${situation.trim()}\n\n`
+    if (yourTurn.trim())  content += `## Your Turn\n\n${yourTurn.trim()}\n\n`
+    if (solution.trim())  content += `## Solution\n\n${solution.trim()}\n`
 
-    if (!fs.existsSync(filePath)) {
-      return { ok: false, error: 'Challenge file not found.' }
-    }
+    // One-liner situation = first non-empty line of situation body
+    const oneLiner = situation.trim().split('\n').find((l) => l.trim()) ?? ''
 
-    const raw = fs.readFileSync(filePath, 'utf8')
-
-    // Extract the raw frontmatter block exactly as-is so we don't mangle it
-    const closingDash = raw.indexOf('\n---', 4)
-    if (closingDash === -1) {
-      return { ok: false, error: 'Could not parse frontmatter.' }
-    }
-    const frontmatter = raw.slice(0, closingDash + 4) // keep up to and including \n---
-
-    // Re-parse to get the data object (so we can update `situation` one-liner too)
-    const { data } = matter(raw)
-
-    // Update the short situation one-liner in frontmatter if the body situation changed
-    // We use the first non-empty line of the body situation as the one-liner
-    const oneLiner = situation.trim().split('\n').find((l) => l.trim()) ?? data.situation
-    const updatedFrontmatter = frontmatter.replace(
-      /^situation:.*$/m,
-      `situation: ${JSON.stringify(oneLiner)}`,
-    )
-
-    // Build the body content from the three sections
-    let body = '\n'
-
-    if (situation.trim()) {
-      body += `## The Situation\n\n${situation.trim()}\n\n`
-    }
-
-    if (yourTurn.trim()) {
-      body += `## Your Turn\n\n${yourTurn.trim()}\n\n`
-    }
-
-    if (solution.trim()) {
-      body += `## Solution\n\n${solution.trim()}\n`
-    }
-
-    fs.writeFileSync(filePath, updatedFrontmatter + body, 'utf8')
+    await adminDb.collection('challenges').doc(slug).update({
+      content,
+      ...(oneLiner && { situation: oneLiner }),
+      updatedAt: new Date().toISOString(),
+    })
 
     return { ok: true }
   } catch (err) {
     console.error('saveChallenge error:', err)
-    return { ok: false, error: 'Failed to save. Check the server console.' }
+    return { ok: false, error: 'Failed to save.' }
   }
 }
+
+// ─── Save voice note ──────────────────────────────────────────────────────────
 
 export async function saveVoiceNote(
   slug: string,
   base64Audio: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const recordingsDir = path.join(process.cwd(), 'public', 'recordings')
-    fs.mkdirSync(recordingsDir, { recursive: true })
+    const bucket    = adminStorage.bucket()
+    const fileName  = `voice-notes/${slug}.webm`
+    const fileRef   = bucket.file(fileName)
+    const buffer    = Buffer.from(base64Audio, 'base64')
 
-    const audioBuffer = Buffer.from(base64Audio, 'base64')
-    const fileName = `${slug}.webm`
-    fs.writeFileSync(path.join(recordingsDir, fileName), audioBuffer)
+    await fileRef.save(buffer, { contentType: 'audio/webm', resumable: false })
 
-    // Update frontmatter to reference the saved file
-    const filePath = path.join(process.cwd(), 'content', 'challenges', `${slug}.mdx`)
-    const raw = fs.readFileSync(filePath, 'utf8')
-    const { data, content } = matter(raw)
-    data.voiceNote = `recordings/${fileName}`
-    fs.writeFileSync(filePath, matter.stringify(content, data), 'utf8')
+    // Make publicly readable
+    await fileRef.makePublic()
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`
+
+    await adminDb.collection('challenges').doc(slug).update({
+      voiceNote:  publicUrl,
+      updatedAt:  new Date().toISOString(),
+    })
 
     return { ok: true }
   } catch (err) {
@@ -92,18 +64,19 @@ export async function saveVoiceNote(
   }
 }
 
+// ─── Save reference video ─────────────────────────────────────────────────────
+
 export async function saveReferenceVideo(
   slug: string,
   url: string,
   note: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const filePath = path.join(process.cwd(), 'content', 'challenges', `${slug}.mdx`)
-    const raw = fs.readFileSync(filePath, 'utf8')
-    const { data, content } = matter(raw)
-    data.referenceVideo = url.trim() || undefined
-    data.referenceVideoNote = note.trim() || undefined
-    fs.writeFileSync(filePath, matter.stringify(content, data), 'utf8')
+    await adminDb.collection('challenges').doc(slug).update({
+      referenceVideo:     url.trim() || null,
+      referenceVideoNote: note.trim() || null,
+      updatedAt:          new Date().toISOString(),
+    })
     return { ok: true }
   } catch (err) {
     console.error('saveReferenceVideo error:', err)
@@ -111,34 +84,23 @@ export async function saveReferenceVideo(
   }
 }
 
+// ─── Save internal note ───────────────────────────────────────────────────────
+
 export async function saveNote(
   slug: string,
   note: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const filePath = path.join(
-      process.cwd(),
-      'content',
-      'challenges',
-      `${slug}.mdx`,
-    )
-
-    if (!fs.existsSync(filePath)) {
-      return { ok: false, error: 'Challenge file not found.' }
-    }
-
-    const raw = fs.readFileSync(filePath, 'utf8')
-    const { data, content } = matter(raw)
-
-    // Update or add the note field in frontmatter
-    data.note = note.trim() || undefined
-
-    const updated = matter.stringify(content, data)
-    fs.writeFileSync(filePath, updated, 'utf8')
-
+    await adminDb.collection('challenges').doc(slug).update({
+      note:      note.trim() || null,
+      updatedAt: new Date().toISOString(),
+    })
     return { ok: true }
   } catch (err) {
     console.error('saveNote error:', err)
     return { ok: false, error: 'Failed to save note.' }
   }
 }
+
+// ─── Split helper (re-export for convenience) ─────────────────────────────────
+export { splitChallenge }
