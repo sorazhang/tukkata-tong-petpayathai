@@ -24,6 +24,7 @@ export async function saveChallenge(
     await adminDb.collection('challenges').doc(slug).update({
       content,
       ...(oneLiner && { situation: oneLiner }),
+      ...(solution.trim() && { status: 'pending_review' }),
       updatedAt: new Date().toISOString(),
     })
 
@@ -99,6 +100,23 @@ export async function saveNote(
   } catch (err) {
     console.error('saveNote error:', err)
     return { ok: false, error: 'Failed to save note.' }
+  }
+}
+
+// ─── Mark complete ────────────────────────────────────────────────────────────
+
+export async function markComplete(
+  slug: string,
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    await adminDb.collection('challenges').doc(slug).update({
+      status:    'complete',
+      updatedAt: new Date().toISOString(),
+    })
+    return { ok: true }
+  } catch (err) {
+    console.error('markComplete error:', err)
+    return { ok: false, error: 'Failed to update status.' }
   }
 }
 

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useTransition, useRef } from 'react'
-import { saveChallenge, saveNote, saveVoiceNote, saveReferenceVideo, saveIllustration } from '@/lib/actions'
+import { saveChallenge, saveNote, saveVoiceNote, saveReferenceVideo, saveIllustration, markComplete } from '@/lib/actions'
+import type { ChallengeStatus } from '@/lib/content'
 
 interface Props {
   slug: string
@@ -13,6 +14,7 @@ interface Props {
   initialReferenceVideo: string
   initialReferenceVideoNote: string
   initialIllustration: string
+  initialStatus: ChallengeStatus
 }
 
 type SaveState = 'idle' | 'saving' | 'saved' | 'error'
@@ -28,6 +30,7 @@ export default function ChallengeEditor({
   initialReferenceVideo,
   initialReferenceVideoNote,
   initialIllustration,
+  initialStatus,
 }: Props) {
   // ── Content fields ───────────────────────────────────────────
   const [situation, setSituation] = useState(initialSituation)
@@ -36,6 +39,8 @@ export default function ChallengeEditor({
   const [saveState, setSaveState] = useState<SaveState>('idle')
   const [saveError, setSaveError] = useState('')
   const [isPending, startTransition] = useTransition()
+  const [status, setStatus] = useState<ChallengeStatus>(initialStatus)
+  const [isCompletePending, startCompleteTransition] = useTransition()
 
   const isDirty =
     situation !== initialSituation ||
@@ -48,6 +53,7 @@ export default function ChallengeEditor({
       const res = await saveChallenge(slug, situation, yourTurn, solution)
       if (res.ok) {
         setSaveState('saved')
+        if (solution.trim() && status === 'needs_answer') setStatus('pending_review')
         setTimeout(() => setSaveState('idle'), 3000)
       } else {
         setSaveState('error')
@@ -245,23 +251,56 @@ export default function ChallengeEditor({
       </div>
 
       {/* Save bar */}
-      <div className="px-5 py-4 bg-gray-50 flex items-center justify-between gap-4">
-        <div className="text-sm">
+      <div className="px-5 py-4 bg-gray-50 flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex items-center gap-3 text-sm flex-wrap">
           {saveState === 'saved' && <span className="text-green-600 font-medium">Saved.</span>}
           {saveState === 'error' && <span className="text-red-600 font-medium">{saveError}</span>}
           {saveState === 'idle' && isDirty && <span className="text-gray-400 text-xs">Unsaved changes</span>}
+
+          {/* Status badge */}
+          {status === 'needs_answer' && (
+            <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded">
+              Needs answer
+            </span>
+          )}
+          {status === 'pending_review' && (
+            <span className="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
+              Pending review
+            </span>
+          )}
+          {status === 'complete' && (
+            <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded">
+              Complete
+            </span>
+          )}
         </div>
-        <button
-          onClick={handleSave}
-          disabled={isPending || !isDirty}
-          className={`px-5 py-2 rounded text-sm font-semibold transition-all ${
-            isPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-            : isDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
-            : 'bg-gray-100 text-gray-300 cursor-not-allowed'
-          }`}
-        >
-          {isPending ? 'Saving…' : 'Save'}
-        </button>
+        <div className="flex items-center gap-2">
+          {status === 'pending_review' && (
+            <button
+              onClick={() => {
+                startCompleteTransition(async () => {
+                  const res = await markComplete(slug)
+                  if (res.ok) setStatus('complete')
+                })
+              }}
+              disabled={isCompletePending}
+              className="px-4 py-2 rounded text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-all disabled:opacity-50"
+            >
+              {isCompletePending ? 'Saving…' : 'Mark complete'}
+            </button>
+          )}
+          <button
+            onClick={handleSave}
+            disabled={isPending || !isDirty}
+            className={`px-5 py-2 rounded text-sm font-semibold transition-all ${
+              isPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : isDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
+              : 'bg-gray-100 text-gray-300 cursor-not-allowed'
+            }`}
+          >
+            {isPending ? 'Saving…' : 'Save'}
+          </button>
+        </div>
       </div>
 
       {/* ── Solution — Voice note ── */}

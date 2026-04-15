@@ -34,6 +34,8 @@ export interface TrackMembership {
   order: number
 }
 
+export type ChallengeStatus = 'needs_answer' | 'pending_review' | 'complete'
+
 export interface Challenge {
   slug: string
   title: string
@@ -44,6 +46,7 @@ export interface Challenge {
   isFree: boolean
   content: string
   tracks: TrackMembership[]
+  status: ChallengeStatus
   note?: string
   voiceNote?: string
   referenceVideo?: string
@@ -123,6 +126,9 @@ function docToChallenge(slug: string, d: FirebaseFirestore.DocumentData): Challe
     isFree:             d.isFree             ?? false,
     content:            d.content            ?? '',
     tracks:             (d.tracks            ?? []) as TrackMembership[],
+    status:             (d.status ?? (
+                          d.content?.includes('## Solution') ? 'pending_review' : 'needs_answer'
+                        )) as ChallengeStatus,
     note:               d.note               ?? '',
     voiceNote:          d.voiceNote          ?? '',
     referenceVideo:     d.referenceVideo     ?? '',

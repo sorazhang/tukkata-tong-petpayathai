@@ -26,8 +26,9 @@ export default async function ReviewPage() {
     sections: splitChallenge(c.content),
   }))
 
-  const done         = withContent.filter((c) => c.sections.solution).length
-  const placeholders = withContent.length - done
+  const done         = withContent.filter((c) => c.status === 'complete').length
+  const pending      = withContent.filter((c) => c.status === 'pending_review').length
+  const placeholders = withContent.filter((c) => c.status === 'needs_answer').length
 
   const grouped = CATEGORY_ORDER.map((cat) => ({
     category: cat,
@@ -65,6 +66,10 @@ export default async function ReviewPage() {
             <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Complete</p>
           </div>
           <div>
+            <p className="text-2xl font-bold text-blue-500">{pending}</p>
+            <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Pending review</p>
+          </div>
+          <div>
             <p className="text-2xl font-bold text-orange-500">{placeholders}</p>
             <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Need answer</p>
           </div>
@@ -93,7 +98,6 @@ export default async function ReviewPage() {
                   </p>
                   <div className="space-y-3">
                     {items.map((c) => {
-                      const isPlaceholder = !c.sections.solution
                       return (
                         <details
                           key={c.slug}
@@ -109,13 +113,19 @@ export default async function ReviewPage() {
                               </p>
                             </div>
                             <div className="flex items-center gap-3 shrink-0 mt-0.5">
-                              {isPlaceholder ? (
-                                <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded">
-                                  Needs answer
-                                </span>
-                              ) : (
+                              {c.status === 'complete' && (
                                 <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded">
                                   Complete
+                                </span>
+                              )}
+                              {c.status === 'pending_review' && (
+                                <span className="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
+                                  Pending review
+                                </span>
+                              )}
+                              {c.status === 'needs_answer' && (
+                                <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded">
+                                  Needs answer
                                 </span>
                               )}
                               <span className="text-gray-300 group-open:rotate-90 transition-transform duration-200 text-lg leading-none">
@@ -134,6 +144,7 @@ export default async function ReviewPage() {
                             initialReferenceVideo={c.referenceVideo ?? ''}
                             initialReferenceVideoNote={c.referenceVideoNote ?? ''}
                             initialIllustration={c.illustration ?? ''}
+                            initialStatus={c.status}
                           />
                         </details>
                       )
