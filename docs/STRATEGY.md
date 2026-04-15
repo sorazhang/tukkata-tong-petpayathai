@@ -135,10 +135,102 @@ fights in his own words is the fastest credibility builder the platform has.
 
 ---
 
+## Instagram Launch Plan
+
+Kru has 11,000 Instagram followers — mostly existing and previous students.
+That audience is both the asset and the risk. They know him in person. If they
+discover the platform without context, they may feel like they are being
+replaced or sold to. The approach below protects that relationship while using
+it as the launch engine.
+
+---
+
+### Phase 1 — Instagram Test (no website, no link)
+
+Post 3–5 challenges as standalone Instagram content.
+
+Just the situation and "Your Turn" prompt. No solution. No website mention.
+Watch how existing students respond in the comments. Are they engaging? Arguing?
+Offering their own answers? That response tells you whether the content lands
+before anyone ever visits a URL.
+
+**What to watch for:**
+- Do they try to answer?
+- Do they ask for the solution?
+- Do they tag other fighters?
+
+If yes to any of these: the content works. Move to Phase 2.
+
+---
+
+### Phase 2 — Private Invitations to Trusted Students
+
+Identify 5–10 existing students who are engaged, thoughtful, and would give
+honest feedback. Reach out individually by DM.
+
+**Framing:**
+*"Kru built something to share his teaching with fighters who can't be here.
+We'd love your honest feedback before he opens it up."*
+
+Not a pitch. Not a product announcement. An invitation to be part of it first.
+
+These students become the first real users. Their feedback shapes the product.
+Their presence means the platform is not empty when it opens.
+
+---
+
+### Phase 3 — Soft Launch With Their Voices
+
+When the platform is ready to open, the first testimonials are already in place
+— from people who trained in the room with Kru.
+
+That is the most credible social proof possible. Not strangers. Not a bought
+review. His own students, who already know the real thing, saying the platform
+captures it accurately.
+
+**Key framing for existing students:**
+
+*"This is for fighters who can never be in the room with Kru. You already had
+the real thing. Now you can point people to this."*
+
+This reframes the platform from a threat to existing relationships into
+something existing students can take pride in. They become ambassadors, not
+an audience being replaced.
+
+---
+
+### Phase 4 — Open Launch
+
+Post publicly on Instagram with the link. By this point:
+
+- The content is proven (Phase 1 response data)
+- Real students have used it and can speak to it (Phase 2 feedback)
+- Genuine testimonials are already visible (Phase 3 social proof)
+- Kru's audience already feels ownership, not surprise
+
+The launch post is not a product announcement. It is Kru saying:
+*"I've been teaching this for years. Now anyone can learn it."*
+
+---
+
+### The Word-of-Mouth Flywheel
+
+Fighters who work through a challenge and feel it in their next sparring
+session will share it. Not because they are asked to — because it is the most
+natural thing to do when something actually changes how you fight.
+
+The goal is for the first 50 users to bring the next 500. That only happens
+if the content is strong enough to produce a real result. The platform needs
+to earn the share before it asks for it.
+
+---
+
 ## Immediate Priorities
 
 1. Capture Kru's voice — one question answered on voice note after class
 2. Get one story — why does he teach? One specific moment or realisation
 3. Draft the About page in his voice — bring it to him to correct
-4. Build Firebase + Vercel so Kru can edit from his phone anywhere
+4. Build Firebase + Vercel so Kru can edit from his phone anywhere ✓
 5. Launch with free content first, subscription tier once content depth justifies it
+6. Post first challenge on Instagram — observe response, do not mention website yet
+7. Identify 5–10 trusted students for private soft-launch invitations
