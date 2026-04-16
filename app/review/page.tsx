@@ -105,7 +105,7 @@ export default async function ReviewPage() {
                           title={c.title}
                           situation={c.situation}
                           initialStatus={c.status}
-                          initialSituation={c.sections.situation ?? ''}
+                          initialSituation={c.sections.situation || c.situation}
                           initialYourTurn={c.sections.yourTurn ?? ''}
                           initialSolution={c.sections.solution ?? ''}
                           initialNote={c.note ?? ''}

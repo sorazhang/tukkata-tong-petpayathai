@@ -208,41 +208,33 @@ export default function ChallengeEditor({
   return (
     <div className="border-t border-gray-100 divide-y divide-gray-100">
 
-      {/* ── Situation ── */}
-      <div className="px-5 py-4">
-        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">
-          Situation
-        </label>
-        <textarea
-          value={situation}
-          onChange={(e) => { setSituation(e.target.value); setSaveState('idle') }}
-          rows={5}
-          placeholder="Describe the situation a fighter is in — what they feel, what is going wrong…"
-          className="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red resize-y font-sans"
-        />
-      </div>
+      {/* ── Situation — read only ── */}
+      {situation && (
+        <div className="px-5 py-4 bg-gray-50">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+            The Problem
+          </p>
+          <p className="text-sm text-gray-700 leading-relaxed">{situation}</p>
+        </div>
+      )}
 
-      {/* ── Your Turn ── */}
-      <div className="px-5 py-4">
-        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">
-          Your Turn
-        </label>
-        <textarea
-          value={yourTurn}
-          onChange={(e) => { setYourTurn(e.target.value); setSaveState('idle') }}
-          rows={5}
-          placeholder="What should the fighter go try? Give them a specific drill or observation task…"
-          className="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red resize-y font-sans"
-        />
-      </div>
+      {/* ── Your Turn — read only ── */}
+      {yourTurn && (
+        <div className="px-5 py-4 bg-gray-50">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+            What the Fighter Tries
+          </p>
+          <p className="text-sm text-gray-700 leading-relaxed">{yourTurn}</p>
+        </div>
+      )}
 
       {/* ── Solution (typed) ── */}
       <div className="px-5 py-4">
         <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
-          Solution — Written
+          {"Kru's Answer"}
           {!solution.trim() && (
             <span className="text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded text-xs normal-case tracking-normal font-semibold">
-              Needs your answer
+              Waiting for your answer
             </span>
           )}
         </label>
@@ -250,7 +242,7 @@ export default function ChallengeEditor({
           value={solution}
           onChange={(e) => { setSolution(e.target.value); setSaveState('idle') }}
           rows={10}
-          placeholder="What actually works and why. The understanding most coaches never put into words…"
+          placeholder="What do you tell this fighter? What actually works and why…"
           className="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red resize-y font-sans"
         />
       </div>
