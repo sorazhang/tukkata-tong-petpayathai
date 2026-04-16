@@ -218,15 +218,16 @@ export default function ChallengeEditor({
         </div>
       )}
 
-      {/* ── Your Turn — read only ── */}
-      {yourTurn && (
-        <div className="px-5 py-4 bg-gray-50">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
-            What the Fighter Tries
-          </p>
-          <p className="text-sm text-gray-700 leading-relaxed">{yourTurn}</p>
-        </div>
-      )}
+      {/* ── Your Turn — read only, always visible ── */}
+      <div className="px-5 py-4 bg-gray-50">
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+          Your Turn
+        </p>
+        {yourTurn
+          ? <p className="text-sm text-gray-700 leading-relaxed">{yourTurn}</p>
+          : <p className="text-sm text-gray-400 italic">Not yet written — the drill the fighter goes to try before reading the solution.</p>
+        }
+      </div>
 
       {/* ── Solution (typed) ── */}
       <div className="px-5 py-4">
