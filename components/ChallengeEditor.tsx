@@ -233,6 +233,7 @@ export default function ChallengeEditor({
       <div className="px-5 py-4">
         <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
           {"Kru's Answer"}
+          <span className="text-gray-400 normal-case tracking-normal font-normal text-xs">— ภาษาไทยก็ได้</span>
           {!solution.trim() && (
             <span className="text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded text-xs normal-case tracking-normal font-semibold">
               Waiting for your answer
