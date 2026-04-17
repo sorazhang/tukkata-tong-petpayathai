@@ -1,5 +1,5 @@
 import { getChallenges, splitChallenge } from '@/lib/content'
-import ChallengeEditor from '@/components/ChallengeEditor'
+import ChallengeAccordionItem from '@/components/ChallengeAccordionItem'
 
 export const metadata = { title: 'Content Review — Kru' }
 
@@ -99,54 +99,21 @@ export default async function ReviewPage() {
                   <div className="space-y-3">
                     {items.map((c) => {
                       return (
-                        <details
+                        <ChallengeAccordionItem
                           key={c.slug}
-                          className="group border border-gray-200 rounded-xl overflow-hidden"
-                        >
-                          <summary className="flex items-start justify-between gap-4 p-5 cursor-pointer [&::-webkit-details-marker]:hidden [&::marker]:hidden select-none hover:bg-gray-50 transition-colors">
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-brand-black text-sm leading-snug">
-                                {c.title}
-                              </p>
-                              <p className="text-xs text-gray-400 mt-1 leading-relaxed line-clamp-2">
-                                {c.situation}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-3 shrink-0 mt-0.5">
-                              {c.status === 'complete' && (
-                                <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                                  Complete
-                                </span>
-                              )}
-                              {c.status === 'pending_review' && (
-                                <span className="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-0.5 rounded">
-                                  Pending review
-                                </span>
-                              )}
-                              {c.status === 'needs_answer' && (
-                                <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded">
-                                  Needs answer
-                                </span>
-                              )}
-                              <span className="text-gray-300 group-open:rotate-90 transition-transform duration-200 text-lg leading-none">
-                                ›
-                              </span>
-                            </div>
-                          </summary>
-
-                          <ChallengeEditor
-                            slug={c.slug}
-                            initialSituation={c.sections.situation ?? ''}
-                            initialYourTurn={c.sections.yourTurn ?? ''}
-                            initialSolution={c.sections.solution ?? ''}
-                            initialNote={c.note ?? ''}
-                            initialVoiceNote={c.voiceNote ?? ''}
-                            initialReferenceVideo={c.referenceVideo ?? ''}
-                            initialReferenceVideoNote={c.referenceVideoNote ?? ''}
-                            initialIllustration={c.illustration ?? ''}
-                            initialStatus={c.status}
-                          />
-                        </details>
+                          slug={c.slug}
+                          title={c.title}
+                          situation={c.situation}
+                          initialStatus={c.status}
+                          initialSituation={c.sections.situation || c.situation}
+                          initialYourTurn={c.sections.yourTurn ?? ''}
+                          initialSolution={c.sections.solution ?? ''}
+                          initialNote={c.note ?? ''}
+                          initialVoiceNote={c.voiceNote ?? ''}
+                          initialReferenceVideo={c.referenceVideo ?? ''}
+                          initialReferenceVideoNote={c.referenceVideoNote ?? ''}
+                          initialIllustration={c.illustration ?? ''}
+                        />
                       )
                     })}
                   </div>
