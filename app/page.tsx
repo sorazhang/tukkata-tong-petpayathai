@@ -21,7 +21,7 @@ export default async function Home() {
             Lumpinee Stadium Champion · Channel 7 World Title Holder
           </p>
           <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
-            ตุ๊กกะต้อง เพชรพยาไทย
+            ตุ๊กตาทอง เพชรพญาไท
           </p>
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
             The art<br />behind the art.

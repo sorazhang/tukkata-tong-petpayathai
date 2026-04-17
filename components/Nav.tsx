@@ -27,7 +27,7 @@ export default function Nav() {
             Tukkatatong Petpayathai
           </span>
           <span className="font-thai text-gray-500 text-xs" lang="th">
-            ตุ๊กกะต้อง เพชรพยาไทย
+            ตุ๊กตาทอง เพชรพญาไท
           </span>
         </Link>
 
