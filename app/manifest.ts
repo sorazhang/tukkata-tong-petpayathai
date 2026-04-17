@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Tukkatatong Petpayathai',
-    short_name: 'Kru Tuk',
-    description: 'Muay Thai knowledge from Kru Tukkatatong Petpayathai — champion of Lumpinee Stadium.',
+    name: 'ตุ๊กตาทอง เพชรพญาไท',
+    short_name: 'ตุ๊กตาทอง',
+    description: 'Muay Thai knowledge from ตุ๊กตาทอง เพชรพญาไท — champion of Lumpinee Stadium.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',

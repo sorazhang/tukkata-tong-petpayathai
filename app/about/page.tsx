@@ -17,8 +17,9 @@ export default function AboutPage() {
             About
           </p>
           <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-            Tukkatatong Petpayathai
+            ตุ๊กตาทอง เพชรพญาไท
           </h1>
+          <p className="text-gray-400 text-lg mt-2">Tukkatatong Petpayathai</p>
         </div>
       </section>
 

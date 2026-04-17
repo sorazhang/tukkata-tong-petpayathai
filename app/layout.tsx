@@ -5,13 +5,13 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Tukkatatong Petpayathai',
-    template: '%s — Tukkatatong Petpayathai',
+    default: 'ตุ๊กตาทอง เพชรพญาไท — Tukkatatong Petpayathai',
+    template: '%s — ตุ๊กตาทอง เพชรพญาไท',
   },
   description:
-    'Champion knowledge from Lumpinee Stadium title holder Tukkatatong Petpayathai. Muay Thai challenges, stories, and the art behind the art.',
+    'Champion knowledge from Lumpinee Stadium title holder ตุ๊กตาทอง เพชรพญาไท (Tukkatatong Petpayathai). Muay Thai challenges, stories, and the art behind the art.',
   openGraph: {
-    siteName: 'Tukkatatong Petpayathai',
+    siteName: 'ตุ๊กตาทอง เพชรพญาไท',
     type: 'website',
   },
 }
