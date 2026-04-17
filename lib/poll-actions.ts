@@ -3,10 +3,17 @@
 import { adminDb, adminStorage } from './firebase-admin'
 import type { PollOption } from './polls'
 
+export interface OptionInput {
+  id: string
+  label: string
+  imageBase64?: string
+  imageMime?: string
+}
+
 export async function createPoll(
   question: string,
   description: string,
-  options: PollOption[],
+  optionInputs: OptionInput[],
 ): Promise<{ ok: boolean; slug?: string; error?: string }> {
   try {
     const slug = question
@@ -16,6 +23,24 @@ export async function createPoll(
       .replace(/\s+/g, '-')
       .slice(0, 60)
       + '-' + Date.now().toString(36)
+
+    const bucket = adminStorage.bucket()
+
+    const options: PollOption[] = await Promise.all(
+      optionInputs.map(async (opt) => {
+        let imageUrl: string | undefined
+        if (opt.imageBase64 && opt.imageMime) {
+          const ext      = opt.imageMime.split('/')[1] ?? 'jpg'
+          const fileName = `poll-options/${slug}-${opt.id}.${ext}`
+          const fileRef  = bucket.file(fileName)
+          const buffer   = Buffer.from(opt.imageBase64, 'base64')
+          await fileRef.save(buffer, { contentType: opt.imageMime, resumable: false })
+          await fileRef.makePublic()
+          imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`
+        }
+        return { id: opt.id, label: opt.label.trim(), ...(imageUrl && { imageUrl }) }
+      })
+    )
 
     await adminDb.collection('polls').doc(slug).set({
       question:    question.trim(),
