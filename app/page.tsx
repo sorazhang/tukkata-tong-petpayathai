@@ -27,13 +27,12 @@ export default async function Home() {
             The art<br />behind the art.
           </h1>
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
-            We speak to someone who trains — who has felt confusion in sparring,
+            This is for someone who trains — who has felt confusion in sparring,
             who has thrown a kick that didn&apos;t land right and didn&apos;t know why,
             who has been told to relax under pressure and had no idea how to do that.
           </p>
           <p className="text-gray-500 text-lg leading-relaxed max-w-xl">
-            We do not explain at them. We point at something and ask them to go
-            find it themselves.
+            Not explained at. Pointed at something and asked to go find it themselves.
           </p>
         </div>
       </section>

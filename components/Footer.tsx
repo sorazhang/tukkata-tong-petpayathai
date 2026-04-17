@@ -13,13 +13,12 @@ export default function Footer() {
               Sharing the knowledge that took 30 years to build.
             </p>
             <p className="text-sm text-gray-600 max-w-xs leading-relaxed mt-4">
-              We speak to someone who trains — who has felt confusion in sparring,
+              This is for someone who trains — who has felt confusion in sparring,
               who has thrown a kick that didn&apos;t land right and didn&apos;t know why,
               who has been told to relax under pressure and had no idea how to do that.
             </p>
             <p className="text-sm text-gray-600 max-w-xs leading-relaxed mt-3">
-              We do not explain at them. We point at something and ask them to go
-              find it themselves.
+              Not explained at. Pointed at something and asked to go find it themselves.
             </p>
           </div>
 
