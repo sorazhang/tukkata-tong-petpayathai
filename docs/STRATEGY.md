@@ -270,3 +270,7 @@ to earn the share before it asks for it.
 5. Launch with free content first, subscription tier once content depth justifies it
 6. Post first challenge on Instagram — observe response, do not mention website yet
 7. Identify 5–10 trusted students for private soft-launch invitations
+
+## Content To-Do
+
+- [ ] Common beginner mistakes series — Kru sees the same 10 mistakes every year (ask Kru to name them, write one article per mistake)
