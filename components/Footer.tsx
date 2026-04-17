@@ -18,7 +18,7 @@ export default function Footer() {
               who has been told to relax under pressure and had no idea how to do that.
             </p>
             <p className="text-sm text-gray-600 max-w-xs leading-relaxed mt-3">
-              Not explained at. Pointed at something and asked to go find it themselves.
+              Not explained at. Pointed toward something and asked to go find it.
             </p>
           </div>
 

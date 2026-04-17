@@ -32,7 +32,7 @@ export default async function Home() {
             who has been told to relax under pressure and had no idea how to do that.
           </p>
           <p className="text-gray-500 text-lg leading-relaxed max-w-xl">
-            Not explained at. Pointed at something and asked to go find it themselves.
+            Not explained at. Pointed toward something and asked to go find it.
           </p>
         </div>
       </section>
