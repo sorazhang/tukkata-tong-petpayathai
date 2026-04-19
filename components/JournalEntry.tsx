@@ -12,6 +12,7 @@ export default function JournalEntry() {
   const [text, setText]               = useState('')
   const [listening, setListening]     = useState(false)
   const [supported, setSupported]     = useState(true)
+  const [lang, setLang]               = useState<'th-TH' | 'en-US'>('th-TH')
   const [saveState, setSaveState]     = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const [isPending, startTransition]  = useTransition()
   const recognitionRef                = useRef<AnyRecognition>(null)
@@ -21,16 +22,22 @@ export default function JournalEntry() {
     const w = window as any
     const SR = w.SpeechRecognition ?? w.webkitSpeechRecognition
     if (!SR) { setSupported(false); return }
+    recognitionRef.current = new SR()
+    recognitionRef.current.continuous     = true
+    recognitionRef.current.interimResults = true
+    return () => recognitionRef.current?.abort()
+  }, [])
 
-    const recognition = new SR()
-    recognition.continuous     = true
-    recognition.interimResults = true
-    recognition.lang           = 'th-TH'
+  function startListening() {
+    const r = recognitionRef.current
+    if (!r) return
+    r.abort()
 
-    let finalText = ''
+    let finalText = text
 
+    r.lang = lang
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    recognition.onresult = (e: any) => {
+    r.onresult = (e: any) => {
       let interim = ''
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const t = e.results[i][0].transcript
@@ -40,24 +47,20 @@ export default function JournalEntry() {
       setText(finalText + interim)
       setSaveState('idle')
     }
+    r.onend  = () => setListening(false)
+    r.onerror = () => setListening(false)
+    r.start()
+    setListening(true)
+  }
 
-    recognition.onend  = () => setListening(false)
-    recognition.onerror = () => setListening(false)
+  function stopListening() {
+    recognitionRef.current?.stop()
+    setListening(false)
+  }
 
-    recognitionRef.current = recognition
-    return () => recognition.abort()
-  }, [])
-
-  function toggleListening() {
-    const r = recognitionRef.current
-    if (!r) return
-    if (listening) {
-      r.stop()
-      setListening(false)
-    } else {
-      r.start()
-      setListening(true)
-    }
+  function toggleLang() {
+    if (listening) stopListening()
+    setLang((l) => l === 'th-TH' ? 'en-US' : 'th-TH')
   }
 
   function handleSave() {
@@ -68,10 +71,7 @@ export default function JournalEntry() {
       if (res.ok) {
         setSaveState('saved')
         setText('')
-        if (recognitionRef.current && listening) {
-          recognitionRef.current.stop()
-          setListening(false)
-        }
+        stopListening()
         router.refresh()
       } else {
         setSaveState('error')
@@ -87,13 +87,25 @@ export default function JournalEntry() {
         placeholder="What did you observe today? Speak or type — in Thai or English."
         rows={8}
         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
-        lang="th"
       />
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+
+        {/* Language toggle */}
+        {supported && (
+          <button
+            onClick={toggleLang}
+            type="button"
+            className="px-3 py-2.5 rounded-xl text-xs font-bold border border-gray-200 hover:border-gray-400 transition-colors text-gray-500"
+          >
+            {lang === 'th-TH' ? 'ไทย' : 'EN'}
+          </button>
+        )}
+
+        {/* Mic button */}
         {supported ? (
           <button
-            onClick={toggleListening}
+            onClick={listening ? stopListening : startListening}
             type="button"
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               listening
@@ -108,6 +120,7 @@ export default function JournalEntry() {
           <span className="text-xs text-gray-400">Voice not supported on this browser</span>
         )}
 
+        {/* Save button */}
         <button
           onClick={handleSave}
           disabled={!text.trim() || isPending}
@@ -121,7 +134,9 @@ export default function JournalEntry() {
       </div>
 
       {listening && (
-        <p className="text-xs text-brand-red animate-pulse">Listening… speak now</p>
+        <p className="text-xs text-brand-red animate-pulse">
+          Listening in {lang === 'th-TH' ? 'Thai' : 'English'}… speak now
+        </p>
       )}
     </div>
   )
