@@ -21,7 +21,7 @@ export default function ReviewLogin() {
     })
 
     if (res.ok) {
-      router.push('/review')
+      router.push('/')
     } else {
       setError('Incorrect password.')
       setLoading(false)

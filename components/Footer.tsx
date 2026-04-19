@@ -71,8 +71,11 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="border-t border-gray-800 mt-10 pt-6 text-xs text-gray-600">
-          © 2025 Tukkatatong Petpayathai — Muay Thai Wisdom
+        <div className="border-t border-gray-800 mt-10 pt-6 text-xs text-gray-600 flex justify-between items-center">
+          <span>© 2025 Tukkatatong Petpayathai — Muay Thai Wisdom</span>
+          <Link href="/review-login" className="text-gray-800 hover:text-gray-600 transition-colors" aria-label="Kru login">
+            ครู
+          </Link>
         </div>
       </div>
     </footer>
