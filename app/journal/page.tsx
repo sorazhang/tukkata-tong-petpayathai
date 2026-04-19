@@ -1,5 +1,6 @@
 import { getJournalEntries } from '@/lib/journal-actions'
 import JournalEntry from '@/components/JournalEntry'
+import JournalList from '@/components/JournalList'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,38 +20,11 @@ export default async function JournalPage() {
         </p>
       </div>
 
-      {/* Entry form */}
       <div className="border border-gray-200 rounded-xl p-5 mb-10">
         <JournalEntry />
       </div>
 
-      {/* Past entries */}
-      {entries.length > 0 && (
-        <section>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
-            Previous entries
-          </h2>
-          <div className="space-y-4">
-            {entries.map((entry) => (
-              <div key={entry.id} className="border border-gray-100 rounded-xl p-4">
-                <p className="text-xs text-gray-400 mb-2">
-                  {new Date(entry.createdAt).toLocaleDateString('th-TH', {
-                    weekday: 'short',
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </p>
-                <p className="text-sm text-brand-black leading-relaxed whitespace-pre-wrap">
-                  {entry.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <JournalList entries={entries} />
 
     </main>
   )
