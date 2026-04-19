@@ -9,13 +9,14 @@ type AnyRecognition = any
 
 export default function JournalEntry() {
   const router = useRouter()
-  const [text, setText]               = useState('')
-  const [listening, setListening]     = useState(false)
-  const [supported, setSupported]     = useState(true)
-  const [lang, setLang]               = useState<'th-TH' | 'en-US'>('th-TH')
-  const [saveState, setSaveState]     = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
-  const [isPending, startTransition]  = useTransition()
-  const recognitionRef                = useRef<AnyRecognition>(null)
+  const [text, setText]              = useState('')
+  const [listening, setListening]    = useState(false)
+  const [supported, setSupported]    = useState(true)
+  const [lang, setLang]              = useState<'th-TH' | 'en-US'>('th-TH')
+  const [saveState, setSaveState]    = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [isPending, startTransition] = useTransition()
+  const recognitionRef               = useRef<AnyRecognition>(null)
+  const finalTextRef                 = useRef<string>('')  // persists across auto-restarts
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,32 +34,40 @@ export default function JournalEntry() {
     if (!r) return
     r.abort()
 
-    let finalText = text
+    // Seed ref with whatever is already typed
+    finalTextRef.current = text
 
     r.lang = lang
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     r.onresult = (e: any) => {
       let interim = ''
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const t = e.results[i][0].transcript
-        if (e.results[i].isFinal) finalText += t
-        else interim = t
+        if (e.results[i].isFinal) {
+          finalTextRef.current += t
+        } else {
+          interim = t
+        }
       }
-      setText(finalText + interim)
+      setText(finalTextRef.current + interim)
       setSaveState('idle')
     }
-    r.onend  = () => {
-      // Auto-restart if user hasn't explicitly stopped — handles browser silence cutoff
-      if (recognitionRef.current?._shouldListen) {
+
+    r.onend = () => {
+      if (r._shouldListen) {
+        // Auto-restart on silence — ref keeps accumulated text safe
         try { r.start() } catch (_) { setListening(false) }
       } else {
         setListening(false)
       }
     }
+
     r.onerror = () => {
-      recognitionRef.current._shouldListen = false
+      r._shouldListen = false
       setListening(false)
     }
+
     r._shouldListen = true
     r.start()
     setListening(true)
@@ -83,6 +92,7 @@ export default function JournalEntry() {
       if (res.ok) {
         setSaveState('saved')
         setText('')
+        finalTextRef.current = ''
         stopListening()
         router.refresh()
       } else {
@@ -95,7 +105,7 @@ export default function JournalEntry() {
     <div className="space-y-4">
       <textarea
         value={text}
-        onChange={(e) => { setText(e.target.value); setSaveState('idle') }}
+        onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
         placeholder="What did you observe today? Speak or type — in Thai or English."
         rows={8}
         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
