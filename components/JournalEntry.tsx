@@ -1,12 +1,14 @@
 'use client'
 
 import { useState, useTransition, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { saveJournalEntry } from '@/lib/journal-actions'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyRecognition = any
 
 export default function JournalEntry() {
+  const router = useRouter()
   const [text, setText]               = useState('')
   const [listening, setListening]     = useState(false)
   const [supported, setSupported]     = useState(true)
@@ -70,6 +72,7 @@ export default function JournalEntry() {
           recognitionRef.current.stop()
           setListening(false)
         }
+        router.refresh()
       } else {
         setSaveState('error')
       }
