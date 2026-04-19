@@ -1,5 +1,6 @@
 import { getPolls } from '@/lib/polls'
 import PollCreate from '@/components/PollCreate'
+import PollCreateToggle from '@/components/PollCreateToggle'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -9,31 +10,23 @@ export default async function VotePage() {
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-12">
-      <div className="mb-10">
+      <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
           Internal
         </p>
         <h1 className="text-3xl font-bold text-brand-black">Polls</h1>
         <p className="text-gray-400 text-sm mt-2">
-          Create a poll, send Kru the link — he picks an option and saves.
+          Send Kru a link — he picks an option and saves.
         </p>
       </div>
 
-      {/* Create new poll */}
-      <section className="border border-gray-200 rounded-xl p-6 mb-10">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-5">
-          New poll
-        </h2>
-        <PollCreate />
-      </section>
-
-      {/* Existing polls */}
+      {/* Poll list */}
       {polls.length > 0 && (
-        <section>
-          <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4">
-            Previous polls
+        <section className="mb-8">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">
+            All polls ({polls.length})
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {polls.map((poll) => (
               <Link
                 key={poll.slug}
@@ -60,6 +53,11 @@ export default async function VotePage() {
           </div>
         </section>
       )}
+
+      {/* New poll — collapsed by default */}
+      <PollCreateToggle>
+        <PollCreate />
+      </PollCreateToggle>
     </main>
   )
 }

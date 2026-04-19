@@ -47,13 +47,25 @@ export default function JournalEntry() {
       setText(finalText + interim)
       setSaveState('idle')
     }
-    r.onend  = () => setListening(false)
-    r.onerror = () => setListening(false)
+    r.onend  = () => {
+      // Auto-restart if user hasn't explicitly stopped — handles browser silence cutoff
+      if (recognitionRef.current?._shouldListen) {
+        try { r.start() } catch (_) { setListening(false) }
+      } else {
+        setListening(false)
+      }
+    }
+    r.onerror = () => {
+      recognitionRef.current._shouldListen = false
+      setListening(false)
+    }
+    r._shouldListen = true
     r.start()
     setListening(true)
   }
 
   function stopListening() {
+    if (recognitionRef.current) recognitionRef.current._shouldListen = false
     recognitionRef.current?.stop()
     setListening(false)
   }
