@@ -91,14 +91,20 @@ export default function JournalEntry() {
 
       <div className="flex items-center gap-2">
 
-        {/* Language toggle */}
+        {/* Language toggle switch */}
         {supported && (
           <button
             onClick={toggleLang}
             type="button"
-            className="px-3 py-2.5 rounded-xl text-xs font-bold border border-gray-200 hover:border-gray-400 transition-colors text-gray-500"
+            className="flex items-center gap-1 p-1 rounded-full border border-gray-200 bg-gray-100 transition-colors hover:border-gray-300"
+            title={`Switch to ${lang === 'th-TH' ? 'English' : 'Thai'}`}
           >
-            {lang === 'th-TH' ? 'ไทย' : 'EN'}
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>
+              ไทย
+            </span>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>
+              EN
+            </span>
           </button>
         )}
 
