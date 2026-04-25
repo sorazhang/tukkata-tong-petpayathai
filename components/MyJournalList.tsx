@@ -6,6 +6,7 @@ import { updateMyEntry, deleteMyEntry } from '@/lib/my-journal-actions'
 import type { MyEntry, JournalTag } from '@/lib/my-journal-actions'
 import { draftAsChallenge } from '@/lib/ai-journal-actions'
 import type { ChallengeDraft } from '@/lib/ai-journal-actions'
+import { saveMyChallenge } from '@/lib/my-challenge-actions'
 
 const TAG_STYLES: Record<JournalTag, string> = {
   footwork: 'bg-blue-50 text-blue-600',
@@ -32,9 +33,11 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [isPending, startTransition] = useTransition()
 
-  const [draft, setDraft]           = useState<ChallengeDraft | null>(null)
+  const [draft, setDraft]              = useState<ChallengeDraft | null>(null)
   const [draftLoading, setDraftLoading] = useState(false)
   const [draftCopied, setDraftCopied]  = useState(false)
+  const [savingChallenge, setSavingChallenge] = useState(false)
+  const [challengeSaved, setChallengeSaved]   = useState(false)
 
   const date = new Date(entry.createdAt)
   const dateLabel = date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
@@ -57,10 +60,22 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
 
   async function handleDraft() {
     setDraft(null)
+    setChallengeSaved(false)
     setDraftLoading(true)
     const res = await draftAsChallenge(entry.text)
     setDraftLoading(false)
     if (res.ok && res.draft) setDraft(res.draft)
+  }
+
+  async function handleSaveChallenge() {
+    if (!draft) return
+    setSavingChallenge(true)
+    const res = await saveMyChallenge(draft.title, draft.situation, draft.yourTurn, entry.id)
+    setSavingChallenge(false)
+    if (res.ok) {
+      setChallengeSaved(true)
+      router.refresh()
+    }
   }
 
   function handleCopyDraft() {
@@ -163,12 +178,25 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Your turn</p>
                     <p className="text-sm text-brand-black leading-relaxed">{draft.yourTurn}</p>
                   </div>
-                  <button
-                    onClick={handleCopyDraft}
-                    className="text-xs text-gray-400 hover:text-brand-black transition-colors"
-                  >
-                    {draftCopied ? '✓ Copied' : 'Copy'}
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={handleCopyDraft}
+                      className="text-xs text-gray-400 hover:text-brand-black transition-colors"
+                    >
+                      {draftCopied ? '✓ Copied' : 'Copy'}
+                    </button>
+                    {challengeSaved ? (
+                      <span className="text-xs font-semibold text-green-600">✓ Saved to challenges</span>
+                    ) : (
+                      <button
+                        onClick={handleSaveChallenge}
+                        disabled={savingChallenge}
+                        className="text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
+                      >
+                        {savingChallenge ? 'Saving…' : 'Save to My Challenges'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

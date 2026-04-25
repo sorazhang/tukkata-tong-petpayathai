@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (pathname.startsWith('/review') || pathname.startsWith('/vote') || pathname.startsWith('/journal') || pathname.startsWith('/my-journal') || pathname.startsWith('/confusions')) {
+  if (pathname.startsWith('/review') || pathname.startsWith('/vote') || pathname.startsWith('/journal') || pathname.startsWith('/my-journal') || pathname.startsWith('/my-space') || pathname.startsWith('/confusions')) {
     const cookie = request.cookies.get('review_auth')?.value
     if (cookie === process.env.REVIEW_PASSWORD) return NextResponse.next()
 
@@ -24,5 +24,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/review/:path*', '/vote/:path*', '/vote', '/journal', '/my-journal', '/confusions'],
+  matcher: ['/review/:path*', '/vote/:path*', '/vote', '/journal', '/my-journal', '/my-space', '/confusions'],
 }

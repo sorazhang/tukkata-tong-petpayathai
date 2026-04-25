@@ -1,0 +1,90 @@
+'use client'
+
+import { useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import { deleteMyChallenge } from '@/lib/my-challenge-actions'
+import type { MyChallenge } from '@/lib/my-challenge-actions'
+
+function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
+  const router = useRouter()
+  const [expanded, setExpanded]           = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [isPending, startTransition]      = useTransition()
+
+  const dateLabel = new Date(challenge.createdAt).toLocaleDateString('en-GB', {
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+  })
+
+  function handleDelete() {
+    startTransition(async () => {
+      const res = await deleteMyChallenge(challenge.id)
+      if (res.ok) router.refresh()
+    })
+  }
+
+  return (
+    <div className="border border-gray-100 rounded-xl overflow-hidden">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors"
+      >
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-brand-black">{challenge.title}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{dateLabel}</p>
+        </div>
+        <span
+          className="text-gray-300 text-lg leading-none shrink-0 mt-0.5"
+          style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}
+        >›</span>
+      </button>
+
+      {expanded && (
+        <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Situation</p>
+            <p className="text-sm text-brand-black leading-relaxed">{challenge.situation}</p>
+          </div>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Your turn</p>
+            <p className="text-sm text-brand-black leading-relaxed">{challenge.yourTurn}</p>
+          </div>
+          <div className="flex gap-3 pt-1">
+            {confirmDelete ? (
+              <span className="flex items-center gap-2 text-xs">
+                <span className="text-gray-400">Delete?</span>
+                <button onClick={handleDelete} disabled={isPending} className="text-red-500 font-semibold hover:text-red-700">Yes</button>
+                <button onClick={() => setConfirmDelete(false)} className="text-gray-400 hover:text-gray-600">Cancel</button>
+              </span>
+            ) : (
+              <button
+                onClick={() => setConfirmDelete(true)}
+                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function MyChallengeList({ challenges }: { challenges: MyChallenge[] }) {
+  if (challenges.length === 0) {
+    return (
+      <div className="py-16 text-center">
+        <p className="text-sm text-gray-400">No challenges saved yet.</p>
+        <p className="text-xs text-gray-300 mt-1">Draft one from a journal entry.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-2">
+      {challenges.map((c) => (
+        <MyChallengeRow key={c.id} challenge={c} />
+      ))}
+    </div>
+  )
+}
