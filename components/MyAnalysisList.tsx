@@ -56,6 +56,13 @@ function MyAnalysisRow({ analysis }: { analysis: MyAnalysis }) {
             ))}
           </div>
 
+          {analysis.progress && (
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <p className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Progress</p>
+              <p className="text-sm text-brand-black leading-relaxed">{analysis.progress}</p>
+            </div>
+          )}
+
           <div className="p-3 bg-brand-red/5 rounded-lg border border-brand-red/10">
             <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Focus</p>
             <p className="text-sm text-brand-black leading-relaxed">{analysis.suggestion}</p>

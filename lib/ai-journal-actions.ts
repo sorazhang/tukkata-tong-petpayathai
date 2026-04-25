@@ -3,6 +3,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { getChallengesFromFirestore } from './content-firestore'
 import { getMyEntries } from './my-journal-actions'
+import { getMyAnalyses } from './my-analysis-actions'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
@@ -67,11 +68,15 @@ Only return valid JSON, no markdown, no explanation.`,
 export interface PatternResult {
   themes: { label: string; description: string }[]
   suggestion: string
+  progress?: string
 }
 
 export async function surfacePatterns(): Promise<{ ok: boolean; result?: PatternResult; entryCount?: number; error?: string }> {
   try {
-    const entries = await getMyEntries()
+    const [entries, pastAnalyses] = await Promise.all([
+      getMyEntries(),
+      getMyAnalyses(),
+    ])
     const recent = entries.slice(0, 20)
 
     if (recent.length < 3) {
@@ -82,26 +87,54 @@ export async function surfacePatterns(): Promise<{ ok: boolean; result?: Pattern
       .map((e, i) => `Entry ${i + 1} [${e.tag}] ${new Date(e.createdAt).toLocaleDateString()}:\n${e.text}`)
       .join('\n\n')
 
+    const hasPastAnalyses = pastAnalyses.length > 0
+    const pastAnalysisBlock = hasPastAnalyses
+      ? pastAnalyses
+          .slice(0, 5)
+          .reverse()
+          .map((a) => {
+            const date = new Date(a.createdAt).toLocaleDateString()
+            const themes = a.themes.map((t) => `  - ${t.label}: ${t.description}`).join('\n')
+            return `[${date}]\nThemes:\n${themes}\nFocus: ${a.suggestion}`
+          })
+          .join('\n\n')
+      : null
+
+    const progressInstruction = hasPastAnalyses
+      ? `
+Previous AI analyses (oldest to newest — use these to assess progress):
+${pastAnalysisBlock}
+
+After identifying current themes, write a "progress" note (2-4 sentences) that:
+- Honestly compares current journal entries to what was flagged in past analyses
+- Notes what seems to be improving, persisting, or newly emerging
+- If there is no visible progress on a past focus area, say so plainly and suggest one concrete reason why (e.g. not enough reps, avoiding the drill, focus drifted) and what might help
+- Keep it direct, like a coach talking to a student they care about`
+      : ''
+
+    const progressField = hasPastAnalyses ? `\n  "progress": "2-4 sentence progress note comparing to past analyses"` : ''
+
     const response = await client.messages.create({
       model: 'claude-opus-4-7',
-      max_tokens: 768,
+      max_tokens: 1024,
       thinking: { type: 'adaptive' },
       messages: [
         {
           role: 'user',
-          content: `You are analyzing a Muay Thai student's training journal to find recurring patterns.
+          content: `You are analyzing a Muay Thai student's training journal to find recurring patterns and assess their progress over time.
 
 Recent journal entries (newest first):
 ${entryList}
+${progressInstruction}
 
-Identify 2-4 recurring themes or patterns. Also give one short actionable suggestion.
+Identify 2-4 recurring themes from the recent entries. Give one short actionable next-session focus.
 
 Return JSON only:
 {
   "themes": [
     {"label": "short label", "description": "1-2 sentences about this recurring theme"}
   ],
-  "suggestion": "One concrete thing to focus on in next training session"
+  "suggestion": "One concrete thing to focus on in next training session"${progressField}
 }`,
         },
       ],

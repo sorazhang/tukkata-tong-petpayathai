@@ -7,6 +7,7 @@ export interface MyAnalysis {
   id: string
   themes: { label: string; description: string }[]
   suggestion: string
+  progress?: string
   entryCount: number
   createdAt: string
 }
@@ -19,6 +20,7 @@ export async function saveMyAnalysis(
     await adminDb.collection('my-analyses').add({
       themes:     result.themes,
       suggestion: result.suggestion,
+      progress:   result.progress ?? null,
       entryCount,
       createdAt:  new Date().toISOString(),
     })
@@ -38,6 +40,7 @@ export async function getMyAnalyses(): Promise<MyAnalysis[]> {
     id:         d.id,
     themes:     d.data().themes ?? [],
     suggestion: d.data().suggestion ?? '',
+    progress:   d.data().progress ?? undefined,
     entryCount: d.data().entryCount ?? 0,
     createdAt:  d.data().createdAt ?? '',
   }))

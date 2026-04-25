@@ -74,6 +74,13 @@ export default function MyJournalPatterns() {
             ))}
           </div>
 
+          {result.progress && (
+            <div className="p-3 bg-amber-50 rounded-lg border border-amber-100">
+              <p className="text-xs font-bold uppercase tracking-widest text-amber-600 mb-1">Progress</p>
+              <p className="text-sm text-brand-black leading-relaxed">{result.progress}</p>
+            </div>
+          )}
+
           <div className="p-3 bg-brand-red/5 rounded-lg border border-brand-red/10">
             <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Next session focus</p>
             <p className="text-sm text-brand-black leading-relaxed">{result.suggestion}</p>
