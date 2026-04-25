@@ -24,6 +24,13 @@ export default function KruPill() {
         >
           <span>🗳</span> Polls
         </Link>
+        <span className="text-white/20">|</span>
+        <Link
+          href="/my-journal"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-white/10 transition-colors"
+        >
+          <span>📓</span> My Notes
+        </Link>
       </div>
     </div>
   )
