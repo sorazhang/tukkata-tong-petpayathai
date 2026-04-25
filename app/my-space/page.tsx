@@ -1,13 +1,15 @@
 import { getMyEntries } from '@/lib/my-journal-actions'
 import { getMyChallenges } from '@/lib/my-challenge-actions'
+import { getMyAnalyses } from '@/lib/my-analysis-actions'
 import MySpace from '@/components/MySpace'
 
 export const dynamic = 'force-dynamic'
 
 export default async function MySpacePage() {
-  const [entries, challenges] = await Promise.all([
+  const [entries, challenges, analyses] = await Promise.all([
     getMyEntries(),
     getMyChallenges(),
+    getMyAnalyses(),
   ])
 
   return (
@@ -22,7 +24,7 @@ export default async function MySpacePage() {
         </p>
       </div>
 
-      <MySpace entries={entries} challenges={challenges} />
+      <MySpace entries={entries} challenges={challenges} analyses={analyses} />
     </main>
   )
 }

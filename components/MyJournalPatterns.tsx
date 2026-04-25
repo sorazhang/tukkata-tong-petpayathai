@@ -3,22 +3,41 @@
 import { useState } from 'react'
 import { surfacePatterns } from '@/lib/ai-journal-actions'
 import type { PatternResult } from '@/lib/ai-journal-actions'
+import { saveMyAnalysis } from '@/lib/my-analysis-actions'
+import { useRouter } from 'next/navigation'
 
 export default function MyJournalPatterns() {
+  const router = useRouter()
   const [result, setResult]   = useState<PatternResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState<string | null>(null)
+  const [entryCount, setEntryCount] = useState(0)
+  const [saving, setSaving]   = useState(false)
+  const [saved, setSaved]     = useState(false)
 
   async function handleFind() {
     setResult(null)
     setError(null)
+    setSaved(false)
     setLoading(true)
     const res = await surfacePatterns()
     setLoading(false)
     if (res.ok && res.result) {
       setResult(res.result)
+      setEntryCount(res.entryCount ?? 0)
     } else {
       setError(res.error ?? 'Something went wrong.')
+    }
+  }
+
+  async function handleSave() {
+    if (!result) return
+    setSaving(true)
+    const res = await saveMyAnalysis(result, entryCount)
+    setSaving(false)
+    if (res.ok) {
+      setSaved(true)
+      router.refresh()
     }
   }
 
@@ -35,17 +54,11 @@ export default function MyJournalPatterns() {
           disabled={loading}
           className="flex items-center gap-2 px-4 py-2 bg-brand-black text-white text-xs font-semibold rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-40"
         >
-          {loading ? (
-            <span className="animate-pulse">Analysing…</span>
-          ) : (
-            <>✦ Find patterns</>
-          )}
+          {loading ? <span className="animate-pulse">Analysing…</span> : <>✦ Find patterns</>}
         </button>
       </div>
 
-      {error && (
-        <p className="text-sm text-gray-400">{error}</p>
-      )}
+      {error && <p className="text-sm text-gray-400">{error}</p>}
 
       {result && (
         <div className="space-y-4 pt-4 border-t border-gray-100">
@@ -64,6 +77,20 @@ export default function MyJournalPatterns() {
           <div className="p-3 bg-brand-red/5 rounded-lg border border-brand-red/10">
             <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Next session focus</p>
             <p className="text-sm text-brand-black leading-relaxed">{result.suggestion}</p>
+          </div>
+
+          <div className="pt-1">
+            {saved ? (
+              <p className="text-xs font-semibold text-green-600">✓ Saved to Insights</p>
+            ) : (
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
+              >
+                {saving ? 'Saving…' : 'Save to Insights'}
+              </button>
+            )}
           </div>
         </div>
       )}

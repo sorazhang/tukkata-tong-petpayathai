@@ -5,17 +5,21 @@ import MyJournalEntry from './MyJournalEntry'
 import MyJournalList from './MyJournalList'
 import MyJournalPatterns from './MyJournalPatterns'
 import MyChallengeList from './MyChallengeList'
+import MyAnalysisList from './MyAnalysisList'
 import type { MyEntry } from '@/lib/my-journal-actions'
 import type { MyChallenge } from '@/lib/my-challenge-actions'
+import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
-type Tab = 'journal' | 'challenges'
+type Tab = 'journal' | 'challenges' | 'insights'
 
 export default function MySpace({
   entries,
   challenges,
+  analyses,
 }: {
   entries: MyEntry[]
   challenges: MyChallenge[]
+  analyses: MyAnalysis[]
 }) {
   const [tab, setTab] = useState<Tab>('journal')
 
@@ -30,6 +34,19 @@ export default function MySpace({
           }`}
         >
           Journal
+        </button>
+        <button
+          onClick={() => setTab('insights')}
+          className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            tab === 'insights' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+          }`}
+        >
+          Insights
+          {analyses.length > 0 && (
+            <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
+              {analyses.length}
+            </span>
+          )}
         </button>
         <button
           onClick={() => setTab('challenges')}
@@ -54,6 +71,10 @@ export default function MySpace({
           <MyJournalPatterns />
           {entries.length > 0 && <MyJournalList entries={entries} />}
         </div>
+      )}
+
+      {tab === 'insights' && (
+        <MyAnalysisList analyses={analyses} />
       )}
 
       {tab === 'challenges' && (

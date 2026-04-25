@@ -69,7 +69,7 @@ export interface PatternResult {
   suggestion: string
 }
 
-export async function surfacePatterns(): Promise<{ ok: boolean; result?: PatternResult; error?: string }> {
+export async function surfacePatterns(): Promise<{ ok: boolean; result?: PatternResult; entryCount?: number; error?: string }> {
   try {
     const entries = await getMyEntries()
     const recent = entries.slice(0, 20)
@@ -113,7 +113,7 @@ Return JSON only:
     const raw = textBlock.text.trim()
     const jsonStr = raw.startsWith('{') ? raw : raw.slice(raw.indexOf('{'))
     const result: PatternResult = JSON.parse(jsonStr)
-    return { ok: true, result }
+    return { ok: true, result, entryCount: recent.length }
   } catch (err) {
     console.error('surfacePatterns error:', err)
     return { ok: false, error: 'Failed to analyze patterns.' }
