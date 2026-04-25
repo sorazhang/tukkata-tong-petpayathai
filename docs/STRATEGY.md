@@ -274,3 +274,32 @@ to earn the share before it asks for it.
 ## Content To-Do
 
 - [ ] Common beginner mistakes series — Kru sees the same 10 mistakes every year (ask Kru to name them, write one article per mistake)
+
+---
+
+## Phase 2 Vision — The Living Connection
+
+The platform is not a library. It is a conversation between Kru and students.
+
+**The loop:**
+1. Students log confusions from their daily practice ("I keep getting pushed off balance when I clinch")
+2. AI clusters similar confusions and surfaces the most common gaps to Kru
+3. Kru sees "12 students are stuck on the same thing" — answers that first
+4. The answer becomes a challenge on the platform — reaching everyone who had the same confusion
+5. Students whose confusion was answered get notified — the loop closes
+
+**What makes this different:**
+Every other Muay Thai site has Kru writing content nobody asked for.
+Here the content emerges from real friction. The answer is already relevant
+before it is written. One answer reaches everyone who struggled with the same thing.
+Kru's time becomes leverage, not just labour.
+
+**What this needs (in order):**
+1. Student accounts — individual logins so confusions are attributed
+2. Student confusion capture — a simple form after class ("I'm confused about...")
+3. Kru's priority view — "Top 5 most common unanswered confusions this week"
+4. AI matching layer — cluster similar confusions, match to existing challenges (add when volume makes manual matching hard)
+
+**Sequencing note:**
+Do not build the AI layer yet. Get 10–20 real students logging real confusions first.
+At that scale the patterns are obvious without AI. Add AI when the volume demands it.
