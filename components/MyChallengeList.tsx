@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteMyChallenge } from '@/lib/my-challenge-actions'
+import { submitConfusion } from '@/lib/confusion-actions'
 import type { MyChallenge } from '@/lib/my-challenge-actions'
 
 function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
@@ -10,6 +11,7 @@ function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
   const [expanded, setExpanded]           = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [isPending, startTransition]      = useTransition()
+  const [askStatus, setAskStatus]         = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
 
   const dateLabel = new Date(challenge.createdAt).toLocaleDateString('en-GB', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
@@ -20,6 +22,13 @@ function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
       const res = await deleteMyChallenge(challenge.id)
       if (res.ok) router.refresh()
     })
+  }
+
+  async function handleAskKru() {
+    setAskStatus('loading')
+    const text = `${challenge.title}\n\n${challenge.situation}`
+    const res = await submitConfusion('Student', text, 'other')
+    setAskStatus(res.ok ? 'sent' : 'error')
   }
 
   return (
@@ -48,7 +57,23 @@ function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
             <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Your turn</p>
             <p className="text-sm text-brand-black leading-relaxed">{challenge.yourTurn}</p>
           </div>
-          <div className="flex gap-3 pt-1">
+          <div className="flex items-center gap-4 pt-1 flex-wrap">
+            {askStatus === 'sent' ? (
+              <span className="text-xs font-semibold text-green-600">✓ Sent to Kru</span>
+            ) : askStatus === 'error' ? (
+              <span className="text-xs text-red-400">Failed — try again</span>
+            ) : (
+              <button
+                onClick={handleAskKru}
+                disabled={askStatus === 'loading'}
+                className="text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
+              >
+                {askStatus === 'loading' ? 'Sending…' : 'Ask Kru →'}
+              </button>
+            )}
+
+            <span className="text-gray-200 text-xs">·</span>
+
             {confirmDelete ? (
               <span className="flex items-center gap-2 text-xs">
                 <span className="text-gray-400">Delete?</span>

@@ -26,9 +26,10 @@ export async function matchEntryToChallenges(
       .join('\n')
 
     const response = await client.messages.create({
-      model: 'claude-opus-4-5',
-      max_tokens: 16000,
-      thinking: { type: 'enabled', budget_tokens: 10000 },
+      model: 'claude-opus-4-7',
+      max_tokens: 4096,
+      thinking: { type: 'adaptive' },
+      output_config: { effort: 'high' },
       messages: [
         {
           role: 'user',
@@ -115,9 +116,10 @@ After identifying current themes, write a "progress" note (2-4 sentences) that:
     const progressField = hasPastAnalyses ? `\n  "progress": "2-4 sentence progress note comparing to past analyses"` : ''
 
     const response = await client.messages.create({
-      model: 'claude-opus-4-5',
-      max_tokens: 16000,
-      thinking: { type: 'enabled', budget_tokens: 10000 },
+      model: 'claude-opus-4-7',
+      max_tokens: 8192,
+      thinking: { type: 'adaptive' },
+      output_config: { effort: 'high' },
       messages: [
         {
           role: 'user',
@@ -166,7 +168,7 @@ export async function draftAsChallenge(
 ): Promise<{ ok: boolean; draft?: ChallengeDraft; error?: string }> {
   try {
     const response = await client.messages.create({
-      model: 'claude-opus-4-5',
+      model: 'claude-opus-4-7',
       max_tokens: 1024,
       messages: [
         {
