@@ -4,6 +4,8 @@ import { useState, useTransition, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { saveMyEntry } from '@/lib/my-journal-actions'
 import type { JournalTag } from '@/lib/my-journal-actions'
+import { matchEntryToChallenges } from '@/lib/ai-journal-actions'
+import type { ChallengeMatch } from '@/lib/ai-journal-actions'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyRecognition = any
@@ -27,6 +29,9 @@ export default function MyJournalEntry() {
   const [isPending, startTransition] = useTransition()
   const recognitionRef               = useRef<AnyRecognition>(null)
   const finalTextRef                 = useRef<string>('')
+
+  const [matches, setMatches]        = useState<ChallengeMatch[] | null>(null)
+  const [matchLoading, setMatchLoading] = useState(false)
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,15 +82,22 @@ export default function MyJournalEntry() {
 
   function handleSave() {
     if (!text.trim()) return
+    const savedText = text
     startTransition(async () => {
       setSaveState('saving')
-      const res = await saveMyEntry(text, tag)
+      setMatches(null)
+      const res = await saveMyEntry(savedText, tag)
       if (res.ok) {
         setSaveState('saved')
         setText('')
         finalTextRef.current = ''
         stopListening()
         router.refresh()
+        // kick off challenge matching after save
+        setMatchLoading(true)
+        const matchRes = await matchEntryToChallenges(savedText)
+        setMatchLoading(false)
+        if (matchRes.ok && matchRes.matches) setMatches(matchRes.matches)
       } else {
         setSaveState('error')
       }
@@ -167,6 +179,29 @@ export default function MyJournalEntry() {
         <p className="text-xs text-brand-red animate-pulse">
           Listening in {lang === 'th-TH' ? 'Thai' : 'English'}… speak now
         </p>
+      )}
+
+      {/* Related challenges (shown after save) */}
+      {matchLoading && (
+        <div className="pt-2 border-t border-gray-100">
+          <p className="text-xs text-gray-400 animate-pulse">Finding related challenges…</p>
+        </div>
+      )}
+
+      {matches && matches.length > 0 && (
+        <div className="pt-3 border-t border-gray-100 space-y-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Related challenges</p>
+          {matches.map((m) => (
+            <a
+              key={m.slug}
+              href={`/review/${m.slug}`}
+              className="flex flex-col gap-0.5 px-3 py-2.5 rounded-lg border border-gray-100 hover:border-brand-red/40 hover:bg-red-50/30 transition-colors"
+            >
+              <span className="text-sm font-semibold text-brand-black">{m.title}</span>
+              <span className="text-xs text-gray-400">{m.reason}</span>
+            </a>
+          ))}
+        </div>
       )}
     </div>
   )

@@ -4,6 +4,8 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateMyEntry, deleteMyEntry } from '@/lib/my-journal-actions'
 import type { MyEntry, JournalTag } from '@/lib/my-journal-actions'
+import { draftAsChallenge } from '@/lib/ai-journal-actions'
+import type { ChallengeDraft } from '@/lib/ai-journal-actions'
 
 const TAG_STYLES: Record<JournalTag, string> = {
   footwork: 'bg-blue-50 text-blue-600',
@@ -30,6 +32,10 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [isPending, startTransition] = useTransition()
 
+  const [draft, setDraft]           = useState<ChallengeDraft | null>(null)
+  const [draftLoading, setDraftLoading] = useState(false)
+  const [draftCopied, setDraftCopied]  = useState(false)
+
   const date = new Date(entry.createdAt)
   const dateLabel = date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
   const timeLabel = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
@@ -47,6 +53,22 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
       const res = await deleteMyEntry(entry.id)
       if (res.ok) router.refresh()
     })
+  }
+
+  async function handleDraft() {
+    setDraft(null)
+    setDraftLoading(true)
+    const res = await draftAsChallenge(entry.text)
+    setDraftLoading(false)
+    if (res.ok && res.draft) setDraft(res.draft)
+  }
+
+  function handleCopyDraft() {
+    if (!draft) return
+    const text = `**${draft.title}**\n\n${draft.situation}\n\n**Your turn:** ${draft.yourTurn}`
+    navigator.clipboard.writeText(text)
+    setDraftCopied(true)
+    setTimeout(() => setDraftCopied(false), 2000)
   }
 
   return (
@@ -105,7 +127,7 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
           ) : (
             <div className="pt-3">
               <p className="text-sm text-brand-black leading-relaxed whitespace-pre-wrap">{entry.text}</p>
-              <div className="flex gap-3 mt-4">
+              <div className="flex gap-3 mt-4 flex-wrap items-center">
                 <button onClick={() => setEditing(true)} className="text-xs text-gray-400 hover:text-brand-black transition-colors">Edit</button>
                 {confirmDelete ? (
                   <span className="flex items-center gap-2 text-xs">
@@ -116,7 +138,39 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
                 ) : (
                   <button onClick={() => setConfirmDelete(true)} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Delete</button>
                 )}
+                <button
+                  onClick={handleDraft}
+                  disabled={draftLoading}
+                  className="ml-auto text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
+                >
+                  {draftLoading ? 'Drafting…' : '✦ Draft as challenge'}
+                </button>
               </div>
+
+              {/* Draft output */}
+              {draft && (
+                <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3">
+                  <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Challenge draft</p>
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Title</p>
+                    <p className="text-sm font-semibold text-brand-black">{draft.title}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Situation</p>
+                    <p className="text-sm text-brand-black leading-relaxed">{draft.situation}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Your turn</p>
+                    <p className="text-sm text-brand-black leading-relaxed">{draft.yourTurn}</p>
+                  </div>
+                  <button
+                    onClick={handleCopyDraft}
+                    className="text-xs text-gray-400 hover:text-brand-black transition-colors"
+                  >
+                    {draftCopied ? '✓ Copied' : 'Copy'}
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

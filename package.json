@@ -10,6 +10,7 @@
     "migrate": "npx tsx scripts/migrate-to-firestore.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.91.1",
     "firebase": "^12.12.0",
     "firebase-admin": "^13.8.0",
     "gray-matter": "^4.0.3",

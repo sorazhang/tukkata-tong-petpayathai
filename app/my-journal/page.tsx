@@ -1,6 +1,7 @@
 import { getMyEntries } from '@/lib/my-journal-actions'
 import MyJournalEntry from '@/components/MyJournalEntry'
 import MyJournalList from '@/components/MyJournalList'
+import MyJournalPatterns from '@/components/MyJournalPatterns'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,8 +21,12 @@ export default async function MyJournalPage() {
         </p>
       </div>
 
-      <div className="border border-gray-200 rounded-xl p-5 mb-10">
+      <div className="border border-gray-200 rounded-xl p-5 mb-6">
         <MyJournalEntry />
+      </div>
+
+      <div className="mb-10">
+        <MyJournalPatterns />
       </div>
 
       <MyJournalList entries={entries} />
