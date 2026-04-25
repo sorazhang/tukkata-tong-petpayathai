@@ -31,6 +31,13 @@ export default function KruPill() {
         >
           <span>📓</span> My Notes
         </Link>
+        <span className="text-white/20">|</span>
+        <Link
+          href="/confusions"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-white/10 transition-colors"
+        >
+          <span>❓</span> Confusions
+        </Link>
       </div>
     </div>
   )
