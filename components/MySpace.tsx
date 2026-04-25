@@ -11,6 +11,41 @@ import type { MyChallenge } from '@/lib/my-challenge-actions'
 import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
 type Tab = 'journal' | 'challenges' | 'insights'
+type Tier = 'free' | 'silver' | 'gold'
+
+// Mock tier — swap this with real auth session data once auth is wired up
+const userTier: Tier = 'gold'
+
+const TIER_LABELS: Record<Tier, string> = {
+  free: 'Free',
+  silver: 'Silver',
+  gold: 'Gold',
+}
+
+const TIER_COLORS: Record<Tier, string> = {
+  free: 'text-gray-400',
+  silver: 'text-gray-400',
+  gold: 'text-amber-500',
+}
+
+function LockedFeature({ label, requiredTier }: { label: string; requiredTier: 'silver' | 'gold' }) {
+  return (
+    <div className="py-12 text-center space-y-3">
+      <div className="text-3xl">🔒</div>
+      <p className="text-sm font-semibold text-brand-black">{label}</p>
+      <p className="text-xs text-gray-400">
+        Available on{' '}
+        <span className={requiredTier === 'gold' ? 'text-amber-500 font-semibold' : 'text-gray-600 font-semibold'}>
+          {TIER_LABELS[requiredTier]}
+        </span>{' '}
+        and above.
+      </p>
+      <button className="mt-2 text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors">
+        Upgrade →
+      </button>
+    </div>
+  )
+}
 
 export default function MySpace({
   entries,
@@ -23,8 +58,19 @@ export default function MySpace({
 }) {
   const [tab, setTab] = useState<Tab>('journal')
 
+  const canAccessInsights = userTier === 'silver' || userTier === 'gold'
+  const canAccessChallenges = userTier === 'silver' || userTier === 'gold'
+  const canAskKru = userTier === 'gold'
+
   return (
     <div>
+      {/* Tier badge */}
+      <div className="flex justify-end mb-4">
+        <span className={`text-xs font-semibold uppercase tracking-widest ${TIER_COLORS[userTier]}`}>
+          {TIER_LABELS[userTier]} Member
+        </span>
+      </div>
+
       {/* Tab bar */}
       <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
         <button
@@ -42,10 +88,13 @@ export default function MySpace({
           }`}
         >
           Insights
-          {analyses.length > 0 && (
+          {canAccessInsights && analyses.length > 0 && (
             <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
               {analyses.length}
             </span>
+          )}
+          {!canAccessInsights && (
+            <span className="ml-1.5 text-xs text-gray-300">🔒</span>
           )}
         </button>
         <button
@@ -55,10 +104,13 @@ export default function MySpace({
           }`}
         >
           Challenges
-          {challenges.length > 0 && (
+          {canAccessChallenges && challenges.length > 0 && (
             <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
               {challenges.length}
             </span>
+          )}
+          {!canAccessChallenges && (
+            <span className="ml-1.5 text-xs text-gray-300">🔒</span>
           )}
         </button>
       </div>
@@ -68,17 +120,27 @@ export default function MySpace({
           <div className="border border-gray-200 rounded-xl p-5">
             <MyJournalEntry />
           </div>
-          <MyJournalPatterns />
+          {canAccessInsights && <MyJournalPatterns />}
+          {!canAccessInsights && (
+            <div className="border border-gray-100 rounded-xl p-5">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-300 mb-2">AI Pattern Analysis</p>
+              <LockedFeature label="Unlock AI-powered pattern recognition" requiredTier="silver" />
+            </div>
+          )}
           {entries.length > 0 && <MyJournalList entries={entries} />}
         </div>
       )}
 
       {tab === 'insights' && (
-        <MyAnalysisList analyses={analyses} />
+        canAccessInsights
+          ? <MyAnalysisList analyses={analyses} />
+          : <LockedFeature label="AI Insights — saved pattern analyses" requiredTier="silver" />
       )}
 
       {tab === 'challenges' && (
-        <MyChallengeList challenges={challenges} />
+        canAccessChallenges
+          ? <MyChallengeList challenges={challenges} canAskKru={canAskKru} />
+          : <LockedFeature label="Personal Challenges — submit &amp; escalate to Kru" requiredTier="silver" />
       )}
     </div>
   )

@@ -203,3 +203,44 @@ Return JSON only:
     return { ok: false, error: 'Failed to draft challenge.' }
   }
 }
+
+// ─── Generalize a personal challenge into a universal platform question ────────
+
+export async function generalizeChallenge(
+  title: string,
+  situation: string,
+): Promise<{ ok: boolean; generalizedText?: string; error?: string }> {
+  try {
+    const response = await client.messages.create({
+      model: 'claude-opus-4-7',
+      max_tokens: 512,
+      messages: [
+        {
+          role: 'user',
+          content: `You help reframe personal Muay Thai training struggles as universal questions that a coach can answer once and benefit many students.
+
+Rules:
+- Remove first-person ("I", "my", "me") — write as if describing a universal student experience
+- Keep it concrete and physical — no vague language
+- Match this platform voice: direct, respectful, coach-to-student, grounded in technique
+- Output one short paragraph (2-4 sentences) that a coach can read and immediately understand what skill gap needs addressing
+- Do NOT include headings, bullet points, or labels — just the paragraph
+
+Personal challenge:
+Title: ${title}
+Situation: ${situation}
+
+Output the generalized question paragraph only, no extra text.`,
+        },
+      ],
+    })
+
+    const textBlock = response.content.find((b) => b.type === 'text')
+    if (!textBlock || textBlock.type !== 'text') return { ok: false, error: 'No response' }
+
+    return { ok: true, generalizedText: textBlock.text.trim() }
+  } catch (err) {
+    console.error('generalizeChallenge error:', err)
+    return { ok: false, error: 'Failed to generalize.' }
+  }
+}
