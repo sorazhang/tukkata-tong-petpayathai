@@ -24,15 +24,17 @@ export default async function Home() {
             ตุ๊กตาทอง เพชรพญาไท
           </p>
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-            The art<br />behind the art.
+            Most fighters train for years without understanding what they&apos;re actually doing.
           </h1>
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
-            This is for someone who trains — who has felt confusion in sparring,
-            who has thrown a kick that didn&apos;t land right and didn&apos;t know why,
-            who has been told to relax under pressure and had no idea how to do that.
+            You train consistently. You try hard. But the same confusion keeps coming back in sparring —
+            the kick that doesn&apos;t land, the pressure that makes you freeze, the situation you
+            don&apos;t know how to handle. You&apos;ve been told what to do. Nobody has helped you
+            see what your training is actually showing you.
           </p>
           <p className="text-gray-500 text-lg leading-relaxed max-w-xl mb-10">
-            Not explained at. Pointed toward something and asked to go find it.
+            This platform changes that. Keep a journal. Watch your patterns emerge.
+            Bring what you&apos;re stuck on to Kru — and get the understanding that makes it click.
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <Link
@@ -51,21 +53,70 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Two ways to learn ── */}
+      {/* ── How it works ── */}
       <section className="py-20 px-6 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold text-brand-black mb-2 text-center">
-            Two ways to learn
+            How it works
           </h2>
           <p className="text-center text-gray-400 text-sm mb-14">
-            One requires your body. One requires your mind.
+            Three parts. One loop. All of it pointing toward understanding.
           </p>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
+
+            {/* Journal */}
+            <div className="border-2 border-brand-black rounded-xl p-8 flex flex-col">
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
+                Journal
+              </p>
+              <h3 className="text-xl font-bold text-brand-black mb-2">
+                Your training becomes visible.
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed mb-8">
+                Most students leave the gym and forget what just happened. Write it down.
+                The patterns you keep running into become clear — and you can bring them directly to Kru.
+              </p>
+              <div className="space-y-5 mb-8 flex-1">
+                {[
+                  {
+                    step: '01',
+                    title: 'Write',
+                    body: 'A short note after training. What confused you. What clicked. No structure needed.',
+                  },
+                  {
+                    step: '02',
+                    title: 'See your patterns',
+                    body: 'AI surfaces what keeps coming up across your entries. The recurring confusion you may not have named yet.',
+                  },
+                  {
+                    step: '03',
+                    title: 'Bring it to Kru',
+                    body: 'Save what matters as an observation. Send your specific struggle directly — thirty years of experience applied to what you keep getting stuck on.',
+                  },
+                ].map(({ step, title, body }) => (
+                  <div key={step} className="flex gap-4">
+                    <span className="text-2xl font-bold text-gray-100 leading-none shrink-0 w-8">
+                      {step}
+                    </span>
+                    <div>
+                      <p className="font-semibold text-brand-black text-sm mb-0.5">{title}</p>
+                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/my-space"
+                className="inline-block bg-brand-red text-white px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+              >
+                Start your journal →
+              </Link>
+            </div>
 
             {/* Challenges */}
-            <div className="border-2 border-brand-black rounded-xl p-8">
-              <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
+            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
                 Challenges
               </p>
               <h3 className="text-xl font-bold text-brand-black mb-2">
@@ -75,7 +126,7 @@ export default async function Home() {
                 You cannot get the answer by reading. You have to move, feel,
                 and try. The answer arrives through your body, not through words.
               </p>
-              <div className="space-y-5 mb-8">
+              <div className="space-y-5 mb-8 flex-1">
                 {[
                   {
                     step: '01',
@@ -94,7 +145,7 @@ export default async function Home() {
                   },
                 ].map(({ step, title, body }) => (
                   <div key={step} className="flex gap-4">
-                    <span className="text-2xl font-bold text-gray-100 leading-none shrink-0 w-8">
+                    <span className="text-2xl font-bold text-gray-200 leading-none shrink-0 w-8">
                       {step}
                     </span>
                     <div>
@@ -106,14 +157,14 @@ export default async function Home() {
               </div>
               <Link
                 href="/challenges"
-                className="inline-block bg-brand-red text-white px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+                className="inline-block border border-gray-300 text-gray-700 px-5 py-2.5 rounded font-medium text-sm hover:border-brand-black transition-colors"
               >
                 See the Challenges →
               </Link>
             </div>
 
             {/* Knowledge */}
-            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50">
+            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
               <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
                 Knowledge
               </p>
@@ -124,7 +175,7 @@ export default async function Home() {
                 Things you can understand without physically doing them. Read,
                 watch, think. Then bring it to the gym.
               </p>
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 flex-1">
                 {[
                   {
                     label: 'Real Fights',
