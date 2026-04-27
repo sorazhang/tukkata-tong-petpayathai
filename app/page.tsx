@@ -33,8 +33,7 @@ export default async function Home() {
             see what your training is actually showing you.
           </p>
           <p className="text-gray-500 text-lg leading-relaxed max-w-xl mb-10">
-            This platform changes that. Keep a journal. Watch your patterns emerge.
-            Bring what you&apos;re stuck on to Kru — and get the understanding that makes it click.
+            This platform changes that. A journal to see your own patterns. Challenges your body has to solve before you read Kru&apos;s answer. And when something specific keeps stopping you — knowledge and direct access to thirty years of experience.
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <Link
