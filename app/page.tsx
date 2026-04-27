@@ -24,7 +24,7 @@ export default async function Home() {
             ตุ๊กตาทอง เพชรพญาไท
           </p>
           <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
-            Most fighters train for years without understanding what they&apos;re actually doing.
+            Some fighters improve faster. The difference is the part of Muay Thai your training isn&apos;t giving you.
           </h1>
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
             You train consistently. You try hard. But the same confusion keeps coming back in sparring —
