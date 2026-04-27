@@ -60,7 +60,8 @@ Only return valid JSON, no markdown, no explanation.`,
     return { ok: true, matches }
   } catch (err) {
     console.error('matchEntryToChallenges error:', err)
-    return { ok: false, error: 'Failed to match.' }
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to match: ${message}` }
   }
 }
 
@@ -151,7 +152,8 @@ Return JSON only:
     return { ok: true, result, entryCount: recent.length }
   } catch (err) {
     console.error('surfacePatterns error:', err)
-    return { ok: false, error: 'Failed to analyze patterns.' }
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to analyze patterns: ${message}` }
   }
 }
 
@@ -200,7 +202,8 @@ Return JSON only:
     return { ok: true, draft }
   } catch (err) {
     console.error('draftAsChallenge error:', err)
-    return { ok: false, error: 'Failed to draft challenge.' }
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to draft challenge: ${message}` }
   }
 }
 
@@ -241,6 +244,7 @@ Output the generalized question paragraph only, no extra text.`,
     return { ok: true, generalizedText: textBlock.text.trim() }
   } catch (err) {
     console.error('generalizeChallenge error:', err)
-    return { ok: false, error: 'Failed to generalize.' }
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to generalize: ${message}` }
   }
 }
