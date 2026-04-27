@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Lumpinee Stadium champion, Channel 7 World title holder, and 20+ years of coaching experience.',
+    'Lumpinee Stadium champion, Channel 7 World title holder. Thirty years of understanding that most coaches never put into words.',
 }
 
 export default function AboutPage() {
@@ -127,22 +127,41 @@ export default function AboutPage() {
             That is the only way this kind of knowledge travels. Not from mind
             to mind. From body to body, with words as the bridge.
           </p>
+          <p>
+            The journal works the same way. When you write down what confused
+            you in training, you are not just recording — you are starting to
+            see. The pattern you keep running into becomes visible when you put
+            it in words. That is when it becomes something you can bring to Kru.
+            Not a vague feeling. A specific problem. And a specific problem is
+            one that can be answered.
+          </p>
         </div>
 
         {/* CTAs */}
-        <div className="mt-12 flex flex-wrap gap-4 pt-8 border-t border-gray-100">
-          <Link
-            href="/challenges"
-            className="bg-brand-red text-white px-6 py-3 rounded font-medium hover:bg-brand-red-dark transition-colors"
-          >
-            See the Challenges
-          </Link>
-          <Link
-            href="/book"
-            className="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium hover:border-gray-500 transition-colors"
-          >
-            Book a Session
-          </Link>
+        <div className="mt-12 pt-8 border-t border-gray-100">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
+            Where to start
+          </p>
+          <div className="flex flex-wrap gap-4">
+            <Link
+              href="/my-space"
+              className="bg-brand-red text-white px-6 py-3 rounded font-medium hover:bg-brand-red-dark transition-colors"
+            >
+              Start your journal →
+            </Link>
+            <Link
+              href="/challenges"
+              className="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium hover:border-brand-black transition-colors"
+            >
+              See the Challenges
+            </Link>
+            <Link
+              href="/book"
+              className="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium hover:border-brand-black transition-colors"
+            >
+              Book a Session
+            </Link>
+          </div>
         </div>
       </article>
     </main>
