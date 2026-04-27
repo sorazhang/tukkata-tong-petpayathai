@@ -4,9 +4,16 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { deleteMyChallenge } from '@/lib/my-challenge-actions'
 import { submitConfusion } from '@/lib/confusion-actions'
+import { generalizeChallenge } from '@/lib/ai-journal-actions'
 import type { MyChallenge } from '@/lib/my-challenge-actions'
 
-function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
+function MyChallengeRow({
+  challenge,
+  canAskKru,
+}: {
+  challenge: MyChallenge
+  canAskKru: boolean
+}) {
   const router = useRouter()
   const [expanded, setExpanded]           = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -26,7 +33,10 @@ function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
 
   async function handleAskKru() {
     setAskStatus('loading')
-    const text = `${challenge.title}\n\n${challenge.situation}`
+    const gen = await generalizeChallenge(challenge.title, challenge.situation)
+    const text = gen.ok && gen.generalizedText
+      ? gen.generalizedText
+      : `${challenge.title}\n\n${challenge.situation}`
     const res = await submitConfusion('Student', text, 'other')
     setAskStatus(res.ok ? 'sent' : 'error')
   }
@@ -58,18 +68,24 @@ function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
             <p className="text-sm text-brand-black leading-relaxed">{challenge.yourTurn}</p>
           </div>
           <div className="flex items-center gap-4 pt-1 flex-wrap">
-            {askStatus === 'sent' ? (
-              <span className="text-xs font-semibold text-green-600">✓ Sent to Kru</span>
-            ) : askStatus === 'error' ? (
-              <span className="text-xs text-red-400">Failed — try again</span>
+            {canAskKru ? (
+              askStatus === 'sent' ? (
+                <span className="text-xs font-semibold text-green-600">✓ Sent to Kru</span>
+              ) : askStatus === 'error' ? (
+                <span className="text-xs text-red-400">Failed — try again</span>
+              ) : (
+                <button
+                  onClick={handleAskKru}
+                  disabled={askStatus === 'loading'}
+                  className="text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
+                >
+                  {askStatus === 'loading' ? 'Sending…' : 'Ask Kru →'}
+                </button>
+              )
             ) : (
-              <button
-                onClick={handleAskKru}
-                disabled={askStatus === 'loading'}
-                className="text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
-              >
-                {askStatus === 'loading' ? 'Sending…' : 'Ask Kru →'}
-              </button>
+              <span className="text-xs text-gray-300 flex items-center gap-1">
+                🔒 <span>Ask Kru — Gold only</span>
+              </span>
             )}
 
             <span className="text-gray-200 text-xs">·</span>
@@ -95,7 +111,13 @@ function MyChallengeRow({ challenge }: { challenge: MyChallenge }) {
   )
 }
 
-export default function MyChallengeList({ challenges }: { challenges: MyChallenge[] }) {
+export default function MyChallengeList({
+  challenges,
+  canAskKru = false,
+}: {
+  challenges: MyChallenge[]
+  canAskKru?: boolean
+}) {
   if (challenges.length === 0) {
     return (
       <div className="py-16 text-center">
@@ -108,7 +130,7 @@ export default function MyChallengeList({ challenges }: { challenges: MyChalleng
   return (
     <div className="space-y-2">
       {challenges.map((c) => (
-        <MyChallengeRow key={c.id} challenge={c} />
+        <MyChallengeRow key={c.id} challenge={c} canAskKru={canAskKru} />
       ))}
     </div>
   )

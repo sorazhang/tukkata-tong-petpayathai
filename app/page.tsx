@@ -31,9 +31,23 @@ export default async function Home() {
             who has thrown a kick that didn&apos;t land right and didn&apos;t know why,
             who has been told to relax under pressure and had no idea how to do that.
           </p>
-          <p className="text-gray-500 text-lg leading-relaxed max-w-xl">
+          <p className="text-gray-500 text-lg leading-relaxed max-w-xl mb-10">
             Not explained at. Pointed toward something and asked to go find it.
           </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link
+              href="/my-space"
+              className="bg-brand-red text-white px-6 py-3 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+            >
+              Start your training journal →
+            </Link>
+            <Link
+              href="/challenges"
+              className="text-gray-400 text-sm hover:text-white transition-colors"
+            >
+              Browse challenges
+            </Link>
+          </div>
         </div>
       </section>
 
