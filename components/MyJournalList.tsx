@@ -4,9 +4,9 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { updateMyEntry, deleteMyEntry } from '@/lib/my-journal-actions'
 import type { MyEntry, JournalTag } from '@/lib/my-journal-actions'
-import { draftAsChallenge } from '@/lib/ai-journal-actions'
-import type { ChallengeDraft } from '@/lib/ai-journal-actions'
-import { saveMyChallenge } from '@/lib/my-challenge-actions'
+import { draftAsObservation } from '@/lib/ai-journal-actions'
+import type { ObservationDraft } from '@/lib/ai-journal-actions'
+import { saveMyObservation } from '@/lib/my-observation-actions'
 
 const TAG_STYLES: Record<JournalTag, string> = {
   footwork: 'bg-blue-50 text-blue-600',
@@ -33,11 +33,11 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [isPending, startTransition] = useTransition()
 
-  const [draft, setDraft]              = useState<ChallengeDraft | null>(null)
+  const [draft, setDraft]              = useState<ObservationDraft | null>(null)
   const [draftLoading, setDraftLoading] = useState(false)
   const [draftCopied, setDraftCopied]  = useState(false)
-  const [savingChallenge, setSavingChallenge] = useState(false)
-  const [challengeSaved, setChallengeSaved]   = useState(false)
+  const [savingObservation, setSavingObservation] = useState(false)
+  const [observationSaved, setObservationSaved]   = useState(false)
 
   const date = new Date(entry.createdAt)
   const dateLabel = date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
@@ -60,20 +60,20 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
 
   async function handleDraft() {
     setDraft(null)
-    setChallengeSaved(false)
+    setObservationSaved(false)
     setDraftLoading(true)
-    const res = await draftAsChallenge(entry.text)
+    const res = await draftAsObservation(entry.text)
     setDraftLoading(false)
     if (res.ok && res.draft) setDraft(res.draft)
   }
 
-  async function handleSaveChallenge() {
+  async function handleSaveObservation() {
     if (!draft) return
-    setSavingChallenge(true)
-    const res = await saveMyChallenge(draft.title, draft.situation, draft.yourTurn, entry.id)
-    setSavingChallenge(false)
+    setSavingObservation(true)
+    const res = await saveMyObservation(draft.title, draft.situation, draft.yourTurn, entry.id)
+    setSavingObservation(false)
     if (res.ok) {
-      setChallengeSaved(true)
+      setObservationSaved(true)
       router.refresh()
     }
   }
@@ -158,14 +158,14 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
                   disabled={draftLoading}
                   className="ml-auto text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
                 >
-                  {draftLoading ? 'Drafting…' : '✦ Draft as challenge'}
+                  {draftLoading ? 'Drafting…' : '✦ Draft as observation'}
                 </button>
               </div>
 
               {/* Draft output */}
               {draft && (
                 <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3">
-                  <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Challenge draft</p>
+                  <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Observation draft</p>
                   <div>
                     <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Title</p>
                     <p className="text-sm font-semibold text-brand-black">{draft.title}</p>
@@ -185,15 +185,15 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
                     >
                       {draftCopied ? '✓ Copied' : 'Copy'}
                     </button>
-                    {challengeSaved ? (
-                      <span className="text-xs font-semibold text-green-600">✓ Saved to challenges</span>
+                    {observationSaved ? (
+                      <span className="text-xs font-semibold text-green-600">✓ Saved to observations</span>
                     ) : (
                       <button
-                        onClick={handleSaveChallenge}
-                        disabled={savingChallenge}
+                        onClick={handleSaveObservation}
+                        disabled={savingObservation}
                         className="text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors disabled:opacity-40"
                       >
-                        {savingChallenge ? 'Saving…' : 'Save to My Challenges'}
+                        {savingObservation ? 'Saving…' : 'Save to Observations'}
                       </button>
                     )}
                   </div>

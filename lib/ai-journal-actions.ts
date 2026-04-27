@@ -159,15 +159,15 @@ Return JSON only:
 
 // ─── Draft entry as a student challenge ───────────────────────────────────────
 
-export interface ChallengeDraft {
+export interface ObservationDraft {
   title: string
   situation: string
   yourTurn: string
 }
 
-export async function draftAsChallenge(
+export async function draftAsObservation(
   entryText: string,
-): Promise<{ ok: boolean; draft?: ChallengeDraft; error?: string }> {
+): Promise<{ ok: boolean; draft?: ObservationDraft; error?: string }> {
   try {
     const response = await client.messages.create({
       model: 'claude-opus-4-7',
@@ -198,12 +198,12 @@ Return JSON only:
 
     const raw = textBlock.text.trim()
     const jsonStr = raw.startsWith('{') ? raw : raw.slice(raw.indexOf('{'))
-    const draft: ChallengeDraft = JSON.parse(jsonStr)
+    const draft: ObservationDraft = JSON.parse(jsonStr)
     return { ok: true, draft }
   } catch (err) {
-    console.error('draftAsChallenge error:', err)
+    console.error('draftAsObservation error:', err)
     const message = err instanceof Error ? err.message : String(err)
-    return { ok: false, error: `Failed to draft challenge: ${message}` }
+    return { ok: false, error: `Failed to draft observation: ${message}` }
   }
 }
 

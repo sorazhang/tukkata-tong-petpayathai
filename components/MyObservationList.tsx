@@ -2,16 +2,16 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { deleteMyChallenge } from '@/lib/my-challenge-actions'
+import { deleteMyObservation } from '@/lib/my-observation-actions'
 import { submitConfusion } from '@/lib/confusion-actions'
 import { generalizeChallenge } from '@/lib/ai-journal-actions'
-import type { MyChallenge } from '@/lib/my-challenge-actions'
+import type { MyObservation } from '@/lib/my-observation-actions'
 
-function MyChallengeRow({
-  challenge,
+function MyObservationRow({
+  observation,
   canAskKru,
 }: {
-  challenge: MyChallenge
+  observation: MyObservation
   canAskKru: boolean
 }) {
   const router = useRouter()
@@ -20,23 +20,23 @@ function MyChallengeRow({
   const [isPending, startTransition]      = useTransition()
   const [askStatus, setAskStatus]         = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
 
-  const dateLabel = new Date(challenge.createdAt).toLocaleDateString('en-GB', {
+  const dateLabel = new Date(observation.createdAt).toLocaleDateString('en-GB', {
     weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
   })
 
   function handleDelete() {
     startTransition(async () => {
-      const res = await deleteMyChallenge(challenge.id)
+      const res = await deleteMyObservation(observation.id)
       if (res.ok) router.refresh()
     })
   }
 
   async function handleAskKru() {
     setAskStatus('loading')
-    const gen = await generalizeChallenge(challenge.title, challenge.situation)
+    const gen = await generalizeChallenge(observation.title, observation.situation)
     const text = gen.ok && gen.generalizedText
       ? gen.generalizedText
-      : `${challenge.title}\n\n${challenge.situation}`
+      : `${observation.title}\n\n${observation.situation}`
     const res = await submitConfusion('Student', text, 'other')
     setAskStatus(res.ok ? 'sent' : 'error')
   }
@@ -48,7 +48,7 @@ function MyChallengeRow({
         className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors"
       >
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-brand-black">{challenge.title}</p>
+          <p className="text-sm font-semibold text-brand-black">{observation.title}</p>
           <p className="text-xs text-gray-400 mt-0.5">{dateLabel}</p>
         </div>
         <span
@@ -61,11 +61,11 @@ function MyChallengeRow({
         <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Situation</p>
-            <p className="text-sm text-brand-black leading-relaxed">{challenge.situation}</p>
+            <p className="text-sm text-brand-black leading-relaxed">{observation.situation}</p>
           </div>
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Your turn</p>
-            <p className="text-sm text-brand-black leading-relaxed">{challenge.yourTurn}</p>
+            <p className="text-sm text-brand-black leading-relaxed">{observation.yourTurn}</p>
           </div>
           <div className="flex items-center gap-4 pt-1 flex-wrap">
             {canAskKru ? (
@@ -111,17 +111,17 @@ function MyChallengeRow({
   )
 }
 
-export default function MyChallengeList({
-  challenges,
+export default function MyObservationList({
+  observations,
   canAskKru = false,
 }: {
-  challenges: MyChallenge[]
+  observations: MyObservation[]
   canAskKru?: boolean
 }) {
-  if (challenges.length === 0) {
+  if (observations.length === 0) {
     return (
       <div className="py-16 text-center">
-        <p className="text-sm text-gray-400">No challenges saved yet.</p>
+        <p className="text-sm text-gray-400">No observations saved yet.</p>
         <p className="text-xs text-gray-300 mt-1">Draft one from a journal entry.</p>
       </div>
     )
@@ -129,8 +129,8 @@ export default function MyChallengeList({
 
   return (
     <div className="space-y-2">
-      {challenges.map((c) => (
-        <MyChallengeRow key={c.id} challenge={c} canAskKru={canAskKru} />
+      {observations.map((o) => (
+        <MyObservationRow key={o.id} observation={o} canAskKru={canAskKru} />
       ))}
     </div>
   )

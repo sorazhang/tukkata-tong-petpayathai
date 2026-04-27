@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react'
 import MyJournalEntry from './MyJournalEntry'
 import MyJournalList from './MyJournalList'
 import MyJournalPatterns from './MyJournalPatterns'
-import MyChallengeList from './MyChallengeList'
+import MyObservationList from './MyObservationList'
 import MyAnalysisList from './MyAnalysisList'
 import type { MyEntry } from '@/lib/my-journal-actions'
-import type { MyChallenge } from '@/lib/my-challenge-actions'
+import type { MyObservation } from '@/lib/my-observation-actions'
 import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
-type Tab = 'journal' | 'insights' | 'challenges'
+type Tab = 'journal' | 'insights' | 'observations'
 type Tier = 'free' | 'silver' | 'gold'
 
 interface Persona {
@@ -87,11 +87,11 @@ function PersonaBar({
 
 export default function MySpace({
   entries,
-  challenges,
+  observations,
   analyses,
 }: {
   entries: MyEntry[]
-  challenges: MyChallenge[]
+  observations: MyObservation[]
   analyses: MyAnalysis[]
 }) {
   const [tab, setTab]           = useState<Tab>('journal')
@@ -111,9 +111,9 @@ export default function MySpace({
   }
 
   const tier = persona.tier
-  const canInsights   = tier === 'silver' || tier === 'gold'
-  const canChallenges = tier === 'silver' || tier === 'gold'
-  const canAskKru     = tier === 'gold'
+  const canInsights     = tier === 'silver' || tier === 'gold'
+  const canObservations = tier === 'silver' || tier === 'gold'
+  const canAskKru       = tier === 'gold'
 
   if (!hydrated) return null
 
@@ -146,18 +146,18 @@ export default function MySpace({
           {!canInsights && <span className="ml-1 text-gray-300 text-xs">🔒</span>}
         </button>
         <button
-          onClick={() => setTab('challenges')}
+          onClick={() => setTab('observations')}
           className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'challenges' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+            tab === 'observations' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
           }`}
         >
-          Challenges
-          {canChallenges && challenges.length > 0 && (
+          Observations
+          {canObservations && observations.length > 0 && (
             <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
-              {challenges.length}
+              {observations.length}
             </span>
           )}
-          {!canChallenges && <span className="ml-1 text-gray-300 text-xs">🔒</span>}
+          {!canObservations && <span className="ml-1 text-gray-300 text-xs">🔒</span>}
         </button>
       </div>
 
@@ -187,9 +187,9 @@ export default function MySpace({
           : <LockedFeature requiredTier="silver" />
       )}
 
-      {tab === 'challenges' && (
-        canChallenges
-          ? <MyChallengeList challenges={challenges} canAskKru={canAskKru} />
+      {tab === 'observations' && (
+        canObservations
+          ? <MyObservationList observations={observations} canAskKru={canAskKru} />
           : <LockedFeature requiredTier="silver" />
       )}
     </div>
