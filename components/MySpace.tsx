@@ -11,7 +11,7 @@ import type { MyObservation } from '@/lib/my-observation-actions'
 import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
 type Tab = 'journal' | 'insights' | 'observations'
-type Tier = 'free' | 'silver' | 'gold'
+type Tier = 'free' | 'silver' | 'gold' | 'kru'
 
 interface Persona {
   key: string
@@ -24,6 +24,7 @@ const PERSONAS: Persona[] = [
   { key: 'owen',   name: 'Owen',   tier: 'free',   label: 'Free'   },
   { key: 'jin',    name: 'Jin',    tier: 'silver', label: 'Silver' },
   { key: 'jolynn', name: 'Jolynn', tier: 'gold',   label: 'Gold'   },
+  { key: 'kru',    name: 'Kru',    tier: 'kru',    label: 'Kru'    },
 ]
 
 const STORAGE_KEY = 'tkt_persona'
@@ -57,12 +58,14 @@ function PersonaBar({
         {PERSONAS.map((p) => {
           const isActive = p.key === active.key
           const tierColor =
-            p.tier === 'gold'   ? 'text-amber-600 border-amber-300 bg-amber-50' :
-            p.tier === 'silver' ? 'text-gray-600 border-gray-300 bg-white'      :
+            p.tier === 'kru'    ? 'text-brand-red border-brand-red/30 bg-red-50'  :
+            p.tier === 'gold'   ? 'text-amber-600 border-amber-300 bg-amber-50'   :
+            p.tier === 'silver' ? 'text-gray-600 border-gray-300 bg-white'        :
                                   'text-gray-500 border-gray-200 bg-white'
           const activeColor =
-            p.tier === 'gold'   ? 'bg-amber-500 text-white border-amber-500' :
-            p.tier === 'silver' ? 'bg-brand-black text-white border-brand-black' :
+            p.tier === 'kru'    ? 'bg-brand-red text-white border-brand-red'          :
+            p.tier === 'gold'   ? 'bg-amber-500 text-white border-amber-500'          :
+            p.tier === 'silver' ? 'bg-brand-black text-white border-brand-black'      :
                                   'bg-gray-600 text-white border-gray-600'
 
           return (
@@ -111,9 +114,9 @@ export default function MySpace({
   }
 
   const tier = persona.tier
-  const canInsights     = tier === 'silver' || tier === 'gold'
-  const canObservations = tier === 'silver' || tier === 'gold'
-  const canAskKru       = tier === 'gold'
+  const canInsights     = tier === 'silver' || tier === 'gold' || tier === 'kru'
+  const canObservations = tier === 'silver' || tier === 'gold' || tier === 'kru'
+  const canAskKru       = tier === 'gold'   || tier === 'kru'
 
   if (!hydrated) return null
 
