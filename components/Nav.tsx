@@ -14,7 +14,8 @@ const studentLinks = [
 ]
 
 const kruLinks = [
-  { href: '/confusions', label: 'Student Questions' },
+  { href: '/kru',        label: 'Dashboard'         },
+  { href: '/confusions', label: 'Questions'         },
   { href: '/vote',       label: 'Vote'              },
   { href: '/review',     label: 'Review'            },
 ]
