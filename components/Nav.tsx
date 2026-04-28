@@ -28,7 +28,11 @@ export default function Nav() {
     const check = () => setIsKru(localStorage.getItem(STORAGE_KEY) === 'kru')
     check()
     window.addEventListener('storage', check)
-    return () => window.removeEventListener('storage', check)
+    window.addEventListener('persona-change', check)
+    return () => {
+      window.removeEventListener('storage', check)
+      window.removeEventListener('persona-change', check)
+    }
   }, [])
 
   const links = isKru ? kruLinks : studentLinks

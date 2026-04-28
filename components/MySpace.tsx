@@ -111,6 +111,7 @@ export default function MySpace({
   function handlePersonaChange(p: Persona) {
     setPersona(p)
     localStorage.setItem(STORAGE_KEY, p.key)
+    window.dispatchEvent(new Event('persona-change'))
   }
 
   const tier = persona.tier
