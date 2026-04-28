@@ -193,7 +193,7 @@ export default function MySpace({
 
       {tab === 'observations' && (
         canObservations
-          ? <MyObservationList observations={observations} canAskKru={canAskKru} />
+          ? <MyObservationList observations={observations} canAskKru={canAskKru} studentName={persona.name} />
           : <LockedFeature requiredTier="silver" />
       )}
     </div>

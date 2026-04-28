@@ -10,9 +10,11 @@ import type { MyObservation } from '@/lib/my-observation-actions'
 function MyObservationRow({
   observation,
   canAskKru,
+  studentName,
 }: {
   observation: MyObservation
   canAskKru: boolean
+  studentName: string
 }) {
   const router = useRouter()
   const [expanded, setExpanded]           = useState(false)
@@ -37,7 +39,7 @@ function MyObservationRow({
     const text = gen.ok && gen.generalizedText
       ? gen.generalizedText
       : `${observation.title}\n\n${observation.situation}`
-    const res = await submitConfusion('Student', text, 'other')
+    const res = await submitConfusion(studentName, text, 'other')
     setAskStatus(res.ok ? 'sent' : 'error')
   }
 
@@ -114,9 +116,11 @@ function MyObservationRow({
 export default function MyObservationList({
   observations,
   canAskKru = false,
+  studentName = 'Student',
 }: {
   observations: MyObservation[]
   canAskKru?: boolean
+  studentName?: string
 }) {
   if (observations.length === 0) {
     return (
@@ -130,7 +134,7 @@ export default function MyObservationList({
   return (
     <div className="space-y-2">
       {observations.map((o) => (
-        <MyObservationRow key={o.id} observation={o} canAskKru={canAskKru} />
+        <MyObservationRow key={o.id} observation={o} canAskKru={canAskKru} studentName={studentName} />
       ))}
     </div>
   )
