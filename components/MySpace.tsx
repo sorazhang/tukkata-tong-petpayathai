@@ -11,22 +11,22 @@ import type { MyObservation } from '@/lib/my-observation-actions'
 import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
 type Tab = 'journal' | 'insights' | 'observations'
-type Tier = 'free' | 'silver' | 'gold' | 'kru'
+type Tier = 'free' | 'silver' | 'gold'
 
-interface Persona {
+interface Student {
   key: string
   name: string
   tier: Tier
-  label: string
+  tierLabel: string
 }
 
-const PERSONAS: Persona[] = [
-  { key: 'owen',   name: 'Owen',   tier: 'free',   label: 'Free'   },
-  { key: 'jin',    name: 'Jin',    tier: 'silver', label: 'Silver' },
-  { key: 'jolynn', name: 'Jolynn', tier: 'gold',   label: 'Gold'   },
-]
+const STUDENTS: Record<string, Student> = {
+  owen: { key: 'owen', name: 'Owen', tier: 'free',   tierLabel: 'Free'   },
+  jin:  { key: 'jin',  name: 'Jin',  tier: 'silver', tierLabel: 'Silver' },
+  alex: { key: 'alex', name: 'Alex', tier: 'gold',   tierLabel: 'Gold'   },
+}
 
-const STORAGE_KEY = 'tkt_persona'
+const STUDENT_KEY = 'tkt_student'
 
 function LockedFeature({ requiredTier }: { requiredTier: 'silver' | 'gold' }) {
   const tierLabel = requiredTier === 'gold' ? 'Gold' : 'Silver'
@@ -37,52 +37,79 @@ function LockedFeature({ requiredTier }: { requiredTier: 'silver' | 'gold' }) {
         {requiredTier === 'gold' ? 'Gold members only' : 'Silver members and above'}
       </p>
       <p className="text-xs text-gray-400">
-        Switch to {tierLabel} or above using the selector at the top to preview this feature.
+        Upgrade to {tierLabel} or above to unlock this feature.
       </p>
     </div>
   )
 }
 
-function PersonaBar({
-  active,
-  onChange,
-}: {
-  active: Persona
-  onChange: (p: Persona) => void
-}) {
-  return (
-    <div className="flex items-center gap-2 mb-8 p-3 bg-gray-50 rounded-xl border border-gray-100">
-      <span className="text-xs text-gray-400 font-medium shrink-0">Training as:</span>
-      <div className="flex gap-1 flex-1">
-        {PERSONAS.map((p) => {
-          const isActive = p.key === active.key
-          const tierColor =
-            p.tier === 'kru'    ? 'text-brand-red border-brand-red/30 bg-red-50'  :
-            p.tier === 'gold'   ? 'text-amber-600 border-amber-300 bg-amber-50'   :
-            p.tier === 'silver' ? 'text-gray-600 border-gray-300 bg-white'        :
-                                  'text-gray-500 border-gray-200 bg-white'
-          const activeColor =
-            p.tier === 'kru'    ? 'bg-brand-red text-white border-brand-red'          :
-            p.tier === 'gold'   ? 'bg-amber-500 text-white border-amber-500'          :
-            p.tier === 'silver' ? 'bg-brand-black text-white border-brand-black'      :
-                                  'bg-gray-600 text-white border-gray-600'
+function LoginForm({ onLogin }: { onLogin: (s: Student) => void }) {
+  const [password, setPassword] = useState('')
+  const [error, setError]       = useState('')
 
-          return (
-            <button
-              key={p.key}
-              onClick={() => onChange(p)}
-              className={`flex-1 py-1.5 px-2 rounded-lg border text-xs font-semibold transition-all ${
-                isActive ? activeColor : `${tierColor} hover:border-gray-400`
-              }`}
-            >
-              {p.name}
-              <span className={`ml-1 font-normal ${isActive ? 'opacity-70' : 'opacity-50'}`}>
-                · {p.label}
-              </span>
-            </button>
-          )
-        })}
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const student = STUDENTS[password.toLowerCase().trim()]
+    if (student) {
+      onLogin(student)
+    } else {
+      setError('Incorrect password.')
+    }
+  }
+
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-2">
+            My Space
+          </p>
+          <h2 className="text-2xl font-bold text-brand-black">Welcome back</h2>
+          <p className="text-gray-400 text-sm mt-2">Enter your password to continue.</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setError('') }}
+            placeholder="Password"
+            autoFocus
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-red"
+          />
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <button
+            type="submit"
+            disabled={!password}
+            className="w-full bg-brand-red text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-50"
+          >
+            Enter
+          </button>
+        </form>
       </div>
+    </div>
+  )
+}
+
+function StudentHeader({ student, onSignOut }: { student: Student; onSignOut: () => void }) {
+  const tierColor =
+    student.tier === 'gold'   ? 'text-amber-600 bg-amber-50 border-amber-200'  :
+    student.tier === 'silver' ? 'text-gray-600 bg-gray-100 border-gray-300'    :
+                                'text-gray-500 bg-gray-50 border-gray-200'
+
+  return (
+    <div className="flex items-center justify-between mb-8 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
+      <div className="flex items-center gap-3">
+        <p className="text-sm font-semibold text-brand-black">{student.name}</p>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${tierColor}`}>
+          {student.tierLabel}
+        </span>
+      </div>
+      <button
+        onClick={onSignOut}
+        className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+      >
+        Sign out
+      </button>
     </div>
   )
 }
@@ -96,33 +123,44 @@ export default function MySpace({
   observations: MyObservation[]
   analyses: MyAnalysis[]
 }) {
-  const [tab, setTab]           = useState<Tab>('journal')
-  const [persona, setPersona]   = useState<Persona>(PERSONAS[0])
+  const [tab, setTab]         = useState<Tab>('journal')
+  const [student, setStudent] = useState<Student | null>(null)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    const found = PERSONAS.find((p) => p.key === stored)
-    if (found) setPersona(found)
+    const stored = localStorage.getItem(STUDENT_KEY)
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as Student
+        if (STUDENTS[parsed.key]) setStudent(parsed)
+      } catch {
+        localStorage.removeItem(STUDENT_KEY)
+      }
+    }
     setHydrated(true)
   }, [])
 
-  function handlePersonaChange(p: Persona) {
-    setPersona(p)
-    localStorage.setItem(STORAGE_KEY, p.key)
-    window.dispatchEvent(new Event('persona-change'))
+  function handleLogin(s: Student) {
+    setStudent(s)
+    localStorage.setItem(STUDENT_KEY, JSON.stringify(s))
   }
 
-  const tier = persona.tier
-  const canInsights     = tier === 'silver' || tier === 'gold' || tier === 'kru'
-  const canObservations = tier === 'silver' || tier === 'gold' || tier === 'kru'
-  const canAskKru       = tier === 'gold'   || tier === 'kru'
+  function handleSignOut() {
+    setStudent(null)
+    localStorage.removeItem(STUDENT_KEY)
+  }
 
   if (!hydrated) return null
+  if (!student)  return <LoginForm onLogin={handleLogin} />
+
+  const tier = student.tier
+  const canInsights     = tier === 'silver' || tier === 'gold'
+  const canObservations = tier === 'silver' || tier === 'gold'
+  const canAskKru       = tier === 'gold'
 
   return (
     <div>
-      <PersonaBar active={persona} onChange={handlePersonaChange} />
+      <StudentHeader student={student} onSignOut={handleSignOut} />
 
       {/* Tab bar */}
       <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
@@ -186,7 +224,7 @@ export default function MySpace({
 
       {tab === 'observations' && (
         canObservations
-          ? <MyObservationList observations={observations} canAskKru={canAskKru} studentName={persona.name} />
+          ? <MyObservationList observations={observations} canAskKru={canAskKru} studentName={student.name} />
           : <LockedFeature requiredTier="silver" />
       )}
     </div>
