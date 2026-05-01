@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
-import { cookies } from 'next/headers'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import KruPill from '@/components/KruPill'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -18,21 +16,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const cookieStore = await cookies()
-  const isKru = cookieStore.get('review_auth')?.value === process.env.REVIEW_PASSWORD
-
   return (
     <html lang="en">
       <body>
         <Nav />
         {children}
         <Footer />
-        {isKru && <KruPill />}
       </body>
     </html>
   )
