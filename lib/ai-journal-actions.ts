@@ -60,7 +60,8 @@ Only return valid JSON, no markdown, no explanation.`,
     return { ok: true, matches }
   } catch (err) {
     console.error('matchEntryToChallenges error:', err)
-    return { ok: false, error: 'Failed to match.' }
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to match: ${message}` }
   }
 }
 
@@ -151,21 +152,22 @@ Return JSON only:
     return { ok: true, result, entryCount: recent.length }
   } catch (err) {
     console.error('surfacePatterns error:', err)
-    return { ok: false, error: 'Failed to analyze patterns.' }
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to analyze patterns: ${message}` }
   }
 }
 
 // ─── Draft entry as a student challenge ───────────────────────────────────────
 
-export interface ChallengeDraft {
+export interface ObservationDraft {
   title: string
   situation: string
   yourTurn: string
 }
 
-export async function draftAsChallenge(
+export async function draftAsObservation(
   entryText: string,
-): Promise<{ ok: boolean; draft?: ChallengeDraft; error?: string }> {
+): Promise<{ ok: boolean; draft?: ObservationDraft; error?: string }> {
   try {
     const response = await client.messages.create({
       model: 'claude-opus-4-7',
@@ -196,10 +198,53 @@ Return JSON only:
 
     const raw = textBlock.text.trim()
     const jsonStr = raw.startsWith('{') ? raw : raw.slice(raw.indexOf('{'))
-    const draft: ChallengeDraft = JSON.parse(jsonStr)
+    const draft: ObservationDraft = JSON.parse(jsonStr)
     return { ok: true, draft }
   } catch (err) {
-    console.error('draftAsChallenge error:', err)
-    return { ok: false, error: 'Failed to draft challenge.' }
+    console.error('draftAsObservation error:', err)
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to draft observation: ${message}` }
+  }
+}
+
+// ─── Generalize a personal challenge into a universal platform question ────────
+
+export async function generalizeChallenge(
+  title: string,
+  situation: string,
+): Promise<{ ok: boolean; generalizedText?: string; error?: string }> {
+  try {
+    const response = await client.messages.create({
+      model: 'claude-opus-4-7',
+      max_tokens: 512,
+      messages: [
+        {
+          role: 'user',
+          content: `You help reframe personal Muay Thai training struggles as universal questions that a coach can answer once and benefit many students.
+
+Rules:
+- Remove first-person ("I", "my", "me") — write as if describing a universal student experience
+- Keep it concrete and physical — no vague language
+- Match this platform voice: direct, respectful, coach-to-student, grounded in technique
+- Output one short paragraph (2-4 sentences) that a coach can read and immediately understand what skill gap needs addressing
+- Do NOT include headings, bullet points, or labels — just the paragraph
+
+Personal challenge:
+Title: ${title}
+Situation: ${situation}
+
+Output the generalized question paragraph only, no extra text.`,
+        },
+      ],
+    })
+
+    const textBlock = response.content.find((b) => b.type === 'text')
+    if (!textBlock || textBlock.type !== 'text') return { ok: false, error: 'No response' }
+
+    return { ok: true, generalizedText: textBlock.text.trim() }
+  } catch (err) {
+    console.error('generalizeChallenge error:', err)
+    const message = err instanceof Error ? err.message : String(err)
+    return { ok: false, error: `Failed to generalize: ${message}` }
   }
 }

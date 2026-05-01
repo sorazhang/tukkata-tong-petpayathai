@@ -2,7 +2,7 @@
 
 import { adminDb } from './firebase-admin'
 
-export interface MyChallenge {
+export interface MyObservation {
   id: string
   title: string
   situation: string
@@ -11,7 +11,7 @@ export interface MyChallenge {
   createdAt: string
 }
 
-export async function saveMyChallenge(
+export async function saveMyObservation(
   title: string,
   situation: string,
   yourTurn: string,
@@ -27,12 +27,12 @@ export async function saveMyChallenge(
     })
     return { ok: true }
   } catch (err) {
-    console.error('saveMyChallenge error:', err)
+    console.error('saveMyObservation error:', err)
     return { ok: false, error: 'Failed to save.' }
   }
 }
 
-export async function getMyChallenges(): Promise<MyChallenge[]> {
+export async function getMyObservations(): Promise<MyObservation[]> {
   const snap = await adminDb
     .collection('my-challenges')
     .orderBy('createdAt', 'desc')
@@ -47,12 +47,12 @@ export async function getMyChallenges(): Promise<MyChallenge[]> {
   }))
 }
 
-export async function deleteMyChallenge(id: string): Promise<{ ok: boolean }> {
+export async function deleteMyObservation(id: string): Promise<{ ok: boolean }> {
   try {
     await adminDb.collection('my-challenges').doc(id).delete()
     return { ok: true }
   } catch (err) {
-    console.error('deleteMyChallenge error:', err)
+    console.error('deleteMyObservation error:', err)
     return { ok: false }
   }
 }
