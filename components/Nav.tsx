@@ -76,7 +76,21 @@ export default function Nav() {
               </Link>
             </li>
           )}
-          {!isKru && (
+          {isKru ? (
+            <li>
+              <button
+                onClick={async () => {
+                  await fetch('/api/review-signout', { method: 'POST' })
+                  localStorage.setItem('tkt_persona', 'jolynn')
+                  window.dispatchEvent(new Event('persona-change'))
+                  window.location.href = '/'
+                }}
+                className="text-gray-400 hover:text-white text-xs transition-colors"
+              >
+                Sign out
+              </button>
+            </li>
+          ) : (
             <li>
               <Link
                 href="/book"
@@ -117,7 +131,21 @@ export default function Nav() {
                 </Link>
               </li>
             ))}
-            {!isKru && (
+            {isKru ? (
+              <li className="pt-3">
+                <button
+                  onClick={async () => {
+                    await fetch('/api/review-signout', { method: 'POST' })
+                    localStorage.setItem('tkt_persona', 'jolynn')
+                    window.dispatchEvent(new Event('persona-change'))
+                    window.location.href = '/'
+                  }}
+                  className="block py-2 text-sm text-gray-400 hover:text-white transition-colors"
+                >
+                  Sign out
+                </button>
+              </li>
+            ) : (
               <>
                 <li className="pt-2">
                   <Link
