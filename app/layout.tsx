@@ -5,8 +5,8 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'ตุ๊กตาทอง เพชรพญาไท — Tukkatatong Petpayathai',
-    template: '%s — ตุ๊กตาทอง เพชรพญาไท',
+    default: 'Tukkatatong Petpayathai — ตุ๊กตาทอง เพชรพญาไท',
+    template: '%s — Tukkatatong Petpayathai',
   },
   description:
     'Champion knowledge from Lumpinee Stadium title holder ตุ๊กตาทอง เพชรพญาไท (Tukkatatong Petpayathai). Muay Thai challenges, stories, and the art behind the art.',
