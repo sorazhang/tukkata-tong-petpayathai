@@ -90,29 +90,6 @@ function LoginForm({ onLogin }: { onLogin: (s: Student) => void }) {
   )
 }
 
-function StudentHeader({ student, onSignOut }: { student: Student; onSignOut: () => void }) {
-  const tierColor =
-    student.tier === 'gold'   ? 'text-amber-600 bg-amber-50 border-amber-200'  :
-    student.tier === 'silver' ? 'text-gray-600 bg-gray-100 border-gray-300'    :
-                                'text-gray-500 bg-gray-50 border-gray-200'
-
-  return (
-    <div className="flex items-center justify-between mb-8 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
-      <div className="flex items-center gap-3">
-        <p className="text-sm font-semibold text-brand-black">{student.name}</p>
-        <span className={`text-xs font-semibold px-2 py-0.5 rounded border ${tierColor}`}>
-          {student.tierLabel}
-        </span>
-      </div>
-      <button
-        onClick={onSignOut}
-        className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-      >
-        Sign out
-      </button>
-    </div>
-  )
-}
 
 export default function MySpace({
   entries,
@@ -150,12 +127,6 @@ export default function MySpace({
     setStudent(s)
   }
 
-  function handleSignOut() {
-    localStorage.removeItem(STUDENT_KEY)
-    window.dispatchEvent(new Event('student-change'))
-    setStudent(null)
-  }
-
   if (!hydrated) return null
   if (!student)  return <LoginForm onLogin={handleLogin} />
 
@@ -166,7 +137,6 @@ export default function MySpace({
 
   return (
     <div>
-      <StudentHeader student={student} onSignOut={handleSignOut} />
 
       {/* Tab bar */}
       <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
