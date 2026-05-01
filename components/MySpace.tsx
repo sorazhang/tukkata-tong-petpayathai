@@ -169,24 +169,18 @@ export default function MySpace({
           <div className="border border-gray-200 rounded-xl p-5">
             <MyJournalEntry />
           </div>
-          {canInsights
-            ? <MyJournalPatterns />
-            : (
-              <div className="border border-gray-100 rounded-xl p-5">
-                <p className="text-xs font-bold uppercase tracking-widest text-gray-300 mb-3">
-                  AI Pattern Analysis
-                </p>
-                <LockedFeature requiredTier="silver" />
-              </div>
-            )
-          }
           {entries.length > 0 && <MyJournalList entries={entries} />}
         </div>
       )}
 
       {tab === 'insights' && (
         canInsights
-          ? <MyAnalysisList analyses={analyses} />
+          ? (
+            <div className="space-y-6">
+              <MyJournalPatterns />
+              {analyses.length > 0 && <MyAnalysisList analyses={analyses} />}
+            </div>
+          )
           : <LockedFeature requiredTier="silver" />
       )}
 
