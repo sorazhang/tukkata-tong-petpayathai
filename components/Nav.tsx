@@ -66,7 +66,8 @@ export default function Nav() {
           <img
             src="/logo.png"
             alt="Tukkatatong logo"
-            className="h-9 w-auto invert mix-blend-screen shrink-0"
+            className="h-9 w-auto shrink-0"
+            style={{ filter: 'invert(1) contrast(100)', mixBlendMode: 'screen' }}
           />
           <div className="flex flex-col leading-tight">
             <span className="text-white font-semibold text-base tracking-tight">
