@@ -317,6 +317,16 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── Kru entry ── */}
+      <div className="text-center py-6 bg-white border-t border-gray-100">
+        <Link
+          href="/review-login"
+          className="text-xs text-gray-300 hover:text-gray-400 transition-colors"
+        >
+          Kru? →
+        </Link>
+      </div>
+
       {/* ── 1-on-1 CTA ── */}
       <section className="py-20 px-6 bg-brand-black text-white">
         <div className="max-w-3xl mx-auto text-center">
