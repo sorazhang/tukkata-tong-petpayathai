@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-const STORAGE_KEY = 'tkt_persona'
+const PERSONA_KEY = 'tkt_persona'
+const STUDENT_KEY = 'tkt_student'
 
 const studentLinks = [
   { href: '/my-space',   label: 'My Space'    },
@@ -18,20 +19,38 @@ const kruLinks = [
 ]
 
 export default function Nav() {
-  const [open, setOpen]       = useState(false)
-  const [isKru, setIsKru]     = useState(false)
-  const pathname              = usePathname()
+  const [open, setOpen]             = useState(false)
+  const [isKru, setIsKru]           = useState(false)
+  const [studentName, setStudentName] = useState<string | null>(null)
+  const pathname                    = usePathname()
 
   useEffect(() => {
-    const check = () => setIsKru(localStorage.getItem(STORAGE_KEY) === 'kru')
-    check()
-    window.addEventListener('storage', check)
-    window.addEventListener('persona-change', check)
+    function sync() {
+      setIsKru(localStorage.getItem(PERSONA_KEY) === 'kru')
+      try {
+        const raw = localStorage.getItem(STUDENT_KEY)
+        const parsed = raw ? JSON.parse(raw) : null
+        setStudentName(parsed?.name ?? null)
+      } catch {
+        setStudentName(null)
+      }
+    }
+    sync()
+    window.addEventListener('storage', sync)
+    window.addEventListener('persona-change', sync)
+    window.addEventListener('student-change', sync)
     return () => {
-      window.removeEventListener('storage', check)
-      window.removeEventListener('persona-change', check)
+      window.removeEventListener('storage', sync)
+      window.removeEventListener('persona-change', sync)
+      window.removeEventListener('student-change', sync)
     }
   }, [])
+
+  function handleStudentLogout() {
+    localStorage.removeItem(STUDENT_KEY)
+    window.dispatchEvent(new Event('student-change'))
+    setOpen(false)
+  }
 
   const links = isKru ? kruLinks : studentLinks
 
@@ -66,6 +85,7 @@ export default function Nav() {
               </Link>
             </li>
           ))}
+
           {!isKru && (
             <li>
               <Link
@@ -76,18 +96,29 @@ export default function Nav() {
               </Link>
             </li>
           )}
+
           {isKru ? (
             <li>
               <button
                 onClick={async () => {
                   await fetch('/api/review-signout', { method: 'POST' })
-                  localStorage.setItem('tkt_persona', 'jolynn')
+                  localStorage.setItem(PERSONA_KEY, 'student')
                   window.dispatchEvent(new Event('persona-change'))
                   window.location.href = '/'
                 }}
                 className="text-gray-400 hover:text-white text-xs transition-colors"
               >
                 Sign out
+              </button>
+            </li>
+          ) : studentName ? (
+            <li className="flex items-center gap-3">
+              <span className="text-gray-400 text-xs">{studentName}</span>
+              <button
+                onClick={handleStudentLogout}
+                className="text-gray-400 hover:text-white text-xs transition-colors"
+              >
+                Log out
               </button>
             </li>
           ) : (
@@ -136,13 +167,23 @@ export default function Nav() {
                 <button
                   onClick={async () => {
                     await fetch('/api/review-signout', { method: 'POST' })
-                    localStorage.setItem('tkt_persona', 'jolynn')
+                    localStorage.setItem(PERSONA_KEY, 'student')
                     window.dispatchEvent(new Event('persona-change'))
                     window.location.href = '/'
                   }}
                   className="block py-2 text-sm text-gray-400 hover:text-white transition-colors"
                 >
                   Sign out
+                </button>
+              </li>
+            ) : studentName ? (
+              <li className="pt-3 flex items-center justify-between">
+                <span className="text-gray-400 text-sm">{studentName}</span>
+                <button
+                  onClick={handleStudentLogout}
+                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  Log out
                 </button>
               </li>
             ) : (

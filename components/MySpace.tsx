@@ -128,26 +128,32 @@ export default function MySpace({
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STUDENT_KEY)
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored) as Student
-        if (STUDENTS[parsed.key]) setStudent(parsed)
-      } catch {
-        localStorage.removeItem(STUDENT_KEY)
+    function sync() {
+      const raw = localStorage.getItem(STUDENT_KEY)
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw) as Student
+          if (STUDENTS[parsed.key]) { setStudent(parsed); return }
+        } catch { /* fall through */ }
       }
+      setStudent(null)
     }
+    sync()
     setHydrated(true)
+    window.addEventListener('student-change', sync)
+    return () => window.removeEventListener('student-change', sync)
   }, [])
 
   function handleLogin(s: Student) {
-    setStudent(s)
     localStorage.setItem(STUDENT_KEY, JSON.stringify(s))
+    window.dispatchEvent(new Event('student-change'))
+    setStudent(s)
   }
 
   function handleSignOut() {
-    setStudent(null)
     localStorage.removeItem(STUDENT_KEY)
+    window.dispatchEvent(new Event('student-change'))
+    setStudent(null)
   }
 
   if (!hydrated) return null
