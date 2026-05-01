@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 const STORAGE_KEY = 'tkt_persona'
 
 const studentLinks = [
-  { href: '/my-space',   label: 'Journal'     },
+  { href: '/my-space',   label: 'My Space'    },
   { href: '/challenges', label: 'Challenges'  },
   { href: '/knowledge',  label: 'Knowledge'   },
   { href: '/about',      label: 'About'       },
