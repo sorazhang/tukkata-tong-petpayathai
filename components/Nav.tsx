@@ -69,6 +69,16 @@ export default function Nav() {
               </Link>
             </li>
           ))}
+          {!isKru && (
+            <li>
+              <Link
+                href="/review-login"
+                className="text-gray-600 hover:text-gray-400 text-xs transition-colors"
+              >
+                Kru
+              </Link>
+            </li>
+          )}
           <li>
             {isKru ? (
               <button
@@ -124,21 +134,39 @@ export default function Nav() {
             ))}
             {isKru ? (
               <li className="pt-3">
-                <span className="flex items-center gap-2 text-brand-red text-sm font-semibold px-1">
+                <button
+                  onClick={() => {
+                    localStorage.setItem('tkt_persona', 'jolynn')
+                    window.dispatchEvent(new Event('persona-change'))
+                    setOpen(false)
+                  }}
+                  className="flex items-center gap-2 text-brand-red text-sm font-semibold px-1"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
-                  Kru view
-                </span>
+                  Kru view ✕
+                </button>
               </li>
             ) : (
-              <li className="pt-3">
-                <Link
-                  href="/book"
-                  onClick={() => setOpen(false)}
-                  className="block w-full text-center bg-brand-red text-white px-4 py-3 rounded text-sm font-medium hover:bg-brand-red-dark transition-colors"
-                >
-                  Book a Session
-                </Link>
-              </li>
+              <>
+                <li className="pt-2">
+                  <Link
+                    href="/review-login"
+                    onClick={() => setOpen(false)}
+                    className="block py-2 text-sm text-gray-600 hover:text-gray-400 transition-colors"
+                  >
+                    Kru
+                  </Link>
+                </li>
+                <li className="pt-1">
+                  <Link
+                    href="/book"
+                    onClick={() => setOpen(false)}
+                    className="block w-full text-center bg-brand-red text-white px-4 py-3 rounded text-sm font-medium hover:bg-brand-red-dark transition-colors"
+                  >
+                    Book a Session
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
         </div>
