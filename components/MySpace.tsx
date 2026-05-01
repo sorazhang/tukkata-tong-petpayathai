@@ -24,7 +24,6 @@ const PERSONAS: Persona[] = [
   { key: 'owen',   name: 'Owen',   tier: 'free',   label: 'Free'   },
   { key: 'jin',    name: 'Jin',    tier: 'silver', label: 'Silver' },
   { key: 'jolynn', name: 'Jolynn', tier: 'gold',   label: 'Gold'   },
-  { key: 'kru',    name: 'Kru',    tier: 'kru',    label: 'Kru'    },
 ]
 
 const STORAGE_KEY = 'tkt_persona'

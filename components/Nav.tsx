@@ -71,10 +71,17 @@ export default function Nav() {
           ))}
           <li>
             {isKru ? (
-              <span className="flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 text-brand-red px-3 py-1.5 rounded text-xs font-semibold">
+              <button
+                onClick={() => {
+                  localStorage.setItem('tkt_persona', 'jolynn')
+                  window.dispatchEvent(new Event('persona-change'))
+                }}
+                className="flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 text-brand-red px-3 py-1.5 rounded text-xs font-semibold hover:bg-brand-red/20 transition-colors"
+                title="Exit Kru view"
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
-                Kru view
-              </span>
+                Kru view ✕
+              </button>
             ) : (
               <Link
                 href="/book"

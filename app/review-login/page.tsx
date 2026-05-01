@@ -21,7 +21,9 @@ export default function ReviewLogin() {
     })
 
     if (res.ok) {
-      router.push('/')
+      localStorage.setItem('tkt_persona', 'kru')
+      window.dispatchEvent(new Event('persona-change'))
+      router.push('/kru')
     } else {
       setError('Incorrect password.')
       setLoading(false)
