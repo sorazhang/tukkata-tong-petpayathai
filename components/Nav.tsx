@@ -14,10 +14,7 @@ const studentLinks = [
 ]
 
 const kruLinks = [
-  { href: '/kru',        label: 'Dashboard'         },
-  { href: '/confusions', label: 'Questions'         },
-  { href: '/vote',       label: 'Vote'              },
-  { href: '/review',     label: 'Review'            },
+  { href: '/kru', label: 'Dashboard' },
 ]
 
 export default function Nav() {
@@ -79,28 +76,16 @@ export default function Nav() {
               </Link>
             </li>
           )}
-          <li>
-            {isKru ? (
-              <button
-                onClick={() => {
-                  localStorage.setItem('tkt_persona', 'jolynn')
-                  window.dispatchEvent(new Event('persona-change'))
-                }}
-                className="flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 text-brand-red px-3 py-1.5 rounded text-xs font-semibold hover:bg-brand-red/20 transition-colors"
-                title="Exit Kru view"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
-                Kru view ✕
-              </button>
-            ) : (
+          {!isKru && (
+            <li>
               <Link
                 href="/book"
                 className="bg-brand-red text-white px-4 py-2 rounded text-sm font-medium hover:bg-brand-red-dark transition-colors"
               >
                 Book a Session
               </Link>
-            )}
-          </li>
+            </li>
+          )}
         </ul>
 
         {/* Hamburger button — mobile only */}
@@ -132,21 +117,7 @@ export default function Nav() {
                 </Link>
               </li>
             ))}
-            {isKru ? (
-              <li className="pt-3">
-                <button
-                  onClick={() => {
-                    localStorage.setItem('tkt_persona', 'jolynn')
-                    window.dispatchEvent(new Event('persona-change'))
-                    setOpen(false)
-                  }}
-                  className="flex items-center gap-2 text-brand-red text-sm font-semibold px-1"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-red" />
-                  Kru view ✕
-                </button>
-              </li>
-            ) : (
+            {!isKru && (
               <>
                 <li className="pt-2">
                   <Link
