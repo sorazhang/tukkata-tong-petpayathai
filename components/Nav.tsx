@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -61,14 +62,23 @@ export default function Nav() {
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="flex flex-col leading-tight hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
-          <span className="text-white font-semibold text-base tracking-tight">
-            Tukkatatong Petpayathai
-          </span>
-          <span className="font-thai text-gray-500 text-xs" lang="th">
-            ตุ๊กตาทอง เพชรพญาไท
-          </span>
+          <Image
+            src="/logo.png"
+            alt="Tukkatatong logo"
+            width={36}
+            height={36}
+            className="invert shrink-0"
+          />
+          <div className="flex flex-col leading-tight">
+            <span className="text-white font-semibold text-base tracking-tight">
+              Tukkatatong Petpayathai
+            </span>
+            <span className="font-thai text-gray-500 text-xs" lang="th">
+              ตุ๊กตาทอง เพชรพญาไท
+            </span>
+          </div>
         </Link>
 
         {/* Desktop links */}
