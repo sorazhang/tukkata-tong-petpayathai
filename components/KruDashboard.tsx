@@ -5,8 +5,11 @@ import Link from 'next/link'
 import type { Confusion } from '@/lib/confusion-actions'
 import type { Challenge } from '@/lib/content'
 import type { Poll } from '@/lib/polls'
+import type { MyEntry } from '@/lib/my-journal-actions'
+import MyJournalEntry from './MyJournalEntry'
+import MyJournalList from './MyJournalList'
 
-type Tab = 'vote' | 'questions' | 'challenges'
+type Tab = 'vote' | 'questions' | 'challenges' | 'notes'
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -29,10 +32,12 @@ export default function KruDashboard({
   openQuestions,
   needsAnswer,
   pendingPolls,
+  entries,
 }: {
   openQuestions: Confusion[]
   needsAnswer: Challenge[]
   pendingPolls: Poll[]
+  entries: MyEntry[]
 }) {
   const [tab, setTab] = useState<Tab>('vote')
 
@@ -60,6 +65,7 @@ export default function KruDashboard({
           { key: 'vote',       label: 'Vote',       count: pendingPolls.length   },
           { key: 'questions',  label: 'Questions',  count: openQuestions.length  },
           { key: 'challenges', label: 'Challenges', count: needsAnswer.length    },
+          { key: 'notes',      label: 'Notes',      count: 0                     },
         ] as { key: Tab; label: string; count: number }[]).map(({ key, label, count }) => (
           <button
             key={key}
@@ -169,6 +175,16 @@ export default function KruDashboard({
             </div>
           </div>
         )
+      )}
+
+      {/* Notes */}
+      {tab === 'notes' && (
+        <div className="space-y-6">
+          <div className="border border-gray-200 rounded-xl p-5">
+            <MyJournalEntry />
+          </div>
+          {entries.length > 0 && <MyJournalList entries={entries} />}
+        </div>
       )}
 
     </main>
