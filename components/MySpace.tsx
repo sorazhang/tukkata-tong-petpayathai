@@ -1,142 +1,75 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import MyJournalEntry from './MyJournalEntry'
 import MyJournalList from './MyJournalList'
 import MyJournalPatterns from './MyJournalPatterns'
-import MyObservationList from './MyObservationList'
+import MyChallengeList from './MyChallengeList'
 import MyAnalysisList from './MyAnalysisList'
 import type { MyEntry } from '@/lib/my-journal-actions'
-import type { MyObservation } from '@/lib/my-observation-actions'
+import type { MyChallenge } from '@/lib/my-challenge-actions'
 import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
-type Tab = 'journal' | 'insights' | 'observations'
+type Tab = 'journal' | 'challenges' | 'insights'
 type Tier = 'free' | 'silver' | 'gold'
 
-interface Student {
-  key: string
-  name: string
-  tier: Tier
-  tierLabel: string
+// Mock tier — swap this with real auth session data once auth is wired up
+const userTier: Tier = 'gold'
+
+const TIER_LABELS: Record<Tier, string> = {
+  free: 'Free',
+  silver: 'Silver',
+  gold: 'Gold',
 }
 
-const STUDENTS: Record<string, Student> = {
-  owen: { key: 'owen', name: 'Owen', tier: 'free',   tierLabel: 'Free'   },
-  jin:  { key: 'jin',  name: 'Jin',  tier: 'silver', tierLabel: 'Silver' },
-  alex: { key: 'alex', name: 'Alex', tier: 'gold',   tierLabel: 'Gold'   },
+const TIER_COLORS: Record<Tier, string> = {
+  free: 'text-gray-400',
+  silver: 'text-gray-400',
+  gold: 'text-amber-500',
 }
 
-const STUDENT_KEY = 'tkt_student'
-
-function LockedFeature({ requiredTier }: { requiredTier: 'silver' | 'gold' }) {
-  const tierLabel = requiredTier === 'gold' ? 'Gold' : 'Silver'
+function LockedFeature({ label, requiredTier }: { label: string; requiredTier: 'silver' | 'gold' }) {
   return (
-    <div className="py-12 text-center space-y-2">
-      <p className="text-2xl">🔒</p>
-      <p className="text-sm font-semibold text-brand-black">
-        {requiredTier === 'gold' ? 'Gold members only' : 'Silver members and above'}
-      </p>
+    <div className="py-12 text-center space-y-3">
+      <div className="text-3xl">🔒</div>
+      <p className="text-sm font-semibold text-brand-black">{label}</p>
       <p className="text-xs text-gray-400">
-        Upgrade to {tierLabel} or above to unlock this feature.
+        Available on{' '}
+        <span className={requiredTier === 'gold' ? 'text-amber-500 font-semibold' : 'text-gray-600 font-semibold'}>
+          {TIER_LABELS[requiredTier]}
+        </span>{' '}
+        and above.
       </p>
+      <button className="mt-2 text-xs font-semibold text-brand-red hover:text-brand-red-dark transition-colors">
+        Upgrade →
+      </button>
     </div>
   )
 }
-
-function LoginForm({ onLogin }: { onLogin: (s: Student) => void }) {
-  const [password, setPassword] = useState('')
-  const [error, setError]       = useState('')
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const student = STUDENTS[password.toLowerCase().trim()]
-    if (student) {
-      onLogin(student)
-    } else {
-      setError('Incorrect password.')
-    }
-  }
-
-  return (
-    <div className="min-h-[60vh] flex items-center justify-center">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-2">
-            My Space
-          </p>
-          <h2 className="text-2xl font-bold text-brand-black">Welcome back</h2>
-          <p className="text-gray-400 text-sm mt-2">Enter your password to continue.</p>
-        </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => { setPassword(e.target.value); setError('') }}
-            placeholder="Password"
-            autoFocus
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-red"
-          />
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          <button
-            type="submit"
-            disabled={!password}
-            className="w-full bg-brand-red text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-50"
-          >
-            Enter
-          </button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
 
 export default function MySpace({
   entries,
-  observations,
+  challenges,
   analyses,
 }: {
   entries: MyEntry[]
-  observations: MyObservation[]
+  challenges: MyChallenge[]
   analyses: MyAnalysis[]
 }) {
-  const [tab, setTab]         = useState<Tab>('journal')
-  const [student, setStudent] = useState<Student | null>(null)
-  const [hydrated, setHydrated] = useState(false)
+  const [tab, setTab] = useState<Tab>('journal')
 
-  useEffect(() => {
-    function sync() {
-      const raw = localStorage.getItem(STUDENT_KEY)
-      if (raw) {
-        try {
-          const parsed = JSON.parse(raw) as Student
-          if (STUDENTS[parsed.key]) { setStudent(parsed); return }
-        } catch { /* fall through */ }
-      }
-      setStudent(null)
-    }
-    sync()
-    setHydrated(true)
-    window.addEventListener('student-change', sync)
-    return () => window.removeEventListener('student-change', sync)
-  }, [])
-
-  function handleLogin(s: Student) {
-    localStorage.setItem(STUDENT_KEY, JSON.stringify(s))
-    window.dispatchEvent(new Event('student-change'))
-    setStudent(s)
-  }
-
-  if (!hydrated) return null
-  if (!student)  return <LoginForm onLogin={handleLogin} />
-
-  const tier = student.tier
-  const canInsights     = tier === 'silver' || tier === 'gold'
-  const canObservations = tier === 'silver' || tier === 'gold'
-  const canAskKru       = tier === 'gold'
+  const canAccessInsights = userTier === 'silver' || userTier === 'gold'
+  const canAccessChallenges = userTier === 'silver' || userTier === 'gold'
+  const canAskKru = userTier === 'gold'
 
   return (
     <div>
+      {/* Tier badge */}
+      <div className="flex justify-end mb-4">
+        <span className={`text-xs font-semibold uppercase tracking-widest ${TIER_COLORS[userTier]}`}>
+          {TIER_LABELS[userTier]} Member
+        </span>
+      </div>
 
       {/* Tab bar */}
       <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
@@ -155,26 +88,30 @@ export default function MySpace({
           }`}
         >
           Insights
-          {canInsights && analyses.length > 0 && (
+          {canAccessInsights && analyses.length > 0 && (
             <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
               {analyses.length}
             </span>
           )}
-          {!canInsights && <span className="ml-1 text-gray-300 text-xs">🔒</span>}
+          {!canAccessInsights && (
+            <span className="ml-1.5 text-xs text-gray-300">🔒</span>
+          )}
         </button>
         <button
-          onClick={() => setTab('observations')}
+          onClick={() => setTab('challenges')}
           className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'observations' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+            tab === 'challenges' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
           }`}
         >
-          Observations
-          {canObservations && observations.length > 0 && (
+          Challenges
+          {canAccessChallenges && challenges.length > 0 && (
             <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
-              {observations.length}
+              {challenges.length}
             </span>
           )}
-          {!canObservations && <span className="ml-1 text-gray-300 text-xs">🔒</span>}
+          {!canAccessChallenges && (
+            <span className="ml-1.5 text-xs text-gray-300">🔒</span>
+          )}
         </button>
       </div>
 
@@ -183,25 +120,27 @@ export default function MySpace({
           <div className="border border-gray-200 rounded-xl p-5">
             <MyJournalEntry />
           </div>
+          {canAccessInsights && <MyJournalPatterns />}
+          {!canAccessInsights && (
+            <div className="border border-gray-100 rounded-xl p-5">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-300 mb-2">AI Pattern Analysis</p>
+              <LockedFeature label="Unlock AI-powered pattern recognition" requiredTier="silver" />
+            </div>
+          )}
           {entries.length > 0 && <MyJournalList entries={entries} />}
         </div>
       )}
 
       {tab === 'insights' && (
-        canInsights
-          ? (
-            <div className="space-y-6">
-              <MyJournalPatterns />
-              {analyses.length > 0 && <MyAnalysisList analyses={analyses} />}
-            </div>
-          )
-          : <LockedFeature requiredTier="silver" />
+        canAccessInsights
+          ? <MyAnalysisList analyses={analyses} />
+          : <LockedFeature label="AI Insights — saved pattern analyses" requiredTier="silver" />
       )}
 
-      {tab === 'observations' && (
-        canObservations
-          ? <MyObservationList observations={observations} canAskKru={canAskKru} studentName={student.name} />
-          : <LockedFeature requiredTier="silver" />
+      {tab === 'challenges' && (
+        canAccessChallenges
+          ? <MyChallengeList challenges={challenges} canAskKru={canAskKru} />
+          : <LockedFeature label="Personal Challenges — submit &amp; escalate to Kru" requiredTier="silver" />
       )}
     </div>
   )

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import MyJournalEntry from './MyJournalEntry'
+import KruNoteEntry from './KruNoteEntry'
 
 const PERSONA_KEY = 'tkt_persona'
 
@@ -31,7 +31,7 @@ export default function KruQuickCapture() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-3">
           Quick note
         </p>
-        <MyJournalEntry />
+        <KruNoteEntry />
       </div>
     </div>
   )

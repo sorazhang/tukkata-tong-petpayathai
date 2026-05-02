@@ -60,8 +60,7 @@ Only return valid JSON, no markdown, no explanation.`,
     return { ok: true, matches }
   } catch (err) {
     console.error('matchEntryToChallenges error:', err)
-    const message = err instanceof Error ? err.message : String(err)
-    return { ok: false, error: `Failed to match: ${message}` }
+    return { ok: false, error: 'Failed to match.' }
   }
 }
 
@@ -152,22 +151,21 @@ Return JSON only:
     return { ok: true, result, entryCount: recent.length }
   } catch (err) {
     console.error('surfacePatterns error:', err)
-    const message = err instanceof Error ? err.message : String(err)
-    return { ok: false, error: `Failed to analyze patterns: ${message}` }
+    return { ok: false, error: 'Failed to analyze patterns.' }
   }
 }
 
 // ─── Draft entry as a student challenge ───────────────────────────────────────
 
-export interface ObservationDraft {
+export interface ChallengeDraft {
   title: string
   situation: string
   yourTurn: string
 }
 
-export async function draftAsObservation(
+export async function draftAsChallenge(
   entryText: string,
-): Promise<{ ok: boolean; draft?: ObservationDraft; error?: string }> {
+): Promise<{ ok: boolean; draft?: ChallengeDraft; error?: string }> {
   try {
     const response = await client.messages.create({
       model: 'claude-opus-4-7',
@@ -198,12 +196,11 @@ Return JSON only:
 
     const raw = textBlock.text.trim()
     const jsonStr = raw.startsWith('{') ? raw : raw.slice(raw.indexOf('{'))
-    const draft: ObservationDraft = JSON.parse(jsonStr)
+    const draft: ChallengeDraft = JSON.parse(jsonStr)
     return { ok: true, draft }
   } catch (err) {
-    console.error('draftAsObservation error:', err)
-    const message = err instanceof Error ? err.message : String(err)
-    return { ok: false, error: `Failed to draft observation: ${message}` }
+    console.error('draftAsChallenge error:', err)
+    return { ok: false, error: 'Failed to draft challenge.' }
   }
 }
 
@@ -244,7 +241,6 @@ Output the generalized question paragraph only, no extra text.`,
     return { ok: true, generalizedText: textBlock.text.trim() }
   } catch (err) {
     console.error('generalizeChallenge error:', err)
-    const message = err instanceof Error ? err.message : String(err)
-    return { ok: false, error: `Failed to generalize: ${message}` }
+    return { ok: false, error: 'Failed to generalize.' }
   }
 }
