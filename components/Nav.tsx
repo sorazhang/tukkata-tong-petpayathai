@@ -64,7 +64,7 @@ export default function Nav() {
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
           <img
-            src="/logo4.png"
+            src="/logo5.png"
             alt="Tukkatatong logo"
             className="h-9 w-auto shrink-0"
             style={{ filter: 'invert(1)', mixBlendMode: 'screen' }}
