@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getChallenges, getCultureStories } from '@/lib/content'
 import ChallengeCard from '@/components/ChallengeCard'
 import SurveyWidget from '@/components/SurveyWidget'
+import KruQuickCapture from '@/components/KruQuickCapture'
 
 export default async function Home() {
   const [challenges, stories] = await Promise.all([
@@ -14,6 +15,7 @@ export default async function Home() {
 
   return (
     <main>
+      <KruQuickCapture />
       {/* ── Hero ── */}
       <section className="bg-brand-black text-white py-28 px-6">
         <div className="max-w-3xl mx-auto">
