@@ -16,13 +16,12 @@ export default async function KruPage() {
 
   const openQuestions = confusions.filter((c) => c.status === 'open')
   const needsAnswer   = challenges.filter((c) => c.status === 'needs_answer')
-  const pendingPolls  = polls.filter((p) => !p.answer)
 
   return (
     <KruDashboard
       openQuestions={openQuestions}
       needsAnswer={needsAnswer}
-      pendingPolls={pendingPolls}
+      polls={polls}
       notes={notes}
     />
   )

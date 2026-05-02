@@ -28,20 +28,28 @@ function Badge({ count }: { count: number }) {
   )
 }
 
+type PollFilter = 'all' | 'waiting' | 'answered'
+
 export default function KruDashboard({
   openQuestions,
   needsAnswer,
-  pendingPolls,
+  polls,
   notes,
 }: {
   openQuestions: Confusion[]
   needsAnswer: Challenge[]
-  pendingPolls: Poll[]
+  polls: Poll[]
   notes: KruNote[]
 }) {
-  const [tab, setTab] = useState<Tab>('vote')
+  const [tab, setTab]               = useState<Tab>('vote')
+  const [pollFilter, setPollFilter] = useState<PollFilter>('waiting')
 
-  const totalPending = openQuestions.length + needsAnswer.length + pendingPolls.length
+  const pendingCount = polls.filter((p) => !p.answer).length
+  const totalPending = openQuestions.length + needsAnswer.length + pendingCount
+
+  const filteredPolls = pollFilter === 'all'      ? polls
+                      : pollFilter === 'waiting'  ? polls.filter((p) => !p.answer)
+                      : polls.filter((p) => !!p.answer)
 
   return (
     <main className="max-w-2xl mx-auto px-6 py-12">
@@ -62,7 +70,7 @@ export default function KruDashboard({
       {/* Tab bar */}
       <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
         {([
-          { key: 'vote',       label: 'Vote',       count: pendingPolls.length   },
+          { key: 'vote',       label: 'Vote',       count: pendingCount          },
           { key: 'questions',  label: 'Questions',  count: openQuestions.length  },
           { key: 'challenges', label: 'Challenges', count: needsAnswer.length    },
           { key: 'notes',      label: 'Notes',      count: 0                     },
@@ -82,32 +90,63 @@ export default function KruDashboard({
 
       {/* Vote */}
       {tab === 'vote' && (
-        pendingPolls.length === 0 ? (
-          <EmptyState message="No votes waiting." />
-        ) : (
-          <div className="space-y-2">
-            {pendingPolls.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/vote/${p.slug}`}
-                className="flex items-center justify-between gap-4 border border-gray-200 rounded-xl px-5 py-4 hover:border-gray-300 hover:bg-gray-50 transition-colors"
-              >
-                <div>
-                  <p className="text-sm font-semibold text-brand-black">{p.question}</p>
-                  {p.description && (
-                    <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{p.description}</p>
-                  )}
-                  <p className="text-xs text-gray-400 mt-1">
-                    {new Date(p.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
-                  </p>
-                </div>
-                <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded shrink-0">
-                  Waiting
-                </span>
-              </Link>
-            ))}
+        <div className="space-y-4">
+          {/* Filter pills */}
+          <div className="flex gap-2">
+            {(['waiting', 'answered', 'all'] as PollFilter[]).map((f) => {
+              const label = f === 'all' ? `All (${polls.length})` : f === 'waiting' ? `Waiting (${polls.filter(p => !p.answer).length})` : `Answered (${polls.filter(p => !!p.answer).length})`
+              return (
+                <button
+                  key={f}
+                  onClick={() => setPollFilter(f)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                    pollFilter === f ? 'bg-brand-black text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                  }`}
+                >
+                  {label}
+                </button>
+              )
+            })}
           </div>
-        )
+
+          {filteredPolls.length === 0 ? (
+            <EmptyState message={pollFilter === 'waiting' ? 'No votes waiting.' : 'No answered votes yet.'} />
+          ) : (
+            <div className="space-y-2">
+              {filteredPolls.map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/vote/${p.slug}`}
+                  className="flex items-center justify-between gap-4 border border-gray-200 rounded-xl px-5 py-4 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-brand-black">{p.question}</p>
+                    {p.description && (
+                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{p.description}</p>
+                    )}
+                    {p.answer && (
+                      <p className="text-xs text-gray-500 mt-0.5 truncate">
+                        → {p.answer.customText ?? p.options.find(o => o.id === p.answer?.optionId)?.label ?? p.answer.optionId}
+                      </p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(p.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                    </p>
+                  </div>
+                  {p.answer ? (
+                    <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded shrink-0">
+                      Answered
+                    </span>
+                  ) : (
+                    <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded shrink-0">
+                      Waiting
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       )}
 
       {/* Questions */}
