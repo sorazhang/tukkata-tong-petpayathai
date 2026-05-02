@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import KruTranslateTooltip from '@/components/KruTranslateTooltip'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({
         <Nav />
         {children}
         <Footer />
+        <KruTranslateTooltip />
       </body>
     </html>
   )
