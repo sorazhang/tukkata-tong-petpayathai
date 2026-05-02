@@ -64,10 +64,10 @@ export default function Nav() {
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
           <img
-            src="/logo5.png"
+            src="/logo6.png"
             alt="Tukkatatong logo"
             className="h-9 w-auto shrink-0"
-            style={{ filter: 'invert(1)', mixBlendMode: 'screen' }}
+            style={{}}
           />
           <div className="flex flex-col leading-tight">
             <span className="text-white font-semibold text-base tracking-tight">
