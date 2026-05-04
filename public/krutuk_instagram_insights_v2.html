@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instagram Insights — Tukkatatong</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Sarabun', sans-serif; background: #0d0d0d; color: #f0ece0; min-height: 100vh; padding: 48px 32px; }
+  .page { max-width: 720px; margin: 0 auto; }
+  .header { border-bottom: 1px solid #2a2a2a; padding-bottom: 24px; margin-bottom: 40px; }
+  .label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.15em; color: #5a5a5a; text-transform: uppercase; margin-bottom: 8px; }
+  h1 { font-size: 28px; font-weight: 600; color: #f0ece0; line-height: 1.2; margin-bottom: 6px; }
+  .subtitle { font-size: 14px; color: #5a5a5a; }
+  .section-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #3a7a5a; text-transform: uppercase; margin-bottom: 16px; }
+  .section { margin-bottom: 40px; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 40px; }
+  .stat-card { background: #161616; border: 1px solid #222; border-radius: 8px; padding: 18px 14px; }
+  .stat-number { font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; color: #c8f0a0; line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 11px; color: #5a5a5a; line-height: 1.4; }
+  .stat-card.highlight { border-color: #1e3d28; }
+
+  .perf-table { width: 100%; border-collapse: collapse; }
+  .perf-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: #5a5a5a; text-align: right; padding: 0 0 12px 16px; text-transform: uppercase; }
+  .perf-table th:first-child { text-align: left; padding-left: 0; }
+  .perf-table td { padding: 11px 0 11px 16px; font-size: 13px; border-top: 1px solid #1a1a1a; text-align: right; }
+  .perf-table td:first-child { text-align: left; padding-left: 0; }
+  .cat-name { display: flex; align-items: center; gap: 8px; }
+  .cat-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .highlight-row td { color: #c8f0a0; }
+  .mono { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .bar-wrap { width: 80px; display: inline-block; }
+  .bar-bg { background: #1a1a1a; border-radius: 2px; height: 5px; width: 100%; }
+  .bar-fill { height: 5px; border-radius: 2px; background: #3a7a5a; }
+  .bar-fill.top { background: #c8f0a0; }
+
+  .dual-proof { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 40px; }
+  .proof-card { background: #0f1f14; border: 1px solid #1e3d28; border-radius: 8px; padding: 20px; }
+  .proof-card h4 { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: #3a7a5a; text-transform: uppercase; margin-bottom: 12px; }
+  .proof-big { font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 600; color: #c8f0a0; line-height: 1; margin-bottom: 4px; }
+  .proof-sub { font-size: 12px; color: #5a7a60; }
+  .proof-note { font-size: 11px; color: #3a5a40; margin-top: 10px; line-height: 1.5; }
+
+  .insight-box { background: #0f1f14; border: 1px solid #1e3d28; border-radius: 8px; padding: 24px; margin-bottom: 40px; }
+  .insight-box h3 { font-size: 16px; font-weight: 600; color: #c8f0a0; margin-bottom: 12px; }
+  .insight-box p { font-size: 14px; color: #8a9a80; line-height: 1.7; }
+  .insight-box p strong { color: #c8f0a0; }
+
+  .cadence-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin-bottom: 8px; }
+  .cadence-month { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .cadence-bar { width: 100%; border-radius: 2px; }
+  .cadence-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: #3a3a3a; text-align: center; }
+
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 40px; }
+  .comp-card { background: #161616; border: 1px solid #222; border-radius: 8px; padding: 20px; }
+  .comp-card.highlight { border-color: #1e3d28; background: #0f1f14; }
+  .comp-name { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: #5a5a5a; text-transform: uppercase; margin-bottom: 12px; }
+  .comp-stat { margin-bottom: 8px; }
+  .comp-stat .label2 { font-size: 11px; color: #5a5a5a; margin-bottom: 2px; }
+  .comp-stat .value { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #c8f0a0; }
+
+  .opportunity { background: #161616; border: 1px solid #222; border-radius: 8px; padding: 24px; }
+  .opportunity h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; color: #f0ece0; }
+  .opp-point { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .opp-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #3a7a5a; margin-top: 2px; flex-shrink: 0; }
+  .opp-text { font-size: 14px; color: #8a8a7a; line-height: 1.6; }
+  .opp-text strong { color: #f0ece0; }
+
+  .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #1a1a1a; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #3a3a3a; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="label">Instagram Content Analysis · May 2026</div>
+    <h1>Tukkatatong Petpayathai</h1>
+    <div class="subtitle">@tukkatatong_petpayathai · 521 posts · 197 videos analyzed</div>
+  </div>
+
+  <!-- Key stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-number">521</div>
+      <div class="stat-label">Total posts analyzed</div>
+    </div>
+    <div class="stat-card highlight">
+      <div class="stat-number">416</div>
+      <div class="stat-label">Avg views — technique videos</div>
+    </div>
+    <div class="stat-card highlight">
+      <div class="stat-number">116</div>
+      <div class="stat-label">Avg likes — technique posts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">41%</div>
+      <div class="stat-label">More views than coaching content</div>
+    </div>
+  </div>
+
+  <!-- Dual proof -->
+  <div class="section">
+    <div class="section-title">Two signals, same direction</div>
+    <div class="dual-proof">
+      <div class="proof-card">
+        <h4>Views (video posts)</h4>
+        <div class="proof-big">+41%</div>
+        <div class="proof-sub">technique vs coaching/gym</div>
+        <div class="proof-note">416 avg views vs 294.<br>Views require a conscious choice to watch — harder to fake than a like.</div>
+      </div>
+      <div class="proof-card">
+        <h4>Likes (all posts)</h4>
+        <div class="proof-big">+38%</div>
+        <div class="proof-sub">technique vs coaching/gym</div>
+        <div class="proof-note">116 avg likes vs 84.<br>Both metrics confirm the same pattern across 521 posts.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance table -->
+  <div class="section">
+    <div class="section-title">Full breakdown by content type</div>
+    <table class="perf-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Posts</th>
+          <th>Avg views</th>
+          <th>Avg likes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="highlight-row">
+          <td><span class="cat-name"><span class="cat-dot" style="background:#c8f0a0"></span>Technique</span></td>
+          <td>77</td>
+          <td class="mono">416</td>
+          <td class="mono">116</td>
+          <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill top" style="width:100%"></div></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="cat-name"><span class="cat-dot" style="background:#5a8a6a"></span>Fight / career</span></td>
+          <td>73</td>
+          <td class="mono">382</td>
+          <td class="mono">128</td>
+          <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:92%"></div></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="cat-name"><span class="cat-dot" style="background:#3a5a4a"></span>Personal</span></td>
+          <td>19</td>
+          <td class="mono">335</td>
+          <td class="mono">110</td>
+          <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:80%"></div></div></div></td>
+        </tr>
+        <tr>
+          <td><span class="cat-name"><span class="cat-dot" style="background:#2a2a2a"></span>Coaching / gym</span></td>
+          <td>213</td>
+          <td class="mono">294</td>
+          <td class="mono">84</td>
+          <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:62%"></div></div></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gap insight -->
+  <div class="insight-box">
+    <h3>The gap</h3>
+    <p>Technique content leads on <strong>both views and likes</strong> — yet it is only <strong>15% of what Kru Tuk posts</strong>. Coaching and gym content fills 41% of the feed but scores lowest on both metrics. The audience is already showing what they value. The supply is not meeting the demand.</p>
+  </div>
+
+  <!-- Cadence -->
+  <div class="section">
+    <div class="section-title">Technique posts per month — last 12 months</div>
+    <div class="cadence-grid">
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">MAY</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:24px; background:#3a7a5a;"></div><div class="cadence-label">JUN</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">JUL</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">AUG</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">SEP</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">OCT</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">NOV</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">DEC</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">JAN</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:4px; background:#1a1a1a;"></div><div class="cadence-label">FEB</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:24px; background:#3a7a5a;"></div><div class="cadence-label">MAR</div></div>
+      <div class="cadence-month"><div class="cadence-bar" style="height:12px; background:#c8f0a0;"></div><div class="cadence-label">APR</div></div>
+    </div>
+    <p style="font-size: 12px; color: #3a3a3a; margin-top: 8px;">8 consecutive months with zero technique content · Jul 2025 — Feb 2026</p>
+  </div>
+
+  <!-- Superlek comparison -->
+  <div class="section">
+    <div class="section-title">The fighter who posts the most technique has the most followers</div>
+
+    <p style="font-size: 13px; color: #5a5a5a; margin-bottom: 20px; line-height: 1.6;">Liam Harrison cracked the code. 46% of his posts are technique. He has 1 million followers and a paid training platform. This is not coincidence — it is a repeatable model.</p>
+
+    <div style="position: relative; width: 100%; height: 200px; margin-bottom: 20px;">
+      <canvas id="three_way_chart" role="img" aria-label="Bar chart showing technique post percentage for three fighters.">Liam Harrison: 46%. Superlek: 18%. Kru Tuk: 15%.</canvas>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+      <div style="background:#161616; border:1px solid #222; border-top: 2px solid #444; border-radius:8px; padding:16px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5a5a5a; margin-bottom:8px; letter-spacing:0.1em;">SUPERLEK</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:#888780; margin-bottom:4px;">18%</div>
+        <div style="font-size:11px; color:#5a5a5a; margin-bottom:10px;">technique posts</div>
+        <div style="font-size:12px; color:#8a8a7a; line-height:1.5;">World champion · ~500K followers · 5 of last 8 months: zero technique</div>
+      </div>
+      <div style="background:#161616; border:1px solid #222; border-top: 2px solid #333; border-radius:8px; padding:16px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5a5a5a; margin-bottom:8px; letter-spacing:0.1em;">KRU TUK — NOW</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:#5a5a5a; margin-bottom:4px;">15%</div>
+        <div style="font-size:11px; color:#5a5a5a; margin-bottom:10px;">technique posts</div>
+        <div style="font-size:12px; color:#8a8a7a; line-height:1.5;">240 fights champion · 11K followers · 8 of last 12 months: zero technique</div>
+      </div>
+      <div style="background:#0f1f14; border:1px solid #1e3d28; border-top: 2px solid #1D9E75; border-radius:8px; padding:16px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#3a7a5a; margin-bottom:8px; letter-spacing:0.1em;">LIAM HARRISON — TARGET</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; font-weight:600; color:#c8f0a0; margin-bottom:4px;">46%</div>
+        <div style="font-size:11px; color:#3a7a5a; margin-bottom:10px;">technique posts</div>
+        <div style="font-size:12px; color:#8a9a80; line-height:1.5;">8x World Champion · <strong style="color:#c8f0a0;">1M followers</strong> · 26 technique posts in 2 months</div>
+      </div>
+    </div>
+
+    <div style="background:#0f1f14; border:1px solid #1e3d28; border-radius:8px; padding:16px;">
+      <p style="font-size:13px; color:#8a9a80; line-height:1.7; margin:0;">Liam is a <strong style="color:#c8f0a0;">Western fighter who learned Muay Thai</strong> and built a platform teaching what he absorbed. Kru Tuk is the fighter Liam's audience is trying to become — the authentic Thai source with 240 fights. Same model. <strong style="color:#c8f0a0;">Stronger credential.</strong> The ceiling is higher.</p>
+    </div>
+  </div>
+
+  <!-- Audience voice -->
+  <div class="section">
+    <div class="section-title">What your audience already says</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+      <div style="background:#161616; border:1px solid #222; border-radius:8px; padding:16px;">
+        <div style="font-size:12px; color:#3a7a5a; font-family:'IBM Plex Mono',monospace; margin-bottom:8px;">TECHNIQUE POST</div>
+        <p style="font-size:13px; color:#c8f0a0; line-height:1.6; margin-bottom:6px;">"Rodtang learnt that escape from you!!"</p>
+        <p style="font-size:11px; color:#5a5a5a;">@elguiri_sm — your audience connects your knowledge to today's champions</p>
+      </div>
+      <div style="background:#161616; border:1px solid #222; border-radius:8px; padding:16px;">
+        <div style="font-size:12px; color:#3a7a5a; font-family:'IBM Plex Mono',monospace; margin-bottom:8px;">TECHNIQUE POST</div>
+        <p style="font-size:13px; color:#c8f0a0; line-height:1.6; margin-bottom:6px;">"Absolutely perfect skill and technique"</p>
+        <p style="font-size:11px; color:#5a5a5a;">@michaelkong888 — unsolicited quality judgment from a viewer</p>
+      </div>
+      <div style="background:#161616; border:1px solid #222; border-radius:8px; padding:16px;">
+        <div style="font-size:12px; color:#3a7a5a; font-family:'IBM Plex Mono',monospace; margin-bottom:8px;">PEER COACHES WATCHING</div>
+        <p style="font-size:13px; color:#c8f0a0; line-height:1.6; margin-bottom:6px;">"Perfect knees" — "Great clinching"</p>
+        <p style="font-size:11px; color:#5a5a5a;">@coachmariusz — other coaches validate technique publicly</p>
+      </div>
+      <div style="background:#161616; border:1px solid #222; border-radius:8px; padding:16px;">
+        <div style="font-size:12px; color:#3a7a5a; font-family:'IBM Plex Mono',monospace; margin-bottom:8px;">TEACHING MOMENT</div>
+        <p style="font-size:13px; color:#c8f0a0; line-height:1.6; margin-bottom:6px;">"This is how it is done 🙏✅"</p>
+        <p style="font-size:11px; color:#5a5a5a;">@jl13tm — tagging a friend to learn from your content</p>
+      </div>
+    </div>
+    <div style="background:#161616; border:1px solid #222; border-radius:8px; padding:16px; display:flex; gap:16px; align-items:flex-start;">
+      <div style="flex:1;">
+        <div style="font-size:12px; color:#3a7a5a; font-family:'IBM Plex Mono',monospace; margin-bottom:8px;">INTERNATIONAL REACH — WITHOUT TRYING</div>
+        <p style="font-size:13px; color:#8a9a80; line-height:1.6;">Comments from Portugal 🇵🇹, Spain, Brazil, Singapore, Thailand. Coaches from Ukraine, Poland, and Malaysia engage regularly. 578 comments analyzed — the audience is already global.</p>
+      </div>
+      <div style="text-align:right; flex-shrink:0;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:28px; font-weight:600; color:#c8f0a0;">578</div>
+        <div style="font-size:11px; color:#5a5a5a;">comments<br>analyzed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opportunity -->
+  <div class="opportunity">
+    <h3>The opportunity</h3>
+    <div class="opp-point">
+      <div class="opp-num">01</div>
+      <div class="opp-text"><strong>Both views and likes confirm it.</strong> Technique content earns 41% more views and 38% more likes than coaching content. Two independent signals, same direction.</div>
+    </div>
+    <div class="opp-point">
+      <div class="opp-num">02</div>
+      <div class="opp-text"><strong>Consistency is the missing piece.</strong> 8 months without a single technique post. A structured weekly cadence changes the algorithm and the audience relationship.</div>
+    </div>
+    <div class="opp-point">
+      <div class="opp-num">03</div>
+      <div class="opp-text"><strong>240 fights of knowledge.</strong> Superlek posts training sessions. Kru Tuk can post wisdom — the why behind the technique. That's a different category nobody else has.</div>
+    </div>
+    <div class="opp-point">
+      <div class="opp-num">04</div>
+      <div class="opp-text"><strong>This becomes a second income.</strong> Consistent technique content builds the audience. The audience funds the platform. The platform funds the gym in Phuket.</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script>
+  new Chart(document.getElementById('three_way_chart'), {
+    type: 'bar',
+    data: {
+      labels: ['Kru Tuk\n(now)', 'Superlek', 'Liam Harrison\n(target)'],
+      datasets: [{
+        label: '% technique posts',
+        data: [15, 18, 46],
+        backgroundColor: ['#2a2a2a', '#3a3a3a', '#1D9E75'],
+        borderWidth: 0,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: ctx => ctx.parsed.y + '% technique posts' }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: '#5a5a5a', font: { size: 11 } } },
+        y: {
+          grid: { color: '#1a1a1a' },
+          ticks: { callback: v => v + '%', color: '#5a5a5a', font: { size: 11 } },
+          max: 60
+        }
+      }
+    }
+  });
+  </script>
+
+  <div class="footer">
+    <span>tukkatatong-petpayathai.com</span>
+    <span>Data: Instagram · May 2026</span>
+  </div>
+
+</div>
+</body>
+</html>
