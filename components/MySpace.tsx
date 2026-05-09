@@ -6,11 +6,12 @@ import MyJournalList from './MyJournalList'
 import MyJournalPatterns from './MyJournalPatterns'
 import MyChallengeList from './MyChallengeList'
 import MyAnalysisList from './MyAnalysisList'
+import MyStrikerDashboard from './MyStrikerDashboard'
 import type { MyEntry } from '@/lib/my-journal-actions'
 import type { MyChallenge } from '@/lib/my-challenge-actions'
 import type { MyAnalysis } from '@/lib/my-analysis-actions'
 
-type Tab = 'journal' | 'challenges' | 'insights'
+type Tab = 'journal' | 'challenges' | 'insights' | 'striker'
 type Tier = 'free' | 'silver' | 'gold'
 
 // Mock tier — swap this with real auth session data once auth is wired up
@@ -113,6 +114,14 @@ export default function MySpace({
             <span className="ml-1.5 text-xs text-gray-300">🔒</span>
           )}
         </button>
+        <button
+          onClick={() => setTab('striker')}
+          className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            tab === 'striker' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+          }`}
+        >
+          🥊 Stats
+        </button>
       </div>
 
       {tab === 'journal' && (
@@ -169,6 +178,8 @@ export default function MySpace({
           ? <MyChallengeList challenges={challenges} canAskKru={canAskKru} />
           : <LockedFeature label="Personal Challenges — submit &amp; escalate to Kru" requiredTier="silver" />
       )}
+
+      {tab === 'striker' && <MyStrikerDashboard />}
     </div>
   )
 }
