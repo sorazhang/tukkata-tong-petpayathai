@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MUAY THAI STRIKER</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@2.1.3/dist/pose-detection.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      overflow: hidden;
+      font-family: 'Chakra Petch', sans-serif;
+      color: #fff;
+      user-select: none;
+    }
+
+    canvas { display: block; }
+
+    /* ── LOADING ── */
+    #loading {
+      position: fixed; inset: 0;
+      background: #000;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 200;
+    }
+    .load-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 10vw, 96px);
+      color: #cc0000;
+      letter-spacing: 10px;
+      line-height: 1;
+      text-shadow: 0 0 60px rgba(200,0,0,0.5);
+    }
+    .load-thai {
+      font-size: 18px;
+      color: #883300;
+      letter-spacing: 6px;
+      margin-top: 4px;
+      margin-bottom: 48px;
+    }
+    .load-bar-track {
+      width: min(340px, 80vw);
+      height: 3px;
+      background: #1a1a1a;
+    }
+    .load-bar-fill {
+      height: 100%;
+      background: #cc0000;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .load-status {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #444;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    /* ── HUD ── */
+    #hud {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 14px 20px 10px;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 10;
+    }
+    .fighter-panel { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
+    .fighter-panel.right { align-items: flex-end; }
+    .fighter-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 3px;
+    }
+    .hp-track {
+      width: 200px;
+      height: 12px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      position: relative;
+      overflow: hidden;
+    }
+    .hp-fill {
+      height: 100%;
+      transition: width 0.15s ease;
+      position: relative;
+    }
+    .hp-fill::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 100%);
+    }
+    .hp-fill.player { background: linear-gradient(90deg, #ff2222, #ff8800); }
+    .hp-fill.opponent { background: linear-gradient(90deg, #ff8800, #ff2222); }
+    .hp-num {
+      font-size: 10px;
+      color: #888;
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+    .center-panel {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .round-label {
+      font-size: 10px;
+      color: #555;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+    .round-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px;
+      color: #cc0000;
+      line-height: 1;
+    }
+    .score-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      color: #555;
+      letter-spacing: 3px;
+    }
+
+    /* ── RESULT SCREEN ── */
+    #result-screen {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88);
+      display: none;
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 150;
+    }
+    .result-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(60px, 15vw, 120px);
+      letter-spacing: 8px;
+      line-height: 1;
+    }
+    .result-label.win  { color: #ffcc00; text-shadow: 0 0 60px rgba(255,150,0,0.6); }
+    .result-label.lose { color: #cc0000; text-shadow: 0 0 60px rgba(200,0,0,0.5); }
+    .result-sub {
+      font-size: 14px;
+      color: #666;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+    .result-score {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: #fff;
+      letter-spacing: 4px;
+      margin-top: 24px;
+    }
+    .result-btn {
+      margin-top: 40px;
+      padding: 14px 52px;
+      background: #cc0000;
+      color: #fff;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 5px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .result-btn:hover { background: #ff2200; transform: scale(1.04); }
+
+    /* ── NO POSE WARNING ── */
+    #no-pose-warn {
+      position: fixed;
+      bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: rgba(255,80,80,0.7);
+      letter-spacing: 2px;
+      pointer-events: none;
+      z-index: 10;
+      display: none;
+    }
+
+    /* ── MOVE GUIDE ── */
+    #move-guide {
+      position: fixed;
+      bottom: 20px; left: 20px;
+      font-size: 10px;
+      color: #333;
+      letter-spacing: 1px;
+      line-height: 2;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* ── SESSION STATS ── */
+    #session-stats {
+      margin-top: 28px;
+      text-align: center;
+      display: none;
+    }
+    .stat-grid {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .stat-chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 8px 16px;
+      min-width: 72px;
+    }
+    .stat-chip .chip-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      color: #fff;
+      line-height: 1;
+    }
+    .stat-chip .chip-lbl {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .stat-meta {
+      font-size: 11px;
+      color: #444;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+    .stat-meta span { color: #888; }
+    .journal-btn {
+      display: inline-block;
+      padding: 11px 36px;
+      border: 1px solid #333;
+      color: #888;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 4px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 12px;
+    }
+    .journal-btn:hover { border-color: #cc0000; color: #fff; }
+  </style>
+</head>
+<body>
+
+<video id="video" playsinline style="display:none"></video>
+<canvas id="canvas"></canvas>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="fighter-panel">
+    <div class="fighter-name">YOU</div>
+    <div class="hp-track"><div class="hp-fill player" id="player-hp-fill" style="width:100%"></div></div>
+    <div class="hp-num" id="player-hp-num">100 HP</div>
+  </div>
+  <div class="center-panel">
+    <div class="round-label">Round</div>
+    <div class="round-number" id="round-num">1</div>
+    <div class="score-val">SCORE <span id="score-num">0</span></div>
+  </div>
+  <div class="fighter-panel right">
+    <div class="fighter-name">OPPONENT</div>
+    <div class="hp-track"><div class="hp-fill opponent" id="opp-hp-fill" style="width:100%"></div></div>
+    <div class="hp-num" id="opp-hp-num">100 HP</div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="load-title">MUAY THAI</div>
+  <div class="load-thai">นักมวยไทย · STRIKER</div>
+  <div class="load-bar-track"><div class="load-bar-fill" id="load-bar"></div></div>
+  <div class="load-status" id="load-status">Initializing…</div>
+</div>
+
+<!-- Result -->
+<div id="result-screen">
+  <div class="result-label" id="result-label">KO!</div>
+  <div class="result-sub" id="result-sub">Round 1 — Victory</div>
+  <div class="result-score">SCORE — <span id="result-score-val">0</span></div>
+  <button class="result-btn" id="result-btn">NEXT ROUND</button>
+
+  <!-- Session stats — only shown at game-over -->
+  <div id="session-stats">
+    <div class="stat-grid" id="stat-grid"></div>
+    <div class="stat-meta" id="stat-meta"></div>
+    <a href="/my-space" class="journal-btn">JOURNAL IT →</a>
+  </div>
+</div>
+
+<div id="no-pose-warn">⚠ STEP INTO FRAME</div>
+
+<div id="move-guide">
+  JAB · CROSS · LEFT KICK · RIGHT KICK · KNEE<br>
+  RAISE BOTH HANDS TO BLOCK
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════
+const CFG = {
+  PUNCH_VEL:   0.036,
+  KICK_VEL:    0.040,
+  KNEE_VEL:    0.033,
+  COOLDOWN:    550,        // ms per limb
+  POSE_INTERVAL: 30,       // ms between detections
+
+  PLAYER_MAX_HP: 100,
+  OPP_MAX_HP:    100,
+  OPP_ATTACK_INTERVAL: 3800,
+  OPP_ATTACK_DMG: 9,
+  OPP_ATTACK_VARIANCE: 4,
+
+  DAMAGE: { jab: 5, cross: 11, lkick: 16, rkick: 19, knee: 13 },
+  COMBO_WINDOW: 1400,
+  TOTAL_ROUNDS: 3,
+};
+
+// ═══════════════════════════════════════════
+//  SESSION RECORDER
+// ═══════════════════════════════════════════
+const SESSION = {
+  startTime: null,
+  strikes: [],
+  bestCombo: 0,
+};
+
+function resetSession() {
+  SESSION.startTime = Date.now();
+  SESSION.strikes = [];
+  SESSION.bestCombo = 0;
+}
+
+function computeExtensionAngle(indices) {
+  if (!G.currentPose) return null;
+  const kp = G.currentPose.keypoints;
+  const [ai, bi, ci] = indices;
+  const a = kp[ai], b = kp[bi], c = kp[ci];
+  if ((a.score||0) < 0.25 || (b.score||0) < 0.25 || (c.score||0) < 0.25) return null;
+  const ax = a.x - b.x, ay = a.y - b.y;
+  const cx = c.x - b.x, cy = c.y - b.y;
+  const dot = ax*cx + ay*cy;
+  const mag = Math.sqrt(ax*ax + ay*ay) * Math.sqrt(cx*cx + cy*cy);
+  if (mag < 0.0001) return null;
+  return Math.round(Math.acos(Math.max(-1, Math.min(1, dot/mag))) * 180 / Math.PI);
+}
+
+function saveSession(outcome) {
+  const record = {
+    date: new Date().toISOString(),
+    score: G.score,
+    outcome,
+    rounds: G.round,
+    durationMs: Date.now() - (SESSION.startTime || Date.now()),
+    strikes: SESSION.strikes,
+    bestCombo: SESSION.bestCombo,
+    totalStrikes: SESSION.strikes.length,
+  };
+
+  const key = 'tkt_muay_sessions';
+  try {
+    const existing = JSON.parse(localStorage.getItem(key) || '[]');
+    existing.unshift(record);
+    if (existing.length > 30) existing.splice(30);
+    localStorage.setItem(key, JSON.stringify(existing));
+  } catch(e) {}
+
+  return record;
+}
+
+function showSessionStats(record) {
+  const counts = { jab: 0, cross: 0, left_kick: 0, right_kick: 0, knee: 0 };
+  let totalPower = 0;
+  record.strikes.forEach(s => {
+    const k = s.type.replace(' ', '_').toLowerCase();
+    if (counts[k] !== undefined) counts[k]++;
+    else counts['knee'] = (counts['knee'] || 0) + (k.includes('knee') ? 1 : 0);
+    totalPower += s.power || 0;
+  });
+
+  const labels = { jab: 'JAB', cross: 'CROSS', left_kick: 'L.KICK', right_kick: 'R.KICK', knee: 'KNEE' };
+  const grid = document.getElementById('stat-grid');
+  grid.innerHTML = Object.entries(counts)
+    .filter(([,v]) => v > 0)
+    .map(([k,v]) => `<div class="stat-chip"><div class="chip-val">${v}</div><div class="chip-lbl">${labels[k]}</div></div>`)
+    .join('') +
+    `<div class="stat-chip"><div class="chip-val" style="color:#ffcc00">${record.bestCombo}×</div><div class="chip-lbl">BEST COMBO</div></div>`;
+
+  const avgPower = record.totalStrikes > 0 ? Math.round(totalPower / record.totalStrikes) : 0;
+  document.getElementById('stat-meta').innerHTML =
+    `AVG POWER <span>${avgPower}</span> &nbsp;·&nbsp; ${record.totalStrikes} STRIKES LANDED &nbsp;·&nbsp; SESSION SAVED`;
+
+  document.getElementById('session-stats').style.display = 'block';
+}
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const G = {
+  phase: 'loading',       // loading | countdown | fighting | roundover
+  playerHP: CFG.PLAYER_MAX_HP,
+  oppHP:    CFG.OPP_MAX_HP,
+  score: 0,
+  combo: 0,
+  lastStrikeTime: 0,
+  round: 1,
+
+  currentPose: null,
+  poseHistory: [],
+  cooldowns: {},
+
+  // Opponent
+  oppState: 'idle',      // idle | attack | hurt | ko
+  oppStateTimer: 0,
+  oppSwayT: 0,
+  lastOppAttack: 0,
+  isBlocking: false,
+
+  // Visuals
+  hitRings: [],
+  dmgNums: [],
+  oppHitFlash: 0,
+  playerHitFlash: 0,
+  screenFlash: 0,
+  moveFlashName: '',
+  moveFlashT: 0,
+  countdownText: '',
+  countdownT: 0,
+};
+
+// ═══════════════════════════════════════════
+//  DOM / CANVAS
+// ═══════════════════════════════════════════
+const video  = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// ═══════════════════════════════════════════
+//  AUDIO (Web Audio API)
+// ═══════════════════════════════════════════
+let audioCtx = null;
+function initAudio() {
+  try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+}
+function playHit(type) {
+  if (!audioCtx) return;
+  const osc  = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  const t = audioCtx.currentTime;
+
+  if (type === 'punch') {
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(140, t);
+    osc.frequency.exponentialRampToValueAtTime(35, t + 0.12);
+    gain.gain.setValueAtTime(0.28, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+  } else if (type === 'kick') {
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(90, t);
+    osc.frequency.exponentialRampToValueAtTime(22, t + 0.18);
+    gain.gain.setValueAtTime(0.38, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+  } else if (type === 'player_hit') {
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(220, t);
+    osc.frequency.exponentialRampToValueAtTime(60, t + 0.12);
+    gain.gain.setValueAtTime(0.22, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+  }
+  osc.start(t);
+  osc.stop(t + 0.25);
+}
+
+// ═══════════════════════════════════════════
+//  LOADING
+// ═══════════════════════════════════════════
+function setLoadStatus(msg, pct) {
+  document.getElementById('load-status').textContent = msg;
+  if (pct !== undefined) document.getElementById('load-bar').style.width = pct + '%';
+}
+
+let detector = null;
+let poseDetecting = false;
+let lastPoseTime = 0;
+
+async function init() {
+  setLoadStatus('Requesting camera…', 15);
+
+  let stream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+  } catch(err) {
+    setLoadStatus('Camera error: ' + err.message, 0);
+    return;
+  }
+
+  video.srcObject = stream;
+  await new Promise(r => { video.onloadedmetadata = r; });
+  video.play();
+  setLoadStatus('Camera ready — loading AI model…', 40);
+
+  try {
+    await tf.ready();
+    setLoadStatus('TensorFlow ready…', 60);
+    detector = await poseDetection.createDetector(
+      poseDetection.SupportedModels.MoveNet,
+      { modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING }
+    );
+    setLoadStatus('Model loaded!', 100);
+  } catch(err) {
+    setLoadStatus('Model error: ' + err.message, 0);
+    return;
+  }
+
+  await sleep(700);
+  document.getElementById('loading').style.display = 'none';
+  initAudio();
+  startRound();
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ═══════════════════════════════════════════
+//  ROUND FLOW
+// ═══════════════════════════════════════════
+async function startRound() {
+  G.phase = 'countdown';
+  G.oppHP = CFG.OPP_MAX_HP;
+  G.playerHP = CFG.PLAYER_MAX_HP;
+  G.combo = 0;
+  G.poseHistory = [];
+  if (G.round === 1) resetSession();
+  document.getElementById('session-stats').style.display = 'none';
+  G.hitRings = [];
+  G.dmgNums = [];
+  G.oppState = 'idle';
+  G.oppHitFlash = 0;
+  G.playerHitFlash = 0;
+  G.screenFlash = 0;
+  G.lastOppAttack = Date.now() + 2000;
+  updateHUD();
+
+  document.getElementById('round-num').textContent = G.round;
+
+  for (const val of ['3', '2', '1', 'FIGHT']) {
+    G.countdownText = val;
+    G.countdownT = 0.85;
+    await sleep(850);
+  }
+  G.countdownText = '';
+  G.phase = 'fighting';
+}
+
+// ═══════════════════════════════════════════
+//  POSE DETECTION (async, non-blocking)
+// ═══════════════════════════════════════════
+async function runPoseDetection() {
+  if (!detector || video.readyState < 2) return;
+  try {
+    const poses = await detector.estimatePoses(video);
+    if (poses.length > 0) {
+      G.currentPose = poses[0];
+      G.poseHistory.push({ kp: poses[0].keypoints, t: Date.now() });
+      if (G.poseHistory.length > 8) G.poseHistory.shift();
+    } else {
+      G.currentPose = null;
+    }
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════
+//  SKELETON CONNECTIONS
+// ═══════════════════════════════════════════
+const BONES = [
+  [0,1],[0,2],[1,3],[2,4],
+  [5,6],[5,7],[7,9],[6,8],[8,10],
+  [5,11],[6,12],[11,12],
+  [11,13],[13,15],[12,14],[14,16],
+];
+
+// ═══════════════════════════════════════════
+//  STRIKE DETECTION
+// ═══════════════════════════════════════════
+function detectStrikes() {
+  if (G.poseHistory.length < 3 || !G.currentPose) return;
+
+  const now = Date.now();
+  const kp  = G.currentPose.keypoints;
+  const prev = G.poseHistory[G.poseHistory.length - 3];
+  const pkp  = prev.kp;
+  const dt   = Math.max(1, now - prev.t);
+
+  const VW = video.videoWidth  || 640;
+  const VH = video.videoHeight || 480;
+
+  function vel(i) {
+    if ((kp[i].score||0) < 0.22 || (pkp[i].score||0) < 0.22) return { sp: 0, vx: 0, vy: 0 };
+    const dx = (kp[i].x - pkp[i].x) / VW;
+    const dy = (kp[i].y - pkp[i].y) / VH;
+    return { sp: Math.sqrt(dx*dx + dy*dy), vx: dx, vy: dy };
+  }
+
+  function canFire(key) {
+    return !G.cooldowns[key] || now - G.cooldowns[key] > CFG.COOLDOWN;
+  }
+
+  function fire(key, name, dmgKey, snd, velObj, kpIndices) {
+    if (!canFire(key)) return;
+    G.cooldowns[key] = now;
+    onStrike(name, CFG.DAMAGE[dmgKey], snd, velObj, kpIndices);
+  }
+
+  // ── Guard detection (both wrists above shoulders) ──
+  const lShoulder = kp[5], rShoulder = kp[6];
+  const lWrist = kp[9], rWrist = kp[10];
+  if (
+    (lShoulder.score||0) > 0.3 && (rShoulder.score||0) > 0.3 &&
+    (lWrist.score||0) > 0.3 && (rWrist.score||0) > 0.3
+  ) {
+    const bothAbove = lWrist.y < lShoulder.y - 20 && rWrist.y < rShoulder.y - 20;
+    G.isBlocking = bothAbove;
+  } else {
+    G.isBlocking = false;
+  }
+
+  // ── Punches ──
+  const lw = vel(9);
+  if (lw.sp > CFG.PUNCH_VEL) fire('jab',   'JAB',        'jab',   'punch', lw, [5,7,9]);
+
+  const rw = vel(10);
+  if (rw.sp > CFG.PUNCH_VEL) fire('cross', 'CROSS',      'cross', 'punch', rw, [6,8,10]);
+
+  // ── Kicks (ankle rises fast, vy negative = moving up in image) ──
+  const la = vel(15);
+  if (la.sp > CFG.KICK_VEL && la.vy < -0.012) fire('lkick', 'LEFT KICK',  'lkick', 'kick', la, [11,13,15]);
+
+  const ra = vel(16);
+  if (ra.sp > CFG.KICK_VEL && ra.vy < -0.012) fire('rkick', 'RIGHT KICK', 'rkick', 'kick', ra, [12,14,16]);
+
+  // ── Knee (knee rises sharply) ──
+  const lk = vel(13);
+  if (lk.sp > CFG.KNEE_VEL && lk.vy < -0.018) fire('lknee', 'KNEE', 'knee', 'kick', lk, [11,13,15]);
+  const rk = vel(14);
+  if (rk.sp > CFG.KNEE_VEL && rk.vy < -0.018) fire('rknee', 'KNEE', 'knee', 'kick', rk, [12,14,16]);
+}
+
+function onStrike(name, baseDmg, sound, velObj, kpIndices) {
+  const now = Date.now();
+
+  // Combo
+  if (now - G.lastStrikeTime < CFG.COMBO_WINDOW) {
+    G.combo = Math.min(G.combo + 1, 9);
+  } else {
+    G.combo = 1;
+  }
+  G.lastStrikeTime = now;
+
+  const mult   = G.combo >= 4 ? 2.0 : G.combo >= 3 ? 1.6 : G.combo >= 2 ? 1.3 : 1.0;
+  const dmg    = Math.round(baseDmg * mult);
+  const points = dmg * (G.combo >= 3 ? 3 : G.combo >= 2 ? 2 : 1);
+
+  G.oppHP  = Math.max(0, G.oppHP - dmg);
+  G.score += points;
+
+  // Flash + ring
+  G.oppHitFlash = 0.5;
+  const rx = canvas.width  * (0.68 + Math.random() * 0.12);
+  const ry = canvas.height * (0.3  + Math.random() * 0.25);
+  G.hitRings.push({ x: rx, y: ry, r: 0, max: 65, alpha: 1, t: 0 });
+
+  G.dmgNums.push({
+    x: canvas.width * 0.72 + Math.random() * 50,
+    y: canvas.height * 0.35 - Math.random() * 20,
+    val: dmg,
+    alpha: 1,
+    vy: -75,
+    t: 0,
+    big: G.combo >= 3,
+    isOpp: true,
+  });
+
+  G.moveFlashName = name + (G.combo >= 2 ? ' ×' + G.combo : '');
+  G.moveFlashT = 1.1;
+
+  G.oppState = 'hurt';
+  G.oppStateTimer = 0.28;
+
+  // Record strike in session
+  const threshold = sound === 'punch' ? CFG.PUNCH_VEL : CFG.KICK_VEL;
+  const power = velObj ? Math.min(100, Math.round((velObj.sp / (threshold * 2.5)) * 100)) : 0;
+  SESSION.strikes.push({
+    type: name.toLowerCase().replace(' ', '_'),
+    velocity: velObj ? +velObj.sp.toFixed(4) : 0,
+    power,
+    extension: kpIndices ? computeExtensionAngle(kpIndices) : null,
+    combo: G.combo,
+    t: now,
+  });
+  if (G.combo > SESSION.bestCombo) SESSION.bestCombo = G.combo;
+
+  playHit(sound);
+  updateHUD();
+
+  if (G.oppHP <= 0) endRound(true);
+}
+
+// ═══════════════════════════════════════════
+//  OPPONENT AI
+// ═══════════════════════════════════════════
+function updateOpponent(dt) {
+  const now = Date.now();
+  G.oppSwayT += dt * 1.8;
+
+  if (G.oppStateTimer > 0) {
+    G.oppStateTimer -= dt;
+    if (G.oppStateTimer <= 0 && G.oppState !== 'ko') G.oppState = 'idle';
+  }
+
+  // Attack
+  if (G.oppState === 'idle' && now - G.lastOppAttack > CFG.OPP_ATTACK_INTERVAL) {
+    G.lastOppAttack = now;
+    G.oppState = 'attack';
+    G.oppStateTimer = 0.55;
+
+    const dmg = G.isBlocking
+      ? Math.max(0, Math.round((CFG.OPP_ATTACK_DMG + (Math.random() - 0.5) * CFG.OPP_ATTACK_VARIANCE) * 0.3))
+      : CFG.OPP_ATTACK_DMG + Math.round((Math.random() - 0.5) * CFG.OPP_ATTACK_VARIANCE);
+
+    G.playerHP = Math.max(0, G.playerHP - dmg);
+    G.playerHitFlash = 0.45;
+    G.screenFlash = 0.28;
+    playHit('player_hit');
+
+    G.dmgNums.push({
+      x: canvas.width * 0.22,
+      y: canvas.height * 0.5,
+      val: dmg,
+      alpha: 1,
+      vy: -55,
+      t: 0,
+      big: false,
+      isOpp: false,
+    });
+
+    if (G.isBlocking) {
+      G.moveFlashName = 'BLOCKED!';
+      G.moveFlashT = 0.8;
+    }
+
+    updateHUD();
+    if (G.playerHP <= 0) endRound(false);
+  }
+}
+
+// ═══════════════════════════════════════════
+//  UPDATE
+// ═══════════════════════════════════════════
+function update(dt) {
+  detectStrikes();
+  updateOpponent(dt);
+
+  G.oppHitFlash    = Math.max(0, G.oppHitFlash    - dt * 3.5);
+  G.playerHitFlash = Math.max(0, G.playerHitFlash - dt * 3.5);
+  G.screenFlash    = Math.max(0, G.screenFlash    - dt * 4);
+  G.moveFlashT     = Math.max(0, G.moveFlashT     - dt * 1.6);
+  G.countdownT     = Math.max(0, G.countdownT     - dt * 1.4);
+
+  G.hitRings = G.hitRings.filter(e => {
+    e.t += dt; e.r = e.max * (1 - Math.exp(-e.t * 12));
+    e.alpha = Math.max(0, 1 - e.t * 2.8);
+    return e.alpha > 0;
+  });
+
+  G.dmgNums = G.dmgNums.filter(d => {
+    d.t += dt; d.y += d.vy * dt; d.alpha = Math.max(0, 1 - d.t * 1.9);
+    return d.alpha > 0;
+  });
+
+  // Show/hide no-pose warning
+  document.getElementById('no-pose-warn').style.display =
+    (!G.currentPose && G.phase === 'fighting') ? 'block' : 'none';
+}
+
+// ═══════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════
+function render() {
+  const W = canvas.width;
+  const H = canvas.height;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // ── Camera feed (mirrored) ──
+  if (video.readyState >= 2) {
+    ctx.save();
+    ctx.translate(W, 0); ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0, W, H);
+    ctx.restore();
+  } else {
+    ctx.fillStyle = '#050505';
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Dark vignette
+  ctx.fillStyle = 'rgba(0,0,0,0.38)';
+  ctx.fillRect(0, 0, W, H);
+
+  // Right-side combat zone darkening
+  const grad = ctx.createLinearGradient(W * 0.5, 0, W, 0);
+  grad.addColorStop(0, 'transparent');
+  grad.addColorStop(1, 'rgba(0,0,0,0.55)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Skeleton ──
+  if (G.currentPose) drawSkeleton(W, H);
+
+  // ── Player hit red overlay ──
+  if (G.playerHitFlash > 0) {
+    ctx.fillStyle = `rgba(200,0,0,${G.playerHitFlash * 0.45})`;
+    ctx.fillRect(0, 0, W * 0.55, H);
+  }
+
+  // ── Screen flash ──
+  if (G.screenFlash > 0) {
+    ctx.fillStyle = `rgba(255,40,40,${G.screenFlash * 0.35})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // ── Opponent ──
+  drawOpponent(W, H);
+
+  // ── Hit rings ──
+  G.hitRings.forEach(e => {
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255,110,20,${e.alpha * 0.9})`;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.r * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,220,60,${e.alpha * 0.55})`;
+    ctx.fill();
+  });
+
+  // ── Damage numbers ──
+  G.dmgNums.forEach(d => {
+    ctx.save();
+    ctx.globalAlpha = d.alpha;
+    const fs = d.big ? 46 : 28;
+    ctx.font = `700 ${fs}px 'Bebas Neue', sans-serif`;
+    ctx.textAlign = 'center';
+    const col = !d.isOpp ? '#ff7777' : (d.big ? '#ffcc00' : '#ffffff');
+    ctx.fillStyle = col;
+    ctx.shadowColor = '#000'; ctx.shadowBlur = 6;
+    const txt = d.isOpp ? `${d.val}` : `-${d.val}`;
+    ctx.strokeStyle = '#000'; ctx.lineWidth = 3;
+    ctx.strokeText(txt, d.x, d.y);
+    ctx.fillText(txt, d.x, d.y);
+    ctx.restore();
+  });
+
+  // ── Blocking indicator ──
+  if (G.isBlocking && G.phase === 'fighting') {
+    ctx.save();
+    ctx.font = `700 20px 'Bebas Neue', sans-serif`;
+    ctx.fillStyle = 'rgba(100,200,255,0.85)';
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '4px';
+    ctx.fillText('GUARD', W * 0.25, H * 0.25);
+    ctx.restore();
+  }
+
+  // ── Move flash ──
+  if (G.moveFlashT > 0) {
+    const a = Math.min(1, G.moveFlashT * 1.6);
+    const sc = 1 + (1.1 - G.moveFlashT) * 0.18;
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.translate(W * 0.5, H * 0.82);
+    ctx.scale(sc, sc);
+    ctx.textAlign = 'center';
+    ctx.font = `700 54px 'Bebas Neue', sans-serif`;
+    ctx.shadowColor = '#ff3300'; ctx.shadowBlur = 28;
+    ctx.strokeStyle = '#990000'; ctx.lineWidth = 5;
+    ctx.strokeText(G.moveFlashName, 0, 0);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(G.moveFlashName, 0, 0);
+
+    if (G.combo >= 2) {
+      ctx.font = `700 22px 'Bebas Neue', sans-serif`;
+      ctx.fillStyle = '#ffaa00'; ctx.shadowColor = '#ff8800';
+      ctx.fillText(`${G.combo}× COMBO`, 0, 34);
+    }
+    ctx.restore();
+  }
+
+  // ── Countdown ──
+  if (G.countdownText && G.countdownT > 0) {
+    const a = Math.min(1, G.countdownT * 1.5);
+    const isWord = isNaN(Number(G.countdownText));
+    const fs = isWord ? 82 : 200;
+    ctx.save();
+    ctx.globalAlpha = a * a;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `700 ${fs}px 'Bebas Neue', sans-serif`;
+    ctx.shadowColor = '#cc0000'; ctx.shadowBlur = 80;
+    ctx.strokeStyle = '#660000'; ctx.lineWidth = 8;
+    ctx.strokeText(G.countdownText, W / 2, H / 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(G.countdownText, W / 2, H / 2);
+    ctx.textBaseline = 'alphabetic';
+    ctx.restore();
+  }
+}
+
+// ═══════════════════════════════════════════
+//  SKELETON DRAW
+// ═══════════════════════════════════════════
+function drawSkeleton(W, H) {
+  const kp  = G.currentPose.keypoints;
+  const VW  = video.videoWidth  || 640;
+  const VH  = video.videoHeight || 480;
+
+  function toCanvas(p) {
+    return { x: (1 - p.x / VW) * W, y: (p.y / VH) * H, s: p.score || 0 };
+  }
+  const pts = kp.map(toCanvas);
+
+  // Bones
+  ctx.strokeStyle = 'rgba(255, 55, 55, 0.82)';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  BONES.forEach(([a, b]) => {
+    if (pts[a].s > 0.22 && pts[b].s > 0.22) {
+      ctx.beginPath();
+      ctx.moveTo(pts[a].x, pts[a].y);
+      ctx.lineTo(pts[b].x, pts[b].y);
+      ctx.stroke();
+    }
+  });
+
+  // Joints
+  pts.forEach((p, i) => {
+    if (p.s > 0.28) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, i === 0 ? 7 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = i === 0
+        ? 'rgba(255,210,50,0.95)'
+        : 'rgba(255,70,70,0.9)';
+      ctx.fill();
+    }
+  });
+}
+
+// ═══════════════════════════════════════════
+//  OPPONENT DRAW
+// ═══════════════════════════════════════════
+function drawOpponent(W, H) {
+  const cx = W * 0.78;
+  const cy = H * 0.52;
+  const sc = Math.min(W, H) / 560;
+  const sway = Math.sin(G.oppSwayT) * 7 * sc;
+  const ko   = G.oppState === 'ko';
+  const hurt = G.oppState === 'hurt';
+  const atk  = G.oppState === 'attack';
+
+  ctx.save();
+
+  if (G.oppHitFlash > 0) {
+    ctx.shadowColor = '#ff4400';
+    ctx.shadowBlur  = 50 * G.oppHitFlash;
+  }
+
+  const alpha = hurt ? 0.55 + Math.abs(Math.sin(Date.now() * 0.04)) * 0.45 : 1;
+  ctx.globalAlpha = Math.max(0.2, alpha);
+
+  ctx.translate(cx + sway, ko ? cy + 60 * sc : cy);
+  if (atk) ctx.translate(-28 * sc, 0);
+  if (ko)  ctx.rotate(0.45);
+
+  const col = hurt ? '#ff6644' : atk ? '#ffcc00' : '#dd1111';
+  ctx.strokeStyle = col;
+  ctx.fillStyle   = col;
+  ctx.lineWidth   = 3.5 * sc;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const S = 130 * sc;
+
+  // Head
+  ctx.beginPath();
+  ctx.arc(0, -S * 0.88, 18 * sc, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Torso
+  ctx.beginPath();
+  ctx.moveTo(0, -S * 0.70);
+  ctx.lineTo(0, -S * 0.05);
+  ctx.stroke();
+
+  // Shoulders line
+  ctx.beginPath();
+  ctx.moveTo(-32 * sc, -S * 0.62);
+  ctx.lineTo( 32 * sc, -S * 0.62);
+  ctx.stroke();
+
+  // Left arm (guard or attacking)
+  const laX = atk ?  55 * sc :  8 * sc;
+  const laY = atk ? -S * 0.28 : -S * 0.42;
+  ctx.beginPath();
+  ctx.moveTo(-32 * sc, -S * 0.62);
+  ctx.quadraticCurveTo(-20 * sc, -S * 0.36, laX, laY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(laX, laY, 9 * sc, 0, Math.PI * 2); // fist
+  ctx.fill();
+
+  // Right arm (guard)
+  ctx.beginPath();
+  ctx.moveTo( 32 * sc, -S * 0.62);
+  ctx.quadraticCurveTo(22 * sc, -S * 0.4, 6 * sc, -S * 0.52);
+  ctx.stroke();
+
+  // Hips
+  ctx.beginPath();
+  ctx.moveTo(-16 * sc, -S * 0.05);
+  ctx.lineTo( 16 * sc, -S * 0.05);
+  ctx.stroke();
+
+  // Left leg (stance)
+  ctx.beginPath();
+  ctx.moveTo(-16 * sc, -S * 0.05);
+  ctx.lineTo(-22 * sc,  S * 0.42);
+  ctx.lineTo(-26 * sc,  S * 0.88);
+  ctx.stroke();
+
+  // Right leg (slightly forward, Muay Thai stance)
+  ctx.beginPath();
+  ctx.moveTo( 16 * sc, -S * 0.05);
+  ctx.lineTo( 10 * sc,  S * 0.42);
+  ctx.lineTo( 14 * sc,  S * 0.88);
+  ctx.stroke();
+
+  // State label
+  ctx.globalAlpha = 1;
+  if (atk) {
+    ctx.font = `700 ${14 * sc}px 'Bebas Neue', sans-serif`;
+    ctx.fillStyle = '#ffcc00';
+    ctx.textAlign = 'center';
+    ctx.fillText('ATTACK', 0, -S - 16 * sc);
+  }
+
+  ctx.restore();
+
+  // HP pip bar below opponent
+  const barW = 110 * sc, barH = 7 * sc;
+  const bx = cx - barW / 2, by = cy + S * 0.95;
+  ctx.fillStyle = 'rgba(0,0,0,0.55)';
+  ctx.fillRect(bx, by, barW, barH);
+  const pct = Math.max(0, G.oppHP / CFG.OPP_MAX_HP);
+  const barCol = pct > 0.5 ? '#dd1111' : pct > 0.25 ? '#ff8800' : '#ffcc00';
+  ctx.fillStyle = barCol;
+  ctx.fillRect(bx, by, barW * pct, barH);
+}
+
+// ═══════════════════════════════════════════
+//  HUD
+// ═══════════════════════════════════════════
+function updateHUD() {
+  const pp = Math.max(0, G.playerHP / CFG.PLAYER_MAX_HP * 100);
+  const op = Math.max(0, G.oppHP    / CFG.OPP_MAX_HP   * 100);
+  document.getElementById('player-hp-fill').style.width = pp + '%';
+  document.getElementById('opp-hp-fill').style.width    = op + '%';
+  document.getElementById('player-hp-num').textContent  = `${G.playerHP} HP`;
+  document.getElementById('opp-hp-num').textContent     = `${G.oppHP} HP`;
+  document.getElementById('score-num').textContent      = G.score;
+}
+
+// ═══════════════════════════════════════════
+//  ROUND END
+// ═══════════════════════════════════════════
+function endRound(playerWon) {
+  G.phase = 'roundover';
+  if (playerWon) G.oppState = 'ko';
+
+  const rs    = document.getElementById('result-screen');
+  const label = document.getElementById('result-label');
+  const sub   = document.getElementById('result-sub');
+  const btn   = document.getElementById('result-btn');
+  document.getElementById('result-score-val').textContent = G.score;
+
+  const isGameOver = !playerWon || G.round >= CFG.TOTAL_ROUNDS;
+
+  if (playerWon) {
+    if (G.round >= CFG.TOTAL_ROUNDS) {
+      label.textContent = 'CHAMPION!';
+      label.className   = 'result-label win';
+      sub.textContent   = `All ${CFG.TOTAL_ROUNDS} Rounds — Your Victory`;
+      btn.textContent   = 'PLAY AGAIN';
+      btn.onclick = () => { G.round = 1; G.score = 0; document.getElementById('round-num').textContent = 1; rs.style.display = 'none'; startRound(); };
+    } else {
+      label.textContent = 'KO!';
+      label.className   = 'result-label win';
+      sub.textContent   = `Round ${G.round} — Victory · Next round up`;
+      btn.textContent   = 'NEXT ROUND';
+      btn.onclick = () => { G.round++; rs.style.display = 'none'; startRound(); };
+    }
+  } else {
+    label.textContent = "KO'D!";
+    label.className   = 'result-label lose';
+    sub.textContent   = `Round ${G.round} — You were knocked out`;
+    btn.textContent   = 'TRY AGAIN';
+    btn.onclick = () => { G.score = 0; rs.style.display = 'none'; startRound(); };
+  }
+
+  if (isGameOver) {
+    const record = saveSession(playerWon ? 'win' : 'loss');
+    setTimeout(() => showSessionStats(record), 1000);
+  }
+
+  setTimeout(() => { rs.style.display = 'flex'; }, 900);
+}
+
+// ═══════════════════════════════════════════
+//  GAME LOOP
+// ═══════════════════════════════════════════
+let lastRAF = 0;
+function loop(ts) {
+  const dt = Math.min((ts - lastRAF) / 1000, 0.05);
+  lastRAF = ts;
+
+  // Pose detection (async, every ~30ms)
+  if (!poseDetecting && Date.now() - lastPoseTime > CFG.POSE_INTERVAL) {
+    lastPoseTime = Date.now();
+    poseDetecting = true;
+    runPoseDetection().finally(() => { poseDetecting = false; });
+  }
+
+  if (G.phase === 'fighting') update(dt);
+  else if (G.phase === 'countdown') {
+    G.countdownT = Math.max(0, G.countdownT - dt * 1.4);
+  }
+
+  render();
+  requestAnimationFrame(loop);
+}
+
+// ═══════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════
+window.addEventListener('load', () => {
+  requestAnimationFrame(loop);
+  init();
+});
+</script>
+</body>
+</html>
