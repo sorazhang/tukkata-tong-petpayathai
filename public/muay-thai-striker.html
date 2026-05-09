@@ -492,20 +492,42 @@ const BONES = [
 ];
 
 function detectStrikes() {
-  if (G.poseHistory.length < 3 || !G.currentPose) return;
+  if (G.poseHistory.length < 4 || !G.currentPose) return;
   const now = Date.now();
   const kp  = G.currentPose.keypoints;
-  const prev = G.poseHistory[G.poseHistory.length - 3];
-  const pkp  = prev.kp;
   const VW = video.videoWidth || 640;
   const VH = video.videoHeight || 480;
 
+  // Smoothed velocity: average 3 consecutive frame-pair deltas, min confidence 0.30.
+  // This eliminates single-frame MoveNet jitter that caused false positives.
   function vel(i) {
-    if ((kp[i].score||0) < 0.22 || (pkp[i].score||0) < 0.22) return { sp: 0, vx: 0, vy: 0 };
-    const dx = (kp[i].x - pkp[i].x) / VW;
-    const dy = (kp[i].y - pkp[i].y) / VH;
-    return { sp: Math.sqrt(dx*dx + dy*dy), vx: dx, vy: dy };
+    const h = G.poseHistory, n = h.length;
+    let sumX = 0, sumY = 0, count = 0;
+    for (let f = 1; f <= 3; f++) {
+      if (n - f - 1 < 0) break;
+      const c = h[n - f].kp[i], p = h[n - f - 1].kp[i];
+      if ((c.score||0) >= 0.30 && (p.score||0) >= 0.30) {
+        sumX += (c.x - p.x) / VW;
+        sumY += (c.y - p.y) / VH;
+        count++;
+      }
+    }
+    if (count === 0) return { sp: 0, vx: 0, vy: 0 };
+    const vx = sumX / count, vy = sumY / count;
+    return { sp: Math.sqrt(vx*vx + vy*vy), vx, vy };
   }
+
+  // Elbow extension angle (shoulder→elbow→wrist). Returns 0 when keypoints are uncertain.
+  // Gate: require >105° so an arm raise doesn't masquerade as a punch.
+  function elbowAngle(si, ei, wi) {
+    const s = kp[si], e = kp[ei], w = kp[wi];
+    if ((s.score||0) < 0.30 || (e.score||0) < 0.30 || (w.score||0) < 0.30) return 0;
+    const ax = s.x - e.x, ay = s.y - e.y, cx = w.x - e.x, cy = w.y - e.y;
+    const mag = Math.sqrt(ax*ax + ay*ay) * Math.sqrt(cx*cx + cy*cy);
+    if (mag < 0.001) return 0;
+    return Math.acos(Math.max(-1, Math.min(1, (ax*cx + ay*cy) / mag))) * 180 / Math.PI;
+  }
+
   function canFire(key) { return !G.cooldowns[key] || now - G.cooldowns[key] > CFG.COOLDOWN; }
   function fire(key, name, dmgKey, snd, velObj, kpIdx) {
     if (!canFire(key)) return;
@@ -518,12 +540,26 @@ function detectStrikes() {
     G.isBlocking = lWrist.y < lShoulder.y - 20 && rWrist.y < rShoulder.y - 20;
   } else { G.isBlocking = false; }
 
-  const lw = vel(9);  if (lw.sp > CFG.PUNCH_VEL) fire('jab',   'JAB',        'jab',   'punch', lw, [5,7,9]);
-  const rw = vel(10); if (rw.sp > CFG.PUNCH_VEL) fire('cross', 'CROSS',      'cross', 'punch', rw, [6,8,10]);
-  const la = vel(15); if (la.sp > CFG.KICK_VEL && la.vy < -0.012) fire('lkick', 'LEFT KICK',  'lkick', 'kick', la, [11,13,15]);
-  const ra = vel(16); if (ra.sp > CFG.KICK_VEL && ra.vy < -0.012) fire('rkick', 'RIGHT KICK', 'rkick', 'kick', ra, [12,14,16]);
-  const lk = vel(13); if (lk.sp > CFG.KNEE_VEL && lk.vy < -0.018) fire('lknee', 'KNEE', 'knee', 'kick', lk, [11,13,15]);
-  const rk = vel(14); if (rk.sp > CFG.KNEE_VEL && rk.vy < -0.018) fire('rknee', 'KNEE', 'knee', 'kick', rk, [12,14,16]);
+  // Punches: velocity + arm must be extending (elbow angle >105°, or angle unmeasured = fall back to velocity only)
+  const lwv = vel(9),  lwAngle = elbowAngle(5, 7, 9);
+  if (lwv.sp > CFG.PUNCH_VEL && (lwAngle === 0 || lwAngle > 105))
+    fire('jab',   'JAB',        'jab',   'punch', lwv, [5,7,9]);
+
+  const rwv = vel(10), rwAngle = elbowAngle(6, 8, 10);
+  if (rwv.sp > CFG.PUNCH_VEL && (rwAngle === 0 || rwAngle > 105))
+    fire('cross', 'CROSS',      'cross', 'punch', rwv, [6,8,10]);
+
+  // Kicks: velocity + ankle must be moving upward (stronger threshold than before)
+  const lav = vel(15);
+  if (lav.sp > CFG.KICK_VEL && lav.vy < -0.015) fire('lkick', 'LEFT KICK',  'lkick', 'kick', lav, [11,13,15]);
+  const rav = vel(16);
+  if (rav.sp > CFG.KICK_VEL && rav.vy < -0.015) fire('rkick', 'RIGHT KICK', 'rkick', 'kick', rav, [12,14,16]);
+
+  // Knees: velocity + upward drive
+  const lkv = vel(13);
+  if (lkv.sp > CFG.KNEE_VEL && lkv.vy < -0.020) fire('lknee', 'KNEE', 'knee', 'kick', lkv, [11,13,15]);
+  const rkv = vel(14);
+  if (rkv.sp > CFG.KNEE_VEL && rkv.vy < -0.020) fire('rknee', 'KNEE', 'knee', 'kick', rkv, [12,14,16]);
 }
 
 function onStrike(name, baseDmg, sound, velObj, kpIndices) {
