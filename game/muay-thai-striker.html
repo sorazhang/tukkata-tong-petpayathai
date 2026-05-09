@@ -243,6 +243,102 @@
       margin-left: 12px;
     }
     .journal-btn:hover { border-color: #cc0000; color: #fff; }
+
+    #mode-selector {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.96);
+      display: none;
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 10px;
+      z-index: 190;
+    }
+    .mode-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 7vw, 60px);
+      letter-spacing: 10px;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .mode-btn {
+      width: min(340px, 80vw);
+      padding: 18px 0;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 6px;
+      border: 2px solid #cc0000;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn:hover { background: #cc0000; }
+    .mode-btn.capture { border-color: #44aaff; }
+    .mode-btn.capture:hover { background: #44aaff; color: #000; }
+    .mode-desc {
+      font-size: 11px;
+      color: #444;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    #capture-hud {
+      position: fixed; top: 0; left: 0; right: 0;
+      padding: 14px 20px;
+      display: none;
+      align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
+      z-index: 10;
+    }
+    #cap-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 6px;
+      color: #44aaff;
+    }
+    #cap-timer {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      color: #fff;
+      letter-spacing: 4px;
+    }
+    #cap-stop {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 4px;
+      padding: 8px 24px;
+      border: 2px solid #44aaff;
+      background: transparent;
+      color: #44aaff;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #cap-stop:hover { background: #44aaff; color: #000; }
+
+    #strike-log {
+      position: fixed;
+      bottom: 60px; left: 20px;
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .log-row {
+      display: flex; gap: 10px; align-items: center;
+      animation: logfade 0.15s ease;
+    }
+    @keyframes logfade { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; } }
+    .log-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 17px;
+      color: #fff;
+      letter-spacing: 2px;
+      width: 95px;
+    }
+    .log-pwr { font-size: 11px; color: #666; letter-spacing: 1px; width: 44px; }
+    .log-combo { font-size: 11px; color: #ffaa00; letter-spacing: 1px; }
   </style>
 </head>
 <body>
@@ -278,7 +374,7 @@
 <div id="result-screen">
   <div class="result-label" id="result-label">KO!</div>
   <div class="result-sub" id="result-sub">Round 1 — Victory</div>
-  <div class="result-score">SCORE — <span id="result-score-val">0</span></div>
+  <div class="result-score"><span id="result-score-label">SCORE</span> — <span id="result-score-val">0</span></div>
   <button class="result-btn" id="result-btn">NEXT ROUND</button>
   <div id="session-stats">
     <div class="stat-grid" id="stat-grid"></div>
@@ -286,6 +382,22 @@
     <a href="/my-space" class="journal-btn">JOURNAL IT →</a>
   </div>
 </div>
+
+<div id="mode-selector">
+  <p class="mode-title">SELECT MODE</p>
+  <button id="btn-fight" class="mode-btn">⚔ FIGHT</button>
+  <p class="mode-desc">Battle the opponent · 3 rounds · HP &amp; score</p>
+  <button id="btn-capture" class="mode-btn capture">◉ CAPTURE</button>
+  <p class="mode-desc">Record your strikes · No opponent · Pure data</p>
+</div>
+
+<div id="capture-hud">
+  <div id="cap-label">◉ CAPTURE</div>
+  <div id="cap-timer">0:00</div>
+  <button id="cap-stop">STOP ■</button>
+</div>
+
+<div id="strike-log"></div>
 
 <div id="no-pose-warn">⚠ STEP INTO FRAME</div>
 <div id="move-guide">
@@ -376,12 +488,14 @@ function showSessionStats(record) {
 
 const G = {
   phase: 'loading',
+  mode: 'fight',
   playerHP: 100, oppHP: 100, score: 0, combo: 0, lastStrikeTime: 0, round: 1,
   currentPose: null, poseHistory: [], cooldowns: {},
   oppState: 'idle', oppStateTimer: 0, oppSwayT: 0, lastOppAttack: 0, isBlocking: false,
   hitRings: [], dmgNums: [],
   oppHitFlash: 0, playerHitFlash: 0, screenFlash: 0,
   moveFlashName: '', moveFlashT: 0, countdownText: '', countdownT: 0,
+  captureStartTime: 0, captureInterval: null,
 };
 
 const video  = document.getElementById('video');
@@ -449,10 +563,81 @@ async function init() {
   await sleep(700);
   document.getElementById('loading').style.display = 'none';
   initAudio();
-  startRound();
+  showModeSelector();
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function showModeSelector() {
+  document.getElementById('mode-selector').style.display = 'flex';
+  document.getElementById('btn-fight').onclick = () => {
+    document.getElementById('mode-selector').style.display = 'none';
+    G.mode = 'fight';
+    startRound();
+  };
+  document.getElementById('btn-capture').onclick = () => {
+    document.getElementById('mode-selector').style.display = 'none';
+    G.mode = 'capture';
+    startCapture();
+  };
+}
+
+function startCapture() {
+  G.phase = 'fighting';
+  G.combo = 0; G.poseHistory = []; G.cooldowns = {};
+  G.moveFlashT = 0; G.hitRings = []; G.dmgNums = [];
+  G.captureStartTime = Date.now();
+  resetSession();
+  document.getElementById('hud').style.display = 'none';
+  document.getElementById('capture-hud').style.display = 'flex';
+  document.getElementById('strike-log').style.display = 'flex';
+  document.getElementById('strike-log').innerHTML = '';
+  document.getElementById('session-stats').style.display = 'none';
+  document.getElementById('cap-timer').textContent = '0:00';
+  clearInterval(G.captureInterval);
+  G.captureInterval = setInterval(() => {
+    if (G.mode !== 'capture' || G.phase !== 'fighting') return;
+    const s = Math.floor((Date.now() - G.captureStartTime) / 1000);
+    document.getElementById('cap-timer').textContent =
+      `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }, 500);
+  document.getElementById('cap-stop').onclick = endCapture;
+}
+
+function endCapture() {
+  clearInterval(G.captureInterval);
+  G.phase = 'roundover';
+  const record = saveSession('capture');
+  document.getElementById('capture-hud').style.display = 'none';
+  document.getElementById('strike-log').style.display = 'none';
+  document.getElementById('hud').style.display = 'flex';
+  const elapsed = Date.now() - G.captureStartTime;
+  const s = Math.floor(elapsed / 1000);
+  const m = Math.floor(s / 60);
+  const rs = document.getElementById('result-screen');
+  const label = document.getElementById('result-label');
+  label.textContent = 'DONE';
+  label.className = 'result-label win';
+  document.getElementById('result-sub').textContent =
+    `${record.totalStrikes} STRIKES · ${m}:${String(s % 60).padStart(2, '0')} · DATA SAVED`;
+  document.getElementById('result-score-label').textContent = 'STRIKES';
+  document.getElementById('result-score-val').textContent = record.totalStrikes;
+  const btn = document.getElementById('result-btn');
+  btn.textContent = 'CAPTURE AGAIN';
+  btn.onclick = () => { rs.style.display = 'none'; startCapture(); };
+  setTimeout(() => { rs.style.display = 'flex'; }, 400);
+  setTimeout(() => showSessionStats(record), 900);
+}
+
+function addToStrikeLog(name, power, combo) {
+  const log = document.getElementById('strike-log');
+  if (!log) return;
+  const row = document.createElement('div');
+  row.className = 'log-row';
+  row.innerHTML = `<span class="log-name">${name}</span><span class="log-pwr">pwr ${power}</span>${combo >= 2 ? `<span class="log-combo">×${combo}</span>` : ''}`;
+  log.prepend(row);
+  while (log.children.length > 7) log.removeChild(log.lastChild);
+}
 
 async function startRound() {
   G.phase = 'countdown';
@@ -498,8 +683,6 @@ function detectStrikes() {
   const VW = video.videoWidth || 640;
   const VH = video.videoHeight || 480;
 
-  // Smoothed velocity: average 3 consecutive frame-pair deltas, min confidence 0.30.
-  // This eliminates single-frame MoveNet jitter that caused false positives.
   function vel(i) {
     const h = G.poseHistory, n = h.length;
     let sumX = 0, sumY = 0, count = 0;
@@ -517,8 +700,6 @@ function detectStrikes() {
     return { sp: Math.sqrt(vx*vx + vy*vy), vx, vy };
   }
 
-  // Elbow extension angle (shoulder→elbow→wrist). Returns 0 when keypoints are uncertain.
-  // Gate: require >105° so an arm raise doesn't masquerade as a punch.
   function elbowAngle(si, ei, wi) {
     const s = kp[si], e = kp[ei], w = kp[wi];
     if ((s.score||0) < 0.30 || (e.score||0) < 0.30 || (w.score||0) < 0.30) return 0;
@@ -540,7 +721,6 @@ function detectStrikes() {
     G.isBlocking = lWrist.y < lShoulder.y - 20 && rWrist.y < rShoulder.y - 20;
   } else { G.isBlocking = false; }
 
-  // Punches: velocity + arm must be extending (elbow angle >105°, or angle unmeasured = fall back to velocity only)
   const lwv = vel(9),  lwAngle = elbowAngle(5, 7, 9);
   if (lwv.sp > CFG.PUNCH_VEL && (lwAngle === 0 || lwAngle > 105))
     fire('jab',   'JAB',        'jab',   'punch', lwv, [5,7,9]);
@@ -549,13 +729,11 @@ function detectStrikes() {
   if (rwv.sp > CFG.PUNCH_VEL && (rwAngle === 0 || rwAngle > 105))
     fire('cross', 'CROSS',      'cross', 'punch', rwv, [6,8,10]);
 
-  // Kicks: velocity + ankle must be moving upward (stronger threshold than before)
   const lav = vel(15);
   if (lav.sp > CFG.KICK_VEL && lav.vy < -0.015) fire('lkick', 'LEFT KICK',  'lkick', 'kick', lav, [11,13,15]);
   const rav = vel(16);
   if (rav.sp > CFG.KICK_VEL && rav.vy < -0.015) fire('rkick', 'RIGHT KICK', 'rkick', 'kick', rav, [12,14,16]);
 
-  // Knees: velocity + upward drive
   const lkv = vel(13);
   if (lkv.sp > CFG.KNEE_VEL && lkv.vy < -0.020) fire('lknee', 'KNEE', 'knee', 'kick', lkv, [11,13,15]);
   const rkv = vel(14);
@@ -566,21 +744,32 @@ function onStrike(name, baseDmg, sound, velObj, kpIndices) {
   const now = Date.now();
   if (now - G.lastStrikeTime < CFG.COMBO_WINDOW) { G.combo = Math.min(G.combo + 1, 9); } else { G.combo = 1; }
   G.lastStrikeTime = now;
-  const mult   = G.combo >= 4 ? 2.0 : G.combo >= 3 ? 1.6 : G.combo >= 2 ? 1.3 : 1.0;
-  const dmg    = Math.round(baseDmg * mult);
-  const points = dmg * (G.combo >= 3 ? 3 : G.combo >= 2 ? 2 : 1);
-  G.oppHP  = Math.max(0, G.oppHP - dmg);
-  G.score += points;
-  G.oppHitFlash = 0.5;
-  const rx = canvas.width  * (0.68 + Math.random() * 0.12);
-  const ry = canvas.height * (0.3  + Math.random() * 0.25);
-  G.hitRings.push({ x: rx, y: ry, r: 0, max: 65, alpha: 1, t: 0 });
-  G.dmgNums.push({ x: canvas.width*0.72+Math.random()*50, y: canvas.height*0.35-Math.random()*20, val: dmg, alpha: 1, vy: -75, t: 0, big: G.combo>=3, isOpp: true });
-  G.moveFlashName = name + (G.combo >= 2 ? ' ×' + G.combo : '');
-  G.moveFlashT = 1.1;
-  G.oppState = 'hurt'; G.oppStateTimer = 0.28;
   const threshold = sound === 'punch' ? CFG.PUNCH_VEL : CFG.KICK_VEL;
   const power = velObj ? Math.min(100, Math.round((velObj.sp / (threshold * 2.5)) * 100)) : 0;
+
+  if (G.mode === 'fight') {
+    const mult   = G.combo >= 4 ? 2.0 : G.combo >= 3 ? 1.6 : G.combo >= 2 ? 1.3 : 1.0;
+    const dmg    = Math.round(baseDmg * mult);
+    const points = dmg * (G.combo >= 3 ? 3 : G.combo >= 2 ? 2 : 1);
+    G.oppHP  = Math.max(0, G.oppHP - dmg);
+    G.score += points;
+    G.oppHitFlash = 0.5;
+    const rx = canvas.width  * (0.68 + Math.random() * 0.12);
+    const ry = canvas.height * (0.3  + Math.random() * 0.25);
+    G.hitRings.push({ x: rx, y: ry, r: 0, max: 65, alpha: 1, t: 0 });
+    G.dmgNums.push({ x: canvas.width*0.72+Math.random()*50, y: canvas.height*0.35-Math.random()*20, val: dmg, alpha: 1, vy: -75, t: 0, big: G.combo>=3, isOpp: true });
+    G.oppState = 'hurt'; G.oppStateTimer = 0.28;
+    updateHUD();
+    if (G.oppHP <= 0) endRound(true);
+  } else {
+    const rx = canvas.width  * (0.3 + Math.random() * 0.4);
+    const ry = canvas.height * (0.25 + Math.random() * 0.5);
+    G.hitRings.push({ x: rx, y: ry, r: 0, max: 50, alpha: 1, t: 0 });
+    addToStrikeLog(name, power, G.combo);
+  }
+
+  G.moveFlashName = name + (G.combo >= 2 ? ' ×' + G.combo : '');
+  G.moveFlashT = 1.1;
   SESSION.strikes.push({
     type: name.toLowerCase().replace(' ', '_'),
     velocity: velObj ? +velObj.sp.toFixed(4) : 0,
@@ -590,8 +779,6 @@ function onStrike(name, baseDmg, sound, velObj, kpIndices) {
   });
   if (G.combo > SESSION.bestCombo) SESSION.bestCombo = G.combo;
   playHit(sound);
-  updateHUD();
-  if (G.oppHP <= 0) endRound(true);
 }
 
 function updateOpponent(dt) {
@@ -619,7 +806,7 @@ function updateOpponent(dt) {
 
 function update(dt) {
   detectStrikes();
-  updateOpponent(dt);
+  if (G.mode === 'fight') updateOpponent(dt);
   G.oppHitFlash    = Math.max(0, G.oppHitFlash    - dt * 3.5);
   G.playerHitFlash = Math.max(0, G.playerHitFlash - dt * 3.5);
   G.screenFlash    = Math.max(0, G.screenFlash    - dt * 4);
@@ -644,7 +831,7 @@ function render() {
   if (G.currentPose) drawSkeleton(W, H);
   if (G.playerHitFlash > 0) { ctx.fillStyle=`rgba(200,0,0,${G.playerHitFlash*0.45})`; ctx.fillRect(0,0,W*0.55,H); }
   if (G.screenFlash > 0)    { ctx.fillStyle=`rgba(255,40,40,${G.screenFlash*0.35})`;  ctx.fillRect(0,0,W,H); }
-  drawOpponent(W, H);
+  if (G.mode === 'fight') drawOpponent(W, H);
   G.hitRings.forEach(e => {
     ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
     ctx.strokeStyle=`rgba(255,110,20,${e.alpha*0.9})`; ctx.lineWidth=3; ctx.stroke();
@@ -766,6 +953,7 @@ function endRound(playerWon) {
   const label=document.getElementById('result-label');
   const sub=document.getElementById('result-sub');
   const btn=document.getElementById('result-btn');
+  document.getElementById('result-score-label').textContent = 'SCORE';
   document.getElementById('result-score-val').textContent=G.score;
   const isGameOver=!playerWon||G.round>=CFG.TOTAL_ROUNDS;
   if (playerWon) {
