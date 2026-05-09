@@ -12,7 +12,7 @@ type Strike = {
 type Session = {
   date: string
   score: number
-  outcome: 'win' | 'loss'
+  outcome: 'win' | 'loss' | 'capture'
   rounds: number
   durationMs: number
   strikes: Strike[]
@@ -61,7 +61,7 @@ function PowerBar({ sessions }: { sessions: Session[] }) {
             <div key={i} className="flex-1 flex flex-col items-center gap-1">
               <div className="w-full flex items-end justify-center" style={{ height: '52px' }}>
                 <div
-                  className={`w-full rounded-t ${s.outcome === 'win' ? 'bg-brand-red' : 'bg-gray-200'}`}
+                  className={`w-full rounded-t ${s.outcome === 'win' ? 'bg-brand-red' : s.outcome === 'capture' ? 'bg-blue-400' : 'bg-gray-200'}`}
                   style={{ height: `${Math.max(4, pct * 0.52)}px` }}
                 />
               </div>
@@ -75,7 +75,7 @@ function PowerBar({ sessions }: { sessions: Session[] }) {
           <p className="text-xs text-gray-300 w-full text-center">No data yet</p>
         )}
       </div>
-      <p className="text-xs text-gray-300 mt-2">Red = win &middot; Grey = loss</p>
+      <p className="text-xs text-gray-300 mt-2">Red = win &middot; Blue = capture &middot; Grey = loss</p>
     </div>
   )
 }
@@ -125,8 +125,9 @@ export default function MyStrikerDashboard() {
   const bestScore = Math.max(...sessions.map(s => s.score))
   const bestCombo = Math.max(...sessions.map(s => s.bestCombo))
   const avgPower = allStrikes.length > 0 ? Math.round(totalPower / allStrikes.length) : 0
-  const wins = sessions.filter(s => s.outcome === 'win').length
-  const winRate = Math.round((wins / sessions.length) * 100)
+  const fightSessions = sessions.filter(s => s.outcome !== 'capture')
+  const wins = fightSessions.filter(s => s.outcome === 'win').length
+  const winRate = fightSessions.length > 0 ? Math.round((wins / fightSessions.length) * 100) : 0
 
   return (
     <div className="space-y-5">
@@ -184,8 +185,8 @@ export default function MyStrikerDashboard() {
               : 0
             return (
               <div key={i} className="flex items-center gap-3 py-2.5 border-b border-gray-50 last:border-0">
-                <span className={`text-xs font-bold w-8 shrink-0 ${s.outcome === 'win' ? 'text-green-500' : 'text-red-400'}`}>
-                  {s.outcome === 'win' ? 'WIN' : 'KO'}
+                <span className={`text-xs font-bold w-8 shrink-0 ${s.outcome === 'win' ? 'text-green-500' : s.outcome === 'capture' ? 'text-blue-400' : 'text-red-400'}`}>
+                  {s.outcome === 'win' ? 'WIN' : s.outcome === 'capture' ? 'CAP' : 'KO'}
                 </span>
                 <span className="text-xs text-gray-400 w-24 shrink-0">{dateStr} {timeStr}</span>
                 <div className="flex flex-1 gap-3 text-xs text-gray-400">
