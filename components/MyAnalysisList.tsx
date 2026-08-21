@@ -95,7 +95,7 @@ export default function MyAnalysisList({ analyses }: { analyses: MyAnalysis[] })
     return (
       <div className="py-16 text-center">
         <p className="text-sm text-brand-muted">No insights saved yet.</p>
-        <p className="text-xs text-brand-bone-dim mt-1">Run "Find patterns" in the Journal tab and save the result.</p>
+        <p className="text-xs text-brand-bone-dim mt-1">Run &ldquo;Find patterns&rdquo; in the Journal tab and save the result.</p>
       </div>
     )
   }
