@@ -27,7 +27,7 @@ export default function Nav() {
           <span className="text-white font-semibold text-base tracking-tight">
             Tukkatatong Petpayathai
           </span>
-          <span className="font-thai text-gray-500 text-xs" lang="th">
+          <span className="font-thai text-brand-bone-dim text-xs" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </span>
         </Link>
@@ -39,7 +39,7 @@ export default function Nav() {
               <Link
                 href={href}
                 className={`transition-colors text-sm ${
-                  pathname === href ? 'text-white' : 'text-gray-400 hover:text-white'
+                  pathname === href ? 'text-white' : 'text-brand-muted hover:text-white'
                 }`}
               >
                 {label}
@@ -63,17 +63,17 @@ export default function Nav() {
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
           <span
-            className={`block w-6 h-0.5 bg-white transition-all duration-200 origin-center ${
+            className={`block w-6 h-0.5 bg-brand-card transition-all duration-200 origin-center ${
               open ? 'rotate-45 translate-y-2' : ''
             }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-white transition-all duration-200 ${
+            className={`block w-6 h-0.5 bg-brand-card transition-all duration-200 ${
               open ? 'opacity-0' : ''
             }`}
           />
           <span
-            className={`block w-6 h-0.5 bg-white transition-all duration-200 origin-center ${
+            className={`block w-6 h-0.5 bg-brand-card transition-all duration-200 origin-center ${
               open ? '-rotate-45 -translate-y-2' : ''
             }`}
           />
@@ -82,15 +82,15 @@ export default function Nav() {
 
       {/* Mobile dropdown */}
       {open && (
-        <div className="md:hidden border-t border-gray-800">
+        <div className="md:hidden border-t border-brand-void">
           <ul className="list-none m-0 p-0 px-6 py-4 flex flex-col gap-1">
             {links.map(({ href, label }) => (
               <li key={href}>
                 <Link
                   href={href}
                   onClick={() => setOpen(false)}
-                  className={`block py-3 text-base transition-colors border-b border-gray-800 last:border-0 ${
-                    pathname === href ? 'text-white font-medium' : 'text-gray-400 hover:text-white'
+                  className={`block py-3 text-base transition-colors border-b border-brand-void last:border-0 ${
+                    pathname === href ? 'text-white font-medium' : 'text-brand-muted hover:text-white'
                   }`}
                 >
                   {label}

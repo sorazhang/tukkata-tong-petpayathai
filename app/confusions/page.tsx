@@ -12,13 +12,13 @@ export default async function ConfusionsPage() {
       <div className="flex items-start justify-between mb-8">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Admin</p>
-          <h1 className="text-3xl font-bold text-brand-black">Student confusions</h1>
-          <p className="text-gray-400 text-sm mt-1">What students are stuck on. Most common = answer first.</p>
+          <h1 className="text-3xl font-bold text-brand-bone">Student confusions</h1>
+          <p className="text-brand-muted text-sm mt-1">What students are stuck on. Most common = answer first.</p>
         </div>
         <Link
           href="/ask"
           target="_blank"
-          className="text-xs text-gray-400 hover:text-brand-red border border-gray-200 px-3 py-2 rounded-lg transition-colors shrink-0"
+          className="text-xs text-brand-muted hover:text-brand-red border border-brand-card-edge px-3 py-2 rounded-lg transition-colors shrink-0"
         >
           View student page ↗
         </Link>

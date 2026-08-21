@@ -108,7 +108,7 @@ export default function JournalEntry() {
         onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
         placeholder="What did you observe today? Speak or type — in Thai or English."
         rows={8}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
+        className="w-full border border-brand-card-edge rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
       />
 
       <div className="flex items-center gap-2">
@@ -118,13 +118,13 @@ export default function JournalEntry() {
           <button
             onClick={toggleLang}
             type="button"
-            className="flex items-center gap-1 p-1 rounded-full border border-gray-200 bg-gray-100 transition-colors hover:border-gray-300"
+            className="flex items-center gap-1 p-1 rounded-full border border-brand-card-edge bg-brand-card transition-colors hover:border-brand-muted"
             title={`Switch to ${lang === 'th-TH' ? 'English' : 'Thai'}`}
           >
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted'}`}>
               ไทย
             </span>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted'}`}>
               EN
             </span>
           </button>
@@ -138,14 +138,14 @@ export default function JournalEntry() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
               listening
                 ? 'bg-brand-red text-white animate-pulse'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'
             }`}
           >
             <span className="text-base">{listening ? '⏹' : '🎙'}</span>
             {listening ? 'Stop' : 'Speak'}
           </button>
         ) : (
-          <span className="text-xs text-gray-400">Voice not supported on this browser</span>
+          <span className="text-xs text-brand-muted">Voice not supported on this browser</span>
         )}
 
         {/* Save button */}

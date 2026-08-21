@@ -86,7 +86,7 @@ export default function ColourPoll() {
             key={t.id}
             onClick={() => { setSelected(t.id); setSaveState('idle') }}
             className={`w-full text-left rounded-xl border-2 overflow-hidden transition-all ${
-              active ? 'border-brand-red ring-2 ring-brand-red/20' : 'border-gray-200 hover:border-gray-300'
+              active ? 'border-brand-red ring-2 ring-brand-red/20' : 'border-brand-card-edge hover:border-brand-muted'
             }`}
           >
             {/* Mini mockup preview */}
@@ -117,8 +117,8 @@ export default function ColourPoll() {
             </div>
 
             {/* Label row */}
-            <div className={`px-4 py-2.5 flex items-center justify-between ${active ? 'bg-red-50' : 'bg-white'}`}>
-              <p className={`text-sm font-semibold ${active ? 'text-brand-red' : 'text-brand-black'}`}>
+            <div className={`px-4 py-2.5 flex items-center justify-between ${active ? 'bg-red-50' : 'bg-brand-card'}`}>
+              <p className={`text-sm font-semibold ${active ? 'text-brand-red' : 'text-brand-bone'}`}>
                 {active ? '● ' : '○ '}{t.label}
               </p>
               {active && <span className="text-xs text-brand-red font-semibold">Selected</span>}
@@ -131,10 +131,10 @@ export default function ColourPoll() {
       <button
         onClick={() => { setSelected('custom'); setSaveState('idle') }}
         className={`w-full text-left border-2 rounded-xl p-4 transition-all ${
-          selected === 'custom' ? 'border-brand-red bg-red-50' : 'border-gray-200 hover:border-gray-300 bg-white'
+          selected === 'custom' ? 'border-brand-red bg-red-50' : 'border-brand-card-edge hover:border-brand-muted bg-brand-card'
         }`}
       >
-        <p className={`text-sm font-semibold ${selected === 'custom' ? 'text-brand-red' : 'text-brand-black'}`}>
+        <p className={`text-sm font-semibold ${selected === 'custom' ? 'text-brand-red' : 'text-brand-bone'}`}>
           {selected === 'custom' ? '● ' : '○ '}I don&apos;t like any of these — I want something different
         </p>
       </button>

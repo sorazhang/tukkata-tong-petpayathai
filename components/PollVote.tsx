@@ -69,7 +69,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
             className={`w-full text-left border-2 rounded-xl p-4 transition-all ${
               active
                 ? 'border-brand-red bg-red-50'
-                : 'border-gray-200 hover:border-gray-300 bg-white'
+                : 'border-brand-card-edge hover:border-brand-muted bg-brand-card'
             }`}
           >
             {opt.imageUrl && (
@@ -79,7 +79,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
                 className="w-full rounded-lg mb-3 object-cover max-h-56"
               />
             )}
-            <p className={`text-sm font-semibold ${active ? 'text-brand-red' : 'text-brand-black'}`}>
+            <p className={`text-sm font-semibold ${active ? 'text-brand-red' : 'text-brand-bone'}`}>
               {active ? '● ' : '○ '}{opt.label}
             </p>
           </button>
@@ -92,23 +92,23 @@ export default function PollVote({ poll }: { poll: Poll }) {
         className={`w-full text-left border-2 rounded-xl p-4 transition-all ${
           isCustom
             ? 'border-brand-red bg-red-50'
-            : 'border-gray-200 hover:border-gray-300 bg-white'
+            : 'border-brand-card-edge hover:border-brand-muted bg-brand-card'
         }`}
       >
-        <p className={`text-sm font-semibold ${isCustom ? 'text-brand-red' : 'text-brand-black'}`}>
+        <p className={`text-sm font-semibold ${isCustom ? 'text-brand-red' : 'text-brand-bone'}`}>
           {isCustom ? '● ' : '○ '}I don&apos;t like any of these — here&apos;s what I want
         </p>
       </button>
 
       {/* Custom input — expands when selected */}
       {isCustom && (
-        <div className="border border-gray-200 rounded-xl p-4 space-y-3 bg-white">
+        <div className="border border-brand-card-edge rounded-xl p-4 space-y-3 bg-brand-card">
           <textarea
             value={customText}
             onChange={(e) => { setCustomText(e.target.value); setSaveState('idle') }}
             placeholder="Describe what you have in mind…"
             rows={3}
-            className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
+            className="w-full text-sm border border-brand-card-edge rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
           />
 
           {/* Image upload */}
@@ -130,7 +130,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
             ) : (
               <button
                 onClick={() => fileRef.current?.click()}
-                className="text-xs text-gray-400 hover:text-brand-red border border-dashed border-gray-300 hover:border-brand-red rounded-lg px-4 py-3 w-full transition-colors"
+                className="text-xs text-brand-muted hover:text-brand-red border border-dashed border-brand-muted hover:border-brand-red rounded-lg px-4 py-3 w-full transition-colors"
               >
                 + Attach a photo as reference
               </button>
@@ -148,7 +148,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
 
       {/* Previous answer note */}
       {answered && saveState === 'idle' && (
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-brand-muted">
           Previously answered · {new Date(existingAnswer!.savedAt).toLocaleDateString()}
         </p>
       )}

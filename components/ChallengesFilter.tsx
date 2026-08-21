@@ -65,13 +65,13 @@ export default function ChallengesFilter({
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               active === cat
                 ? 'bg-brand-black text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'
             }`}
           >
             {cat}
             {cat !== 'All' && (
               <span
-                className={`ml-1.5 text-xs ${active === cat ? 'text-gray-400' : 'text-gray-400'}`}
+                className={`ml-1.5 text-xs ${active === cat ? 'text-brand-muted' : 'text-brand-muted'}`}
               >
                 {counts[cat]}
               </span>
@@ -81,7 +81,7 @@ export default function ChallengesFilter({
       </div>
 
       {/* Sub-count */}
-      <p className="text-xs text-gray-400 mb-10">
+      <p className="text-xs text-brand-muted mb-10">
         {filtered.length} challenge{filtered.length !== 1 ? 's' : ''}
         {freeInView > 0 && (
           <> · <span className="text-green-600">{freeInView} free</span></>
@@ -93,11 +93,11 @@ export default function ChallengesFilter({
         {grouped.map(({ difficulty, items }) => (
           <div key={difficulty}>
             <div className="flex items-center gap-4 mb-6">
-              <h3 className="text-xs font-medium text-gray-400 uppercase tracking-widest whitespace-nowrap">
+              <h3 className="text-xs font-medium text-brand-muted uppercase tracking-widest whitespace-nowrap">
                 {DIFFICULTY_LABELS[difficulty]}
               </h3>
-              <div className="flex-1 h-px bg-gray-100" />
-              <span className="text-xs text-gray-400 whitespace-nowrap">
+              <div className="flex-1 h-px bg-brand-card" />
+              <span className="text-xs text-brand-muted whitespace-nowrap">
                 {items.length} challenge{items.length !== 1 ? 's' : ''}
               </span>
             </div>
@@ -115,11 +115,11 @@ export default function ChallengesFilter({
 }
 
 function ChallengeCard({ challenge: c }: { challenge: ChallengeItem }) {
-  const colorClass = CATEGORY_COLORS[c.category] ?? 'text-gray-600 bg-gray-100'
+  const colorClass = CATEGORY_COLORS[c.category] ?? 'text-brand-bone-dim bg-brand-card'
 
   return (
     <Link href={`/challenges/${c.slug}`} className="block group">
-      <article className="border border-gray-200 rounded-lg p-5 h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+      <article className="border border-brand-card-edge rounded-lg p-5 h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div className="flex items-center justify-between mb-3">
           <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${colorClass}`}>
             {c.category}
@@ -127,7 +127,7 @@ function ChallengeCard({ challenge: c }: { challenge: ChallengeItem }) {
           {c.isFree ? (
             <span className="text-xs font-semibold text-green-600">Free</span>
           ) : (
-            <span className="text-xs text-gray-400 flex items-center gap-1">
+            <span className="text-xs text-brand-muted flex items-center gap-1">
               <svg
                 className="w-3 h-3"
                 fill="none"
@@ -146,11 +146,11 @@ function ChallengeCard({ challenge: c }: { challenge: ChallengeItem }) {
           )}
         </div>
 
-        <h3 className="font-semibold text-brand-black text-base leading-snug mb-2 group-hover:text-brand-red transition-colors flex-1">
+        <h3 className="font-semibold text-brand-bone text-base leading-snug mb-2 group-hover:text-brand-red transition-colors flex-1">
           {c.title}
         </h3>
 
-        <p className="text-gray-400 text-xs leading-relaxed line-clamp-2 mt-auto pt-2">
+        <p className="text-brand-muted text-xs leading-relaxed line-clamp-2 mt-auto pt-2">
           {c.situation}
         </p>
       </article>

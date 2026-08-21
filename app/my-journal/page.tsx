@@ -15,13 +15,13 @@ export default async function MyJournalPage() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
           My Training
         </p>
-        <h1 className="text-3xl font-bold text-brand-black">Daily observations</h1>
-        <p className="text-gray-400 text-sm mt-2">
+        <h1 className="text-3xl font-bold text-brand-bone">Daily observations</h1>
+        <p className="text-brand-muted text-sm mt-2">
           Raw notes from training. Tag what it belongs to. Patterns emerge over time.
         </p>
       </div>
 
-      <div className="border border-gray-200 rounded-xl p-5 mb-6">
+      <div className="border border-brand-card-edge rounded-xl p-5 mb-6">
         <MyJournalEntry />
       </div>
 

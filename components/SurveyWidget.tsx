@@ -73,11 +73,11 @@ export default function SurveyWidget({
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-4">
           Your path
         </p>
-        <p className="text-gray-300 text-sm leading-relaxed mb-6">
+        <p className="text-brand-bone-dim text-sm leading-relaxed mb-6">
           {rec.message}
         </p>
 
-        <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">
+        <p className="text-xs text-brand-bone-dim uppercase tracking-widest mb-2">
           Start with
         </p>
         <Link
@@ -92,7 +92,7 @@ export default function SurveyWidget({
 
         {rec.path.length > 0 && (
           <>
-            <p className="text-xs text-gray-500 uppercase tracking-widest mb-2">
+            <p className="text-xs text-brand-bone-dim uppercase tracking-widest mb-2">
               Then try
             </p>
             <ul className="space-y-2 mb-6">
@@ -100,7 +100,7 @@ export default function SurveyWidget({
                 <li key={slug}>
                   <Link
                     href={`/challenges/${slug}`}
-                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                    className="text-sm text-brand-muted hover:text-white transition-colors"
                   >
                     → {getTitle(slug)}
                   </Link>
@@ -111,15 +111,15 @@ export default function SurveyWidget({
         )}
 
         {rec.track && (
-          <p className="text-xs text-gray-600 mb-6">
+          <p className="text-xs text-brand-bone-dim mb-6">
             These are part of the{' '}
-            <span className="text-gray-400">{rec.track}</span> series.
+            <span className="text-brand-muted">{rec.track}</span> series.
           </p>
         )}
 
         <button
           onClick={reset}
-          className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+          className="text-xs text-brand-bone-dim hover:text-brand-muted transition-colors"
         >
           ← Start over
         </button>
@@ -132,7 +132,7 @@ export default function SurveyWidget({
   const question = QUESTIONS[questionKey]
 
   return (
-    <div className="border border-gray-200 rounded-xl p-7 bg-white">
+    <div className="border border-brand-card-edge rounded-xl p-7 bg-brand-card">
       {/* Progress dots */}
       <div className="flex gap-1.5 mb-6">
         {['duration', 'sparring', 'problem'].map((s, i) => (
@@ -141,16 +141,16 @@ export default function SurveyWidget({
             className={`block h-1 rounded-full transition-all duration-300 ${
               i <= stepIndex - 0
                 ? 'bg-brand-red w-6'
-                : 'bg-gray-200 w-3'
+                : 'bg-brand-card-edge w-3'
             }`}
           />
         ))}
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+      <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2">
         {stepIndex + 1} of 3
       </p>
-      <p className="text-base font-semibold text-brand-black mb-5">
+      <p className="text-base font-semibold text-brand-bone mb-5">
         {question.label}
       </p>
 
@@ -170,7 +170,7 @@ export default function SurveyWidget({
                 setStep('result')
               }
             }}
-            className="text-left px-4 py-3 rounded-lg border border-gray-200 text-sm text-brand-black hover:border-brand-red hover:text-brand-red transition-all duration-150 font-medium"
+            className="text-left px-4 py-3 rounded-lg border border-brand-card-edge text-sm text-brand-bone hover:border-brand-red hover:text-brand-red transition-all duration-150 font-medium"
           >
             {opt.label}
           </button>

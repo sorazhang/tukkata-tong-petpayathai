@@ -47,31 +47,31 @@ export default async function ReviewPage() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-2">
           Internal Review
         </p>
-        <h1 className="text-3xl font-bold text-brand-black mb-4">
+        <h1 className="text-3xl font-bold text-brand-bone mb-4">
           All Challenges — Kru Review
         </h1>
-        <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-xl">
+        <p className="text-brand-bone-dim text-sm leading-relaxed mb-6 max-w-xl">
           Click any challenge to expand it. Type, record, or paste a video link — hit Save and it writes immediately.
           Orange badges show which ones still need your answer.
         </p>
 
         {/* Summary */}
-        <div className="flex gap-8 p-5 bg-gray-50 rounded-xl border border-gray-200">
+        <div className="flex gap-8 p-5 bg-brand-card rounded-xl border border-brand-card-edge">
           <div>
-            <p className="text-2xl font-bold text-brand-black">{challenges.length}</p>
-            <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Total</p>
+            <p className="text-2xl font-bold text-brand-bone">{challenges.length}</p>
+            <p className="text-xs text-brand-muted uppercase tracking-widest mt-0.5">Total</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-green-600">{done}</p>
-            <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Complete</p>
+            <p className="text-xs text-brand-muted uppercase tracking-widest mt-0.5">Complete</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-blue-500">{pending}</p>
-            <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Pending review</p>
+            <p className="text-xs text-brand-muted uppercase tracking-widest mt-0.5">Pending review</p>
           </div>
           <div>
             <p className="text-2xl font-bold text-orange-500">{placeholders}</p>
-            <p className="text-xs text-gray-400 uppercase tracking-widest mt-0.5">Need answer</p>
+            <p className="text-xs text-brand-muted uppercase tracking-widest mt-0.5">Need answer</p>
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@ export default async function ReviewPage() {
             <div className="space-y-8">
               {byDifficulty.map(({ difficulty, items }) => (
                 <div key={difficulty}>
-                  <p className="text-xs text-gray-400 uppercase tracking-widest mb-3 font-medium">
+                  <p className="text-xs text-brand-muted uppercase tracking-widest mb-3 font-medium">
                     {DIFFICULTY_LABELS[difficulty]}
                   </p>
                   <div className="space-y-3">

@@ -18,8 +18,8 @@ export default async function MySpacePage() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
           My Space
         </p>
-        <h1 className="text-3xl font-bold text-brand-black">Training hub</h1>
-        <p className="text-gray-400 text-sm mt-2">
+        <h1 className="text-3xl font-bold text-brand-bone">Training hub</h1>
+        <p className="text-brand-muted text-sm mt-2">
           Observations, patterns, and personal challenges — all in one place.
         </p>
       </div>

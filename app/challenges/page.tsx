@@ -28,24 +28,24 @@ export default async function ChallengesPage() {
       <section className="bg-brand-black text-white py-16 px-6">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Challenges</h1>
-          <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-10">
+          <p className="text-brand-bone-dim text-lg leading-relaxed max-w-xl mb-10">
             Real problems from the ring. Find the one that matches where you are.
             Read it, go try it, come back for the answer.
           </p>
           <div className="flex flex-wrap gap-x-8 gap-y-3 text-sm">
             <div>
               <span className="text-white font-bold text-2xl">{freeCount}</span>
-              <span className="text-gray-400 ml-2">free to start</span>
+              <span className="text-brand-muted ml-2">free to start</span>
             </div>
-            <div className="w-px bg-gray-700 hidden sm:block" />
+            <div className="w-px bg-brand-muted hidden sm:block" />
             <div>
               <span className="text-white font-bold text-2xl">{challenges.length}</span>
-              <span className="text-gray-400 ml-2">total challenges</span>
+              <span className="text-brand-muted ml-2">total challenges</span>
             </div>
-            <div className="w-px bg-gray-700 hidden sm:block" />
+            <div className="w-px bg-brand-muted hidden sm:block" />
             <div>
               <span className="text-white font-bold text-2xl">5</span>
-              <span className="text-gray-400 ml-2">disciplines</span>
+              <span className="text-brand-muted ml-2">disciplines</span>
             </div>
           </div>
         </div>
@@ -53,31 +53,31 @@ export default async function ChallengesPage() {
 
       {/* ── Start Here ── */}
       {startHere && (
-        <section className="border-b border-gray-100 px-6 py-5 bg-red-50">
+        <section className="border-b border-brand-card-edge px-6 py-5 bg-red-50">
           <div className="max-w-3xl mx-auto flex items-center gap-4 flex-wrap">
             <span className="text-xs font-semibold text-brand-red uppercase tracking-widest">
               New here?
             </span>
             <Link
               href={`/challenges/${startHere.slug}`}
-              className="text-sm font-medium text-brand-black hover:text-brand-red transition-colors"
+              className="text-sm font-medium text-brand-bone hover:text-brand-red transition-colors"
             >
               Start with: {startHere.title} →
             </Link>
-            <span className="text-xs text-gray-400">Free · Beginner</span>
+            <span className="text-xs text-brand-muted">Free · Beginner</span>
           </div>
         </section>
       )}
 
       {/* ── Survey ── */}
-      <section className="py-14 px-6 bg-gray-50 border-b border-gray-100 hover:bg-white transition-colors duration-500 group/survey">
+      <section className="py-14 px-6 bg-brand-card border-b border-brand-card-edge hover:bg-brand-card-edge transition-colors duration-500 group/survey">
         <div className="max-w-xl mx-auto group-hover/survey:-translate-y-0.5 transition-transform duration-300">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 text-center flex items-center justify-center gap-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2 text-center flex items-center justify-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse shrink-0" />
             Not sure where to start?
             <span className="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse shrink-0" />
           </p>
-          <h2 className="text-xl font-bold text-brand-black mb-6 text-center">
+          <h2 className="text-xl font-bold text-brand-bone mb-6 text-center">
             Three questions. One clear starting point.
           </h2>
           <SurveyWidget challenges={challengeItems.map(({ slug, title }) => ({ slug, title }))} />
@@ -85,15 +85,15 @@ export default async function ChallengesPage() {
       </section>
 
       {/* ── Find Your Problem ── */}
-      <section className="py-16 px-6 border-b border-gray-100">
+      <section className="py-16 px-6 border-b border-brand-card-edge">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-2">
             Find Your Problem
           </p>
-          <h2 className="text-2xl font-bold text-brand-black mb-2">
+          <h2 className="text-2xl font-bold text-brand-bone mb-2">
             Pick the discipline. Pick your level.
           </h2>
-          <p className="text-gray-500 text-sm mb-10">
+          <p className="text-brand-bone-dim text-sm mb-10">
             Each discipline opens into Beginner, Intermediate, and Advanced.
             Find the title that sounds like what you are dealing with.
           </p>
@@ -108,10 +108,10 @@ export default async function ChallengesPage() {
             <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-2">
               Learning Series
             </p>
-            <h2 className="text-2xl font-bold text-brand-black mb-2">
+            <h2 className="text-2xl font-bold text-brand-bone mb-2">
               Structured Paths
             </h2>
-            <p className="text-gray-500 text-sm mb-8">
+            <p className="text-brand-bone-dim text-sm mb-8">
               Challenges designed to be done in order. Each one builds on the last.
             </p>
             <div className="space-y-4">
@@ -121,15 +121,15 @@ export default async function ChallengesPage() {
                   href={`/challenges/${track.challenges[0].slug}`}
                   className="block group"
                 >
-                  <div className="border border-gray-200 rounded-lg p-6 bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                  <div className="border border-brand-card-edge rounded-lg p-6 bg-brand-card hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-semibold text-brand-black group-hover:text-brand-red transition-colors mb-1">
+                        <h3 className="font-semibold text-brand-bone group-hover:text-brand-red transition-colors mb-1">
                           {track.name}
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-brand-bone-dim">
                           {track.challenges.length} challenges · Start with:{' '}
-                          <span className="text-gray-700">{track.challenges[0].title}</span>
+                          <span className="text-brand-bone">{track.challenges[0].title}</span>
                         </p>
                       </div>
                       <span className="text-brand-red text-xl shrink-0 ml-6">→</span>

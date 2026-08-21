@@ -14,13 +14,13 @@ export default async function JournalPage() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
           Kru&apos;s Journal
         </p>
-        <h1 className="text-3xl font-bold text-brand-black">What I observed today</h1>
-        <p className="text-gray-400 text-sm mt-2">
+        <h1 className="text-3xl font-bold text-brand-bone">What I observed today</h1>
+        <p className="text-brand-muted text-sm mt-2">
           Speak or type — no structure needed. Save the thought.
         </p>
       </div>
 
-      <div className="border border-gray-200 rounded-xl p-5 mb-10">
+      <div className="border border-brand-card-edge rounded-xl p-5 mb-10">
         <JournalEntry />
       </div>
 

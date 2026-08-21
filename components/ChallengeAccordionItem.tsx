@@ -47,17 +47,17 @@ export default function ChallengeAccordionItem({
   }
 
   return (
-    <details className="group border border-gray-200 rounded-xl overflow-hidden">
-      <summary className="flex items-start justify-between gap-4 p-5 cursor-pointer [&::-webkit-details-marker]:hidden [&::marker]:hidden select-none hover:bg-gray-50 transition-colors">
+    <details className="group border border-brand-card-edge rounded-xl overflow-hidden">
+      <summary className="flex items-start justify-between gap-4 p-5 cursor-pointer [&::-webkit-details-marker]:hidden [&::marker]:hidden select-none hover:bg-brand-card transition-colors">
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-brand-black text-sm leading-snug">{title}</p>
-          <p className="text-xs text-gray-400 mt-1 leading-relaxed line-clamp-2">{situation}</p>
+          <p className="font-semibold text-brand-bone text-sm leading-snug">{title}</p>
+          <p className="text-xs text-brand-muted mt-1 leading-relaxed line-clamp-2">{situation}</p>
         </div>
         <div className="flex items-center gap-3 shrink-0 mt-0.5">
           {/* Copy link button */}
           <button
             onClick={copyLink}
-            className="text-xs text-gray-400 hover:text-brand-red transition-colors px-1.5 py-0.5 rounded hover:bg-gray-100"
+            className="text-xs text-brand-muted hover:text-brand-red transition-colors px-1.5 py-0.5 rounded hover:bg-brand-card"
             title="Copy link to send to Kru"
           >
             {copied ? '✓ Copied' : 'Copy link'}
@@ -78,7 +78,7 @@ export default function ChallengeAccordionItem({
               Needs answer
             </span>
           )}
-          <span className="text-gray-300 group-open:rotate-90 transition-transform duration-200 text-lg leading-none">
+          <span className="text-brand-bone-dim group-open:rotate-90 transition-transform duration-200 text-lg leading-none">
             ›
           </span>
         </div>

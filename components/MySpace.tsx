@@ -23,8 +23,8 @@ const TIER_LABELS: Record<Tier, string> = {
 }
 
 const TIER_COLORS: Record<Tier, string> = {
-  free: 'text-gray-400',
-  silver: 'text-gray-400',
+  free: 'text-brand-muted',
+  silver: 'text-brand-muted',
   gold: 'text-amber-500',
 }
 
@@ -32,10 +32,10 @@ function LockedFeature({ label, requiredTier }: { label: string; requiredTier: '
   return (
     <div className="py-12 text-center space-y-3">
       <div className="text-3xl">🔒</div>
-      <p className="text-sm font-semibold text-brand-black">{label}</p>
-      <p className="text-xs text-gray-400">
+      <p className="text-sm font-semibold text-brand-bone">{label}</p>
+      <p className="text-xs text-brand-muted">
         Available on{' '}
-        <span className={requiredTier === 'gold' ? 'text-amber-500 font-semibold' : 'text-gray-600 font-semibold'}>
+        <span className={requiredTier === 'gold' ? 'text-amber-500 font-semibold' : 'text-brand-bone-dim font-semibold'}>
           {TIER_LABELS[requiredTier]}
         </span>{' '}
         and above.
@@ -72,11 +72,11 @@ export default function MySpace({
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
+      <div className="flex gap-1 p-1 bg-brand-void rounded-xl mb-8">
         <button
           onClick={() => setTab('journal')}
           className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'journal' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+            tab === 'journal' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted hover:text-brand-bone-dim'
           }`}
         >
           Journal
@@ -84,7 +84,7 @@ export default function MySpace({
         <button
           onClick={() => setTab('insights')}
           className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'insights' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+            tab === 'insights' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted hover:text-brand-bone-dim'
           }`}
         >
           Insights
@@ -94,13 +94,13 @@ export default function MySpace({
             </span>
           )}
           {!canAccessInsights && (
-            <span className="ml-1.5 text-xs text-gray-300">🔒</span>
+            <span className="ml-1.5 text-xs text-brand-bone-dim">🔒</span>
           )}
         </button>
         <button
           onClick={() => setTab('challenges')}
           className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-            tab === 'challenges' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
+            tab === 'challenges' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted hover:text-brand-bone-dim'
           }`}
         >
           Challenges
@@ -110,20 +110,20 @@ export default function MySpace({
             </span>
           )}
           {!canAccessChallenges && (
-            <span className="ml-1.5 text-xs text-gray-300">🔒</span>
+            <span className="ml-1.5 text-xs text-brand-bone-dim">🔒</span>
           )}
         </button>
       </div>
 
       {tab === 'journal' && (
         <div className="space-y-6">
-          <div className="border border-gray-200 rounded-xl p-5">
+          <div className="border border-brand-card-edge rounded-xl p-5">
             <MyJournalEntry />
           </div>
           {canAccessInsights && <MyJournalPatterns />}
           {!canAccessInsights && (
-            <div className="border border-gray-100 rounded-xl p-5">
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-300 mb-2">AI Pattern Analysis</p>
+            <div className="border border-brand-card-edge rounded-xl p-5">
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-bone-dim mb-2">AI Pattern Analysis</p>
               <LockedFeature label="Unlock AI-powered pattern recognition" requiredTier="silver" />
             </div>
           )}

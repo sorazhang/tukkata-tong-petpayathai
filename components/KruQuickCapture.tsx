@@ -26,7 +26,7 @@ export default function KruQuickCapture() {
   if (!hydrated || !isKru) return null
 
   return (
-    <div className="bg-white border-b border-gray-100">
+    <div className="bg-brand-card border-b border-brand-card-edge">
       <div className="max-w-2xl mx-auto px-6 py-6">
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-3">
           Quick note

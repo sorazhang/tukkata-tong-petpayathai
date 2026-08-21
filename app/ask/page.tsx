@@ -9,10 +9,10 @@ export default function AskPage() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-2">
           ตุ๊กตาทอง เพชรพญาไท
         </p>
-        <h1 className="text-2xl font-bold text-brand-black leading-snug">
+        <h1 className="text-2xl font-bold text-brand-bone leading-snug">
           What is confusing you in training?
         </h1>
-        <p className="text-gray-500 text-sm mt-2 leading-relaxed">
+        <p className="text-brand-bone-dim text-sm mt-2 leading-relaxed">
           Kru reads every submission. The questions that come up most often
           become the next challenges he answers on the platform.
         </p>

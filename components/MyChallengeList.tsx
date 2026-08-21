@@ -42,30 +42,30 @@ function MyChallengeRow({
   }
 
   return (
-    <div className="border border-gray-100 rounded-xl overflow-hidden">
+    <div className="border border-brand-card-edge rounded-xl overflow-hidden">
       <button
         onClick={() => setExpanded((v) => !v)}
-        className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-gray-50 transition-colors"
+        className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-brand-card transition-colors"
       >
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-brand-black">{challenge.title}</p>
-          <p className="text-xs text-gray-400 mt-0.5">{dateLabel}</p>
+          <p className="text-sm font-semibold text-brand-bone">{challenge.title}</p>
+          <p className="text-xs text-brand-muted mt-0.5">{dateLabel}</p>
         </div>
         <span
-          className="text-gray-300 text-lg leading-none shrink-0 mt-0.5"
+          className="text-brand-bone-dim text-lg leading-none shrink-0 mt-0.5"
           style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}
         >›</span>
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 border-t border-gray-100 pt-3 space-y-3">
+        <div className="px-4 pb-4 border-t border-brand-card-edge pt-3 space-y-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Situation</p>
-            <p className="text-sm text-brand-black leading-relaxed">{challenge.situation}</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-1">Situation</p>
+            <p className="text-sm text-brand-bone leading-relaxed">{challenge.situation}</p>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Your turn</p>
-            <p className="text-sm text-brand-black leading-relaxed">{challenge.yourTurn}</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-1">Your turn</p>
+            <p className="text-sm text-brand-bone leading-relaxed">{challenge.yourTurn}</p>
           </div>
           <div className="flex items-center gap-4 pt-1 flex-wrap">
             {canAskKru ? (
@@ -83,23 +83,23 @@ function MyChallengeRow({
                 </button>
               )
             ) : (
-              <span className="text-xs text-gray-300 flex items-center gap-1">
+              <span className="text-xs text-brand-bone-dim flex items-center gap-1">
                 🔒 <span>Ask Kru — Gold only</span>
               </span>
             )}
 
-            <span className="text-gray-200 text-xs">·</span>
+            <span className="text-brand-bone-dim text-xs">·</span>
 
             {confirmDelete ? (
               <span className="flex items-center gap-2 text-xs">
-                <span className="text-gray-400">Delete?</span>
+                <span className="text-brand-muted">Delete?</span>
                 <button onClick={handleDelete} disabled={isPending} className="text-red-500 font-semibold hover:text-red-700">Yes</button>
-                <button onClick={() => setConfirmDelete(false)} className="text-gray-400 hover:text-gray-600">Cancel</button>
+                <button onClick={() => setConfirmDelete(false)} className="text-brand-muted hover:text-brand-bone-dim">Cancel</button>
               </span>
             ) : (
               <button
                 onClick={() => setConfirmDelete(true)}
-                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+                className="text-xs text-brand-muted hover:text-red-500 transition-colors"
               >
                 Delete
               </button>
@@ -121,8 +121,8 @@ export default function MyChallengeList({
   if (challenges.length === 0) {
     return (
       <div className="py-16 text-center">
-        <p className="text-sm text-gray-400">No challenges saved yet.</p>
-        <p className="text-xs text-gray-300 mt-1">Draft one from a journal entry.</p>
+        <p className="text-sm text-brand-muted">No challenges saved yet.</p>
+        <p className="text-xs text-brand-bone-dim mt-1">Draft one from a journal entry.</p>
       </div>
     )
   }
