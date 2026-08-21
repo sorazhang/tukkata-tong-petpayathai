@@ -13,7 +13,7 @@ const TAG_STYLES: Record<JournalTag, string> = {
   striking: 'bg-red-50 text-red-600',
   clinch:   'bg-orange-50 text-orange-600',
   mental:   'bg-purple-50 text-purple-600',
-  other:    'bg-brand-card text-brand-bone-dim',
+  other:    'bg-gray-100 text-gray-500',
 }
 
 const TAGS: { id: JournalTag; label: string }[] = [
@@ -87,37 +87,37 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
   }
 
   return (
-    <div className="border border-brand-card-edge rounded-xl overflow-hidden">
+    <div className="border border-gray-100 rounded-xl overflow-hidden">
       <button
         onClick={() => { if (!editing) setExpanded((v) => !v) }}
-        className="w-full text-left px-4 py-3 flex items-center justify-between gap-3 hover:bg-brand-card transition-colors"
+        className="w-full text-left px-4 py-3 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors"
       >
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 ${TAG_STYLES[entry.tag]}`}>
             {entry.tag}
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-brand-bone">{dateLabel}</p>
+            <p className="text-sm font-semibold text-brand-black">{dateLabel}</p>
             {!expanded && (
-              <p className="text-xs text-brand-muted truncate mt-0.5">{entry.text}</p>
+              <p className="text-xs text-gray-400 truncate mt-0.5">{entry.text}</p>
             )}
           </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-brand-muted">{timeLabel}</span>
-          <span className="text-brand-bone-dim text-lg leading-none"
+          <span className="text-xs text-gray-400">{timeLabel}</span>
+          <span className="text-gray-300 text-lg leading-none"
             style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>›</span>
         </div>
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 border-t border-brand-card-edge">
+        <div className="px-4 pb-4 border-t border-gray-100">
           {editing ? (
             <div className="pt-3 space-y-3">
               <div className="flex flex-wrap gap-2">
                 {TAGS.map((t) => (
                   <button key={t.id} type="button" onClick={() => setEditTag(t.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${editTag === t.id ? 'bg-brand-red text-white' : 'bg-brand-card text-brand-bone-dim'}`}>
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${editTag === t.id ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-500'}`}>
                     {t.label}
                   </button>
                 ))}
@@ -126,7 +126,7 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
                 rows={5} autoFocus
-                className="w-full text-sm border border-brand-card-edge rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
+                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
               />
               <div className="flex gap-2">
                 <button onClick={handleSaveEdit} disabled={isPending || !editText.trim()}
@@ -134,24 +134,24 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
                   {isPending ? 'Saving…' : 'Save'}
                 </button>
                 <button onClick={() => { setEditing(false); setEditText(entry.text); setEditTag(entry.tag) }}
-                  className="px-4 py-2 text-xs text-brand-muted hover:text-brand-bone-dim">
+                  className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600">
                   Cancel
                 </button>
               </div>
             </div>
           ) : (
             <div className="pt-3">
-              <p className="text-sm text-brand-bone leading-relaxed whitespace-pre-wrap">{entry.text}</p>
+              <p className="text-sm text-brand-black leading-relaxed whitespace-pre-wrap">{entry.text}</p>
               <div className="flex gap-3 mt-4 flex-wrap items-center">
-                <button onClick={() => setEditing(true)} className="text-xs text-brand-muted hover:text-brand-bone transition-colors">Edit</button>
+                <button onClick={() => setEditing(true)} className="text-xs text-gray-400 hover:text-brand-black transition-colors">Edit</button>
                 {confirmDelete ? (
                   <span className="flex items-center gap-2 text-xs">
-                    <span className="text-brand-muted">Delete?</span>
+                    <span className="text-gray-400">Delete?</span>
                     <button onClick={handleDelete} disabled={isPending} className="text-red-500 font-semibold hover:text-red-700">Yes</button>
-                    <button onClick={() => setConfirmDelete(false)} className="text-brand-muted hover:text-brand-bone-dim">Cancel</button>
+                    <button onClick={() => setConfirmDelete(false)} className="text-gray-400 hover:text-gray-600">Cancel</button>
                   </span>
                 ) : (
-                  <button onClick={() => setConfirmDelete(true)} className="text-xs text-brand-muted hover:text-red-500 transition-colors">Delete</button>
+                  <button onClick={() => setConfirmDelete(true)} className="text-xs text-gray-400 hover:text-red-500 transition-colors">Delete</button>
                 )}
                 <button
                   onClick={handleDraft}
@@ -164,24 +164,24 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
 
               {/* Draft output */}
               {draft && (
-                <div className="mt-4 p-4 bg-brand-card rounded-xl border border-brand-card-edge space-y-3">
+                <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100 space-y-3">
                   <p className="text-xs font-bold uppercase tracking-widest text-brand-red">Challenge draft</p>
                   <div>
-                    <p className="text-xs font-bold text-brand-bone-dim uppercase tracking-widest mb-1">Title</p>
-                    <p className="text-sm font-semibold text-brand-bone">{draft.title}</p>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Title</p>
+                    <p className="text-sm font-semibold text-brand-black">{draft.title}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-brand-bone-dim uppercase tracking-widest mb-1">Situation</p>
-                    <p className="text-sm text-brand-bone leading-relaxed">{draft.situation}</p>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Situation</p>
+                    <p className="text-sm text-brand-black leading-relaxed">{draft.situation}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-brand-bone-dim uppercase tracking-widest mb-1">Your turn</p>
-                    <p className="text-sm text-brand-bone leading-relaxed">{draft.yourTurn}</p>
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Your turn</p>
+                    <p className="text-sm text-brand-black leading-relaxed">{draft.yourTurn}</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <button
                       onClick={handleCopyDraft}
-                      className="text-xs text-brand-muted hover:text-brand-bone transition-colors"
+                      className="text-xs text-gray-400 hover:text-brand-black transition-colors"
                     >
                       {draftCopied ? '✓ Copied' : 'Copy'}
                     </button>
@@ -225,7 +225,7 @@ export default function MyJournalList({ entries }: { entries: MyEntry[] }) {
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setFilterTag('all')}
-          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${filterTag === 'all' ? 'bg-brand-black text-white' : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'}`}
+          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${filterTag === 'all' ? 'bg-brand-black text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
         >
           All ({entries.length})
         </button>

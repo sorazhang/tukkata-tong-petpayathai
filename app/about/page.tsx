@@ -19,14 +19,14 @@ export default function AboutPage() {
           <h1 className="text-4xl md:text-5xl font-bold leading-tight">
             ตุ๊กตาทอง เพชรพญาไท
           </h1>
-          <p className="text-brand-muted text-lg mt-2">Tukkatatong Petpayathai</p>
+          <p className="text-gray-400 text-lg mt-2">Tukkatatong Petpayathai</p>
         </div>
       </section>
 
       {/* Bio */}
       <article className="max-w-3xl mx-auto px-6 py-16">
         <div className="prose prose-lg max-w-none">
-          <p className="text-xl text-brand-bone-dim leading-relaxed">
+          <p className="text-xl text-gray-600 leading-relaxed">
             I started fighting because my family needed the money. That is the
             honest answer. Most Thai fighters from Isaan will tell you the same
             thing.
@@ -130,7 +130,7 @@ export default function AboutPage() {
         </div>
 
         {/* CTAs */}
-        <div className="mt-12 flex flex-wrap gap-4 pt-8 border-t border-brand-card-edge">
+        <div className="mt-12 flex flex-wrap gap-4 pt-8 border-t border-gray-100">
           <Link
             href="/challenges"
             className="bg-brand-red text-white px-6 py-3 rounded font-medium hover:bg-brand-red-dark transition-colors"
@@ -139,7 +139,7 @@ export default function AboutPage() {
           </Link>
           <Link
             href="/book"
-            className="border border-brand-muted text-brand-bone px-6 py-3 rounded font-medium hover:border-gray-500 transition-colors"
+            className="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium hover:border-gray-500 transition-colors"
           >
             Book a Session
           </Link>

@@ -206,34 +206,34 @@ export default function ChallengeEditor({
   const isNoteDirty = note !== initialNote
 
   return (
-    <div className="border-t border-brand-card-edge divide-y divide-brand-card-edge">
+    <div className="border-t border-gray-100 divide-y divide-gray-100">
 
       {/* ── Situation — read only ── */}
       {situation && (
-        <div className="px-5 py-4 bg-brand-card">
-          <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2">
+        <div className="px-5 py-4 bg-gray-50">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
             The Problem
           </p>
-          <p className="text-sm text-brand-bone leading-relaxed">{situation}</p>
+          <p className="text-sm text-gray-700 leading-relaxed">{situation}</p>
         </div>
       )}
 
       {/* ── Your Turn — read only, always visible ── */}
-      <div className="px-5 py-4 bg-brand-card">
-        <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2">
+      <div className="px-5 py-4 bg-gray-50">
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
           Your Turn
         </p>
         {yourTurn
-          ? <p className="text-sm text-brand-bone leading-relaxed">{yourTurn}</p>
-          : <p className="text-sm text-brand-muted italic">Not yet written — the drill the fighter goes to try before reading the solution.</p>
+          ? <p className="text-sm text-gray-700 leading-relaxed">{yourTurn}</p>
+          : <p className="text-sm text-gray-400 italic">Not yet written — the drill the fighter goes to try before reading the solution.</p>
         }
       </div>
 
       {/* ── Solution (typed) ── */}
       <div className="px-5 py-4">
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2 flex items-center gap-2">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 flex items-center gap-2">
           {"Kru's Answer"}
-          <span className="text-brand-muted normal-case tracking-normal font-normal text-xs">— ภาษาไทยก็ได้</span>
+          <span className="text-gray-400 normal-case tracking-normal font-normal text-xs">— ภาษาไทยก็ได้</span>
           {!solution.trim() && (
             <span className="text-orange-500 bg-orange-50 px-1.5 py-0.5 rounded text-xs normal-case tracking-normal font-semibold">
               Waiting for your answer
@@ -245,16 +245,16 @@ export default function ChallengeEditor({
           onChange={(e) => { setSolution(e.target.value); setSaveState('idle') }}
           rows={10}
           placeholder="What do you tell this fighter? What actually works and why…"
-          className="w-full text-sm text-brand-bone leading-relaxed border border-brand-card-edge rounded-lg p-3 focus:outline-none focus:border-brand-red resize-y font-sans"
+          className="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red resize-y font-sans"
         />
       </div>
 
       {/* Save bar */}
-      <div className="px-5 py-4 bg-brand-card flex items-center justify-between gap-4 flex-wrap">
+      <div className="px-5 py-4 bg-gray-50 flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3 text-sm flex-wrap">
           {saveState === 'saved' && <span className="text-green-600 font-medium">Saved.</span>}
           {saveState === 'error' && <span className="text-red-600 font-medium">{saveError}</span>}
-          {saveState === 'idle' && isDirty && <span className="text-brand-muted text-xs">Unsaved changes</span>}
+          {saveState === 'idle' && isDirty && <span className="text-gray-400 text-xs">Unsaved changes</span>}
 
           {/* Status badge */}
           {status === 'needs_answer' && (
@@ -295,9 +295,9 @@ export default function ChallengeEditor({
             onClick={handleSave}
             disabled={isPending || !isDirty}
             className={`px-5 py-2 rounded text-sm font-semibold transition-all ${
-              isPending ? 'bg-brand-card-edge text-brand-muted cursor-not-allowed'
+              isPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
               : isDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
-              : 'bg-brand-card text-brand-bone-dim cursor-not-allowed'
+              : 'bg-gray-100 text-gray-300 cursor-not-allowed'
             }`}
           >
             {isPending ? 'Saving…' : 'Save'}
@@ -307,10 +307,10 @@ export default function ChallengeEditor({
 
       {/* ── Solution — Voice note ── */}
       <div className="px-5 py-4">
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-1 block">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">
           Solution — Voice Note
         </label>
-        <p className="text-xs text-brand-muted mb-4">
+        <p className="text-xs text-gray-400 mb-4">
           Prefer to speak? Record your answer directly. No editing needed.
         </p>
 
@@ -321,7 +321,7 @@ export default function ChallengeEditor({
         {/* Existing recording */}
         {voiceNote && recordState === 'saved' && (
           <div className="mb-4">
-            <p className="text-xs text-brand-muted mb-1">Current recording</p>
+            <p className="text-xs text-gray-400 mb-1">Current recording</p>
             <audio controls src={`/${voiceNote}`} className="w-full h-10" />
           </div>
         )}
@@ -332,7 +332,7 @@ export default function ChallengeEditor({
               onClick={startRecording}
               className="flex items-center gap-2 px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors"
             >
-              <span className="w-2 h-2 rounded-full bg-brand-card inline-block" />
+              <span className="w-2 h-2 rounded-full bg-white inline-block" />
               {voiceNote ? 'Re-record' : 'Record answer'}
             </button>
           )}
@@ -345,7 +345,7 @@ export default function ChallengeEditor({
               </span>
               <button
                 onClick={stopRecording}
-                className="px-4 py-2 bg-brand-void text-white text-sm font-semibold rounded hover:bg-black transition-colors"
+                className="px-4 py-2 bg-gray-800 text-white text-sm font-semibold rounded hover:bg-black transition-colors"
               >
                 Stop
               </button>
@@ -364,7 +364,7 @@ export default function ChallengeEditor({
               </button>
               <button
                 onClick={() => { setAudioBlob(null); setRecordState(voiceNote ? 'saved' : 'idle') }}
-                className="text-xs text-brand-muted hover:text-brand-bone-dim"
+                className="text-xs text-gray-400 hover:text-gray-600"
               >
                 Discard
               </button>
@@ -372,17 +372,17 @@ export default function ChallengeEditor({
           )}
 
           {recordState === 'saving' && (
-            <span className="text-sm text-brand-muted">Saving…</span>
+            <span className="text-sm text-gray-400">Saving…</span>
           )}
         </div>
       </div>
 
       {/* ── Solution — Video reference ── */}
       <div className="px-5 py-4">
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-1 block">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">
           Solution — Video Reference
         </label>
-        <p className="text-xs text-brand-muted mb-4">
+        <p className="text-xs text-gray-400 mb-4">
           Paste a YouTube link or any video that shows the answer. Add a timestamp note if helpful.
         </p>
 
@@ -391,19 +391,19 @@ export default function ChallengeEditor({
           value={videoUrl}
           onChange={(e) => { setVideoUrl(e.target.value); setVideoSaveState('idle') }}
           placeholder="https://youtube.com/watch?v=…"
-          className="w-full text-sm text-brand-bone border border-brand-card-edge rounded-lg p-3 focus:outline-none focus:border-brand-red mb-2 font-sans"
+          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red mb-2 font-sans"
         />
         <input
           type="text"
           value={videoNote}
           onChange={(e) => { setVideoNote(e.target.value); setVideoSaveState('idle') }}
           placeholder="e.g. Watch from 1:32 — this is where I shift weight before the kick"
-          className="w-full text-sm text-brand-bone border border-brand-card-edge rounded-lg p-3 focus:outline-none focus:border-brand-red font-sans"
+          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red font-sans"
         />
 
         {videoUrl && (
-          <div className="mt-3 p-3 bg-brand-card rounded-lg">
-            <p className="text-xs text-brand-muted mb-1">Preview link</p>
+          <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+            <p className="text-xs text-gray-400 mb-1">Preview link</p>
             <a
               href={videoUrl}
               target="_blank"
@@ -412,7 +412,7 @@ export default function ChallengeEditor({
             >
               {videoUrl}
             </a>
-            {videoNote && <p className="text-xs text-brand-bone-dim mt-1">{videoNote}</p>}
+            {videoNote && <p className="text-xs text-gray-500 mt-1">{videoNote}</p>}
           </div>
         )}
 
@@ -420,15 +420,15 @@ export default function ChallengeEditor({
           <div className="text-xs">
             {videoSaveState === 'saved' && <span className="text-green-600 font-medium">Video link saved.</span>}
             {videoSaveState === 'error'  && <span className="text-red-600 font-medium">Failed to save.</span>}
-            {videoSaveState === 'idle' && isVideoDirty && <span className="text-brand-muted">Unsaved</span>}
+            {videoSaveState === 'idle' && isVideoDirty && <span className="text-gray-400">Unsaved</span>}
           </div>
           <button
             onClick={handleVideoSave}
             disabled={isVideoPending || !isVideoDirty}
             className={`px-4 py-1.5 rounded text-xs font-semibold transition-all ${
-              isVideoPending ? 'bg-brand-card-edge text-brand-muted cursor-not-allowed'
+              isVideoPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
               : isVideoDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
-              : 'bg-brand-card text-brand-bone-dim cursor-not-allowed'
+              : 'bg-gray-100 text-gray-300 cursor-not-allowed'
             }`}
           >
             {isVideoPending ? 'Saving…' : 'Save link'}
@@ -438,21 +438,21 @@ export default function ChallengeEditor({
 
       {/* ── Illustration ── */}
       <div className="px-5 py-4">
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-1 block">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1 block">
           Illustration
         </label>
-        <p className="text-xs text-brand-muted mb-4">
+        <p className="text-xs text-gray-400 mb-4">
           Attach a diagram or sketch. Shows alongside the solution to explain the mechanics visually.
         </p>
 
         {/* Existing illustration */}
         {illustrationUrl && !illustrationPreview && (
           <div className="mb-4">
-            <p className="text-xs text-brand-muted mb-2">Current illustration</p>
+            <p className="text-xs text-gray-400 mb-2">Current illustration</p>
             <img
               src={illustrationUrl}
               alt="Challenge illustration"
-              className="max-w-full rounded-lg border border-brand-card-edge"
+              className="max-w-full rounded-lg border border-gray-200"
             />
           </div>
         )}
@@ -460,11 +460,11 @@ export default function ChallengeEditor({
         {/* New file preview */}
         {illustrationPreview && (
           <div className="mb-4">
-            <p className="text-xs text-brand-muted mb-2">Preview — not yet saved</p>
+            <p className="text-xs text-gray-400 mb-2">Preview — not yet saved</p>
             <img
               src={illustrationPreview}
               alt="Preview"
-              className="max-w-full rounded-lg border border-brand-card-edge"
+              className="max-w-full rounded-lg border border-gray-200"
             />
           </div>
         )}
@@ -474,7 +474,7 @@ export default function ChallengeEditor({
         )}
 
         <div className="flex items-center gap-3 flex-wrap">
-          <label className="cursor-pointer px-4 py-2 bg-brand-card text-brand-bone text-sm font-semibold rounded hover:bg-brand-card-edge transition-colors">
+          <label className="cursor-pointer px-4 py-2 bg-gray-100 text-gray-700 text-sm font-semibold rounded hover:bg-gray-200 transition-colors">
             {illustrationUrl ? 'Replace image' : 'Choose image'}
             <input
               type="file"
@@ -495,7 +495,7 @@ export default function ChallengeEditor({
               </button>
               <button
                 onClick={() => { setIllustrationFile(null); setIllustrationPreview(null) }}
-                className="text-xs text-brand-muted hover:text-brand-bone-dim"
+                className="text-xs text-gray-400 hover:text-gray-600"
               >
                 Discard
               </button>
@@ -521,7 +521,7 @@ export default function ChallengeEditor({
           onChange={(e) => { setNote(e.target.value); setNoteSaveState('idle') }}
           rows={3}
           placeholder="e.g. Kru — does this situation feel right to you? Or: needs a clearer drill…"
-          className="w-full text-sm text-amber-900 leading-relaxed border border-amber-200 rounded-lg p-3 focus:outline-none focus:border-amber-400 resize-y font-sans bg-brand-card placeholder:text-amber-300"
+          className="w-full text-sm text-amber-900 leading-relaxed border border-amber-200 rounded-lg p-3 focus:outline-none focus:border-amber-400 resize-y font-sans bg-white placeholder:text-amber-300"
         />
         <div className="flex items-center justify-between mt-2">
           <div className="text-xs">

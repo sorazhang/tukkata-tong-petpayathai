@@ -109,7 +109,7 @@ export default function MyJournalEntry() {
 
       {/* Tag picker */}
       <div>
-        <p className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-2">Tag</p>
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Tag</p>
         <div className="flex flex-wrap gap-2">
           {TAGS.map((t) => (
             <button
@@ -119,7 +119,7 @@ export default function MyJournalEntry() {
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                 tag === t.id
                   ? 'bg-brand-red text-white'
-                  : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
               }`}
             >
               {t.label}
@@ -134,7 +134,7 @@ export default function MyJournalEntry() {
         onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
         placeholder="What did you notice today in training?"
         rows={7}
-        className="w-full border border-brand-card-edge rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
       />
 
       <div className="flex items-center gap-2">
@@ -144,10 +144,10 @@ export default function MyJournalEntry() {
           <button
             onClick={() => { if (listening) stopListening(); setLang((l) => l === 'th-TH' ? 'en-US' : 'th-TH') }}
             type="button"
-            className="flex items-center gap-1 p-1 rounded-full border border-brand-card-edge bg-brand-card"
+            className="flex items-center gap-1 p-1 rounded-full border border-gray-200 bg-gray-100"
           >
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted'}`}>ไทย</span>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted'}`}>EN</span>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>ไทย</span>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>EN</span>
           </button>
         )}
 
@@ -157,7 +157,7 @@ export default function MyJournalEntry() {
             onClick={listening ? stopListening : startListening}
             type="button"
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-              listening ? 'bg-brand-red text-white animate-pulse' : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'
+              listening ? 'bg-brand-red text-white animate-pulse' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
             <span>{listening ? '⏹' : '🎙'}</span>
@@ -183,22 +183,22 @@ export default function MyJournalEntry() {
 
       {/* Related challenges (shown after save) */}
       {matchLoading && (
-        <div className="pt-2 border-t border-brand-card-edge">
-          <p className="text-xs text-brand-muted animate-pulse">Finding related challenges…</p>
+        <div className="pt-2 border-t border-gray-100">
+          <p className="text-xs text-gray-400 animate-pulse">Finding related challenges…</p>
         </div>
       )}
 
       {matches && matches.length > 0 && (
-        <div className="pt-3 border-t border-brand-card-edge space-y-2">
-          <p className="text-xs font-bold uppercase tracking-widest text-brand-muted">Related challenges</p>
+        <div className="pt-3 border-t border-gray-100 space-y-2">
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-400">Related challenges</p>
           {matches.map((m) => (
             <a
               key={m.slug}
               href={`/review/${m.slug}`}
-              className="flex flex-col gap-0.5 px-3 py-2.5 rounded-lg border border-brand-card-edge hover:border-brand-red/40 hover:bg-red-50/30 transition-colors"
+              className="flex flex-col gap-0.5 px-3 py-2.5 rounded-lg border border-gray-100 hover:border-brand-red/40 hover:bg-red-50/30 transition-colors"
             >
-              <span className="text-sm font-semibold text-brand-bone">{m.title}</span>
-              <span className="text-xs text-brand-muted">{m.reason}</span>
+              <span className="text-sm font-semibold text-brand-black">{m.title}</span>
+              <span className="text-xs text-gray-400">{m.reason}</span>
             </a>
           ))}
         </div>

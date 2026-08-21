@@ -51,11 +51,11 @@ export default async function ChallengePage({ params }: Props) {
   return (
     <main>
       {/* Back */}
-      <div className="border-b border-brand-card-edge bg-brand-card px-6 py-3">
+      <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="max-w-3xl mx-auto">
           <Link
             href="/challenges"
-            className="text-sm text-brand-muted hover:text-brand-red transition-colors"
+            className="text-sm text-gray-400 hover:text-brand-red transition-colors"
           >
             ← All Challenges
           </Link>
@@ -74,8 +74,8 @@ export default async function ChallengePage({ params }: Props) {
                     <span className="text-xs font-medium text-brand-red uppercase tracking-widest">
                       {membership.name}
                     </span>
-                    <span className="text-brand-bone-dim text-xs">·</span>
-                    <span className="text-xs text-brand-muted">
+                    <span className="text-gray-300 text-xs">·</span>
+                    <span className="text-xs text-gray-400">
                       {membership.order} of {track?.challenges.length ?? '?'}
                     </span>
                   </span>
@@ -87,14 +87,14 @@ export default async function ChallengePage({ params }: Props) {
             <span className="text-xs font-medium text-brand-red uppercase tracking-widest">
               {challenge.category}
             </span>
-            <span className="text-brand-bone-dim">·</span>
-            <span className="text-xs text-brand-muted capitalize">
+            <span className="text-gray-300">·</span>
+            <span className="text-xs text-gray-400 capitalize">
               {challenge.difficulty}
             </span>
-            <span className="text-brand-bone-dim">·</span>
-            <span className="text-xs text-brand-muted">{formattedDate}</span>
+            <span className="text-gray-300">·</span>
+            <span className="text-xs text-gray-400">{formattedDate}</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-brand-bone leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-black leading-tight">
             {challenge.title}
           </h1>
         </div>
@@ -105,24 +105,24 @@ export default async function ChallengePage({ params }: Props) {
             01 · The Situation
           </p>
           <div className="prose prose-lg prose-invert max-w-none
-            prose-p:text-brand-bone-dim prose-p:leading-relaxed
-            prose-strong:text-white prose-em:text-brand-bone-dim
-            prose-hr:border-brand-void">
+            prose-p:text-gray-200 prose-p:leading-relaxed
+            prose-strong:text-white prose-em:text-gray-300
+            prose-hr:border-gray-700">
             <MDXRemote source={situation} />
           </div>
         </div>
 
         {/* ── 02 · Your Turn ── */}
         {yourTurn && (
-          <div className="border-l-4 border-brand-red bg-brand-card rounded-r-xl p-8 mb-6">
+          <div className="border-l-4 border-brand-red bg-gray-50 rounded-r-xl p-8 mb-6">
             <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
               02 · Your Turn
             </p>
             <div className="prose prose-lg max-w-none
-              prose-p:text-brand-bone prose-p:leading-relaxed
-              prose-strong:text-brand-bone prose-em:text-brand-bone-dim
-              prose-ol:text-brand-bone prose-ul:text-brand-bone
-              prose-hr:border-brand-card-edge">
+              prose-p:text-gray-700 prose-p:leading-relaxed
+              prose-strong:text-brand-black prose-em:text-gray-500
+              prose-ol:text-gray-700 prose-ul:text-gray-700
+              prose-hr:border-gray-200">
               <MDXRemote source={yourTurn} />
             </div>
           </div>
@@ -132,7 +132,7 @@ export default async function ChallengePage({ params }: Props) {
         {solution && (
           <div className="mt-2">
             {isLocked ? (
-              <div className="relative rounded-xl overflow-hidden border border-brand-card-edge">
+              <div className="relative rounded-xl overflow-hidden border border-gray-200">
                 {/* Blurred preview */}
                 <div className="blur-sm pointer-events-none select-none p-8 opacity-50">
                   <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
@@ -145,9 +145,9 @@ export default async function ChallengePage({ params }: Props) {
                 {/* Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-white via-white/95 to-transparent">
                   <div className="text-center px-8 py-10 max-w-sm">
-                    <div className="w-12 h-12 rounded-full bg-brand-card flex items-center justify-center mx-auto mb-4">
+                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
                       <svg
-                        className="w-5 h-5 text-brand-bone-dim"
+                        className="w-5 h-5 text-gray-500"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -160,24 +160,24 @@ export default async function ChallengePage({ params }: Props) {
                         />
                       </svg>
                     </div>
-                    <h3 className="font-bold text-brand-bone text-xl mb-2">
+                    <h3 className="font-bold text-brand-black text-xl mb-2">
                       Did you try Your Turn?
                     </h3>
-                    <p className="text-brand-bone-dim text-sm leading-relaxed mb-6">
+                    <p className="text-gray-500 text-sm leading-relaxed mb-6">
                       The solution lands differently after you have felt the
                       problem in your own body.
                     </p>
                     <button className="w-full bg-brand-red text-white py-3 rounded font-medium hover:bg-brand-red-dark transition-colors">
                       Unlock the Solution
                     </button>
-                    <p className="text-brand-muted text-xs mt-3">
+                    <p className="text-gray-400 text-xs mt-3">
                       Payments launching soon — free during beta.
                     </p>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="border border-brand-card-edge rounded-xl p-8">
+              <div className="border border-gray-200 rounded-xl p-8">
                 <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
                   03 · Solution
                 </p>
@@ -190,7 +190,7 @@ export default async function ChallengePage({ params }: Props) {
         )}
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-brand-card-edge">
+        <div className="mt-16 pt-8 border-t border-gray-100">
           {nextPerTrack.length > 0 && (
             <div className="space-y-3 mb-8">
               {nextPerTrack.map(({ trackName, challenge: next }) => (
@@ -199,17 +199,17 @@ export default async function ChallengePage({ params }: Props) {
                   href={`/challenges/${next.slug}`}
                   className="block group"
                 >
-                  <div className="bg-brand-card rounded-xl p-6 hover:bg-brand-card transition-colors">
-                    <p className="text-xs font-medium text-brand-muted uppercase tracking-widest mb-2">
+                  <div className="bg-gray-50 rounded-xl p-6 hover:bg-gray-100 transition-colors">
+                    <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mb-2">
                       Next in {trackName}
                     </p>
                     <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-semibold text-brand-bone group-hover:text-brand-red transition-colors">
+                      <h3 className="font-semibold text-brand-black group-hover:text-brand-red transition-colors">
                         {next.title}
                       </h3>
                       <span className="text-brand-red shrink-0">→</span>
                     </div>
-                    <p className="text-sm text-brand-bone-dim mt-1 line-clamp-1">
+                    <p className="text-sm text-gray-500 mt-1 line-clamp-1">
                       {next.situation}
                     </p>
                   </div>
@@ -220,7 +220,7 @@ export default async function ChallengePage({ params }: Props) {
           <div className="flex justify-between items-center">
             <Link
               href="/challenges"
-              className="text-sm text-brand-muted hover:text-brand-red transition-colors"
+              className="text-sm text-gray-400 hover:text-brand-red transition-colors"
             >
               ← All Challenges
             </Link>

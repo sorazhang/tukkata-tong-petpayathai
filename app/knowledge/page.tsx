@@ -57,7 +57,7 @@ export default function KnowledgePage() {
       <section className="bg-brand-black text-white py-16 px-6">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Knowledge</h1>
-          <p className="text-brand-bone-dim text-lg leading-relaxed max-w-xl">
+          <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
             Things you can understand without physically doing them. Read, watch,
             think. Then bring it to the gym.
           </p>
@@ -72,8 +72,8 @@ export default function KnowledgePage() {
               <div
                 className={`border rounded-lg p-8 transition-all duration-200 ${
                   status === 'coming'
-                    ? 'border-brand-card-edge bg-brand-card'
-                    : 'border-brand-card-edge bg-brand-card hover:shadow-md hover:-translate-y-0.5 group'
+                    ? 'border-gray-100 bg-gray-50'
+                    : 'border-gray-200 bg-white hover:shadow-md hover:-translate-y-0.5 group'
                 }`}
               >
                 <div className="flex items-start justify-between gap-6">
@@ -82,28 +82,28 @@ export default function KnowledgePage() {
                       <h2
                         className={`text-xl font-bold transition-colors ${
                           status === 'coming'
-                            ? 'text-brand-muted'
-                            : 'text-brand-bone group-hover:text-brand-red'
+                            ? 'text-gray-400'
+                            : 'text-brand-black group-hover:text-brand-red'
                         }`}
                       >
                         {label}
                       </h2>
                       {status === 'coming' && (
-                        <span className="text-xs text-brand-muted bg-brand-card-edge px-2 py-0.5 rounded font-medium">
+                        <span className="text-xs text-gray-400 bg-gray-200 px-2 py-0.5 rounded font-medium">
                           Coming
                         </span>
                       )}
                     </div>
                     <p
                       className={`text-sm font-medium mb-3 ${
-                        status === 'coming' ? 'text-brand-muted' : 'text-brand-red'
+                        status === 'coming' ? 'text-gray-400' : 'text-brand-red'
                       }`}
                     >
                       {question}
                     </p>
                     <p
                       className={`text-sm leading-relaxed ${
-                        status === 'coming' ? 'text-brand-muted' : 'text-brand-bone-dim'
+                        status === 'coming' ? 'text-gray-400' : 'text-gray-500'
                       }`}
                     >
                       {description}
@@ -130,9 +130,9 @@ export default function KnowledgePage() {
       </section>
 
       {/* ── Separator ── */}
-      <section className="py-12 px-6 border-t border-brand-card-edge">
+      <section className="py-12 px-6 border-t border-gray-100">
         <div className="max-w-3xl mx-auto">
-          <p className="text-sm text-brand-muted leading-relaxed">
+          <p className="text-sm text-gray-400 leading-relaxed">
             Looking for something to actively try?{' '}
             <Link
               href="/challenges"

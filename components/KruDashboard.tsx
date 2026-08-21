@@ -14,7 +14,7 @@ type Tab = 'vote' | 'questions' | 'challenges' | 'notes'
 function EmptyState({ message }: { message: string }) {
   return (
     <div className="py-16 text-center">
-      <p className="text-sm text-brand-muted">{message}</p>
+      <p className="text-sm text-gray-400">{message}</p>
     </div>
   )
 }
@@ -57,10 +57,10 @@ export default function KruDashboard({
       {/* Header */}
       <div className="mb-8">
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Kru</p>
-        <h1 className="text-3xl font-bold text-brand-bone">
+        <h1 className="text-3xl font-bold text-brand-black">
           {totalPending > 0 ? `${totalPending} items waiting` : 'All caught up'}
         </h1>
-        <p className="text-brand-muted text-sm mt-2">
+        <p className="text-gray-400 text-sm mt-2">
           {totalPending > 0
             ? 'These need your input before students can move forward.'
             : 'Nothing pending right now.'}
@@ -68,7 +68,7 @@ export default function KruDashboard({
       </div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 bg-brand-void rounded-xl mb-8">
+      <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
         {([
           { key: 'vote',       label: 'Vote',       count: pendingCount          },
           { key: 'questions',  label: 'Questions',  count: openQuestions.length  },
@@ -79,7 +79,7 @@ export default function KruDashboard({
             key={key}
             onClick={() => setTab(key)}
             className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all ${
-              tab === key ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted hover:text-brand-bone-dim'
+              tab === key ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
             {label}
@@ -100,7 +100,7 @@ export default function KruDashboard({
                   key={f}
                   onClick={() => setPollFilter(f)}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                    pollFilter === f ? 'bg-brand-black text-white' : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'
+                    pollFilter === f ? 'bg-brand-black text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                   }`}
                 >
                   {label}
@@ -117,19 +117,19 @@ export default function KruDashboard({
                 <Link
                   key={p.slug}
                   href={`/vote/${p.slug}`}
-                  className="flex items-center justify-between gap-4 border border-brand-card-edge rounded-xl px-5 py-4 hover:border-brand-muted hover:bg-brand-card transition-colors"
+                  className="flex items-center justify-between gap-4 border border-gray-200 rounded-xl px-5 py-4 hover:border-gray-300 hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-brand-bone">{p.question}</p>
+                    <p className="text-sm font-semibold text-brand-black">{p.question}</p>
                     {p.description && (
-                      <p className="text-xs text-brand-muted mt-0.5 line-clamp-1">{p.description}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{p.description}</p>
                     )}
                     {p.answer && (
-                      <p className="text-xs text-brand-bone-dim mt-0.5 truncate">
+                      <p className="text-xs text-gray-500 mt-0.5 truncate">
                         → {p.answer.customText ?? p.options.find(o => o.id === p.answer?.optionId)?.label ?? p.answer.optionId}
                       </p>
                     )}
-                    <p className="text-xs text-brand-muted mt-1">
+                    <p className="text-xs text-gray-400 mt-1">
                       {new Date(p.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                     </p>
                   </div>
@@ -158,15 +158,15 @@ export default function KruDashboard({
             {openQuestions.map((q) => (
               <div
                 key={q.id}
-                className="border border-brand-card-edge rounded-xl px-5 py-4"
+                className="border border-gray-200 rounded-xl px-5 py-4"
               >
                 <div className="flex items-center justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-brand-bone">{q.name}</span>
-                    <span className="text-brand-bone-dim text-xs">·</span>
-                    <span className="text-xs text-brand-muted capitalize">{q.tag}</span>
-                    <span className="text-brand-bone-dim text-xs">·</span>
-                    <span className="text-xs text-brand-muted">
+                    <span className="text-xs font-semibold text-brand-black">{q.name}</span>
+                    <span className="text-gray-200 text-xs">·</span>
+                    <span className="text-xs text-gray-400 capitalize">{q.tag}</span>
+                    <span className="text-gray-200 text-xs">·</span>
+                    <span className="text-xs text-gray-400">
                       {new Date(q.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                     </span>
                   </div>
@@ -174,7 +174,7 @@ export default function KruDashboard({
                     Open
                   </span>
                 </div>
-                <p className="text-sm text-brand-bone leading-relaxed">{q.text}</p>
+                <p className="text-sm text-brand-black leading-relaxed">{q.text}</p>
               </div>
             ))}
             <div className="pt-2 text-right">
@@ -196,11 +196,11 @@ export default function KruDashboard({
               <Link
                 key={c.slug}
                 href={`/review/${c.slug}`}
-                className="flex items-center justify-between gap-4 border border-brand-card-edge rounded-xl px-5 py-4 hover:border-brand-muted hover:bg-brand-card transition-colors"
+                className="flex items-center justify-between gap-4 border border-gray-200 rounded-xl px-5 py-4 hover:border-gray-300 hover:bg-gray-50 transition-colors"
               >
                 <div>
-                  <p className="text-sm font-semibold text-brand-bone">{c.title}</p>
-                  <p className="text-xs text-brand-muted mt-0.5 capitalize">{c.category} · {c.difficulty}</p>
+                  <p className="text-sm font-semibold text-brand-black">{c.title}</p>
+                  <p className="text-xs text-gray-400 mt-0.5 capitalize">{c.category} · {c.difficulty}</p>
                 </div>
                 <span className="text-xs font-semibold text-orange-500 bg-orange-50 px-2 py-0.5 rounded shrink-0">
                   Needs answer
@@ -219,7 +219,7 @@ export default function KruDashboard({
       {/* Notes */}
       {tab === 'notes' && (
         <div className="space-y-6">
-          <div className="border border-brand-card-edge rounded-xl p-5">
+          <div className="border border-gray-200 rounded-xl p-5">
             <KruNoteEntry />
           </div>
           {notes.length > 0 && <KruNoteList notes={notes} />}

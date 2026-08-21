@@ -20,7 +20,7 @@ export default async function ReviewChallengePage({
       {/* Back link */}
       <Link
         href="/review"
-        className="text-xs text-brand-muted hover:text-brand-red uppercase tracking-widest font-bold mb-8 inline-block transition-colors"
+        className="text-xs text-gray-400 hover:text-brand-red uppercase tracking-widest font-bold mb-8 inline-block transition-colors"
       >
         ← All challenges
       </Link>
@@ -31,10 +31,10 @@ export default async function ReviewChallengePage({
           <span className="text-xs font-bold uppercase tracking-widest text-brand-red">
             {challenge.category}
           </span>
-          <span className="text-brand-bone-dim">·</span>
-          <span className="text-xs text-brand-muted capitalize">{challenge.difficulty}</span>
+          <span className="text-gray-300">·</span>
+          <span className="text-xs text-gray-400 capitalize">{challenge.difficulty}</span>
         </div>
-        <h1 className="text-2xl font-bold text-brand-bone leading-snug">
+        <h1 className="text-2xl font-bold text-brand-black leading-snug">
           {challenge.title}
         </h1>
       </div>
@@ -59,7 +59,7 @@ export default async function ReviewChallengePage({
       </div>
 
       {/* Editor */}
-      <div className="border border-brand-card-edge rounded-xl overflow-hidden">
+      <div className="border border-gray-200 rounded-xl overflow-hidden">
         <ChallengeEditor
           slug={challenge.slug}
           initialSituation={sections.situation || challenge.situation}

@@ -90,7 +90,7 @@ export default function KruNoteEntry() {
         onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
         placeholder="Quick thought, technique note, observation…"
         rows={5}
-        className="w-full border border-brand-card-edge rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
       />
 
       <div className="flex items-center gap-2">
@@ -98,10 +98,10 @@ export default function KruNoteEntry() {
           <button
             onClick={() => { if (listening) stopListening(); setLang((l) => l === 'th-TH' ? 'en-US' : 'th-TH') }}
             type="button"
-            className="flex items-center gap-1 p-1 rounded-full border border-brand-card-edge bg-brand-card"
+            className="flex items-center gap-1 p-1 rounded-full border border-gray-200 bg-gray-100"
           >
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted'}`}>ไทย</span>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-brand-card text-brand-bone shadow-sm' : 'text-brand-muted'}`}>EN</span>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'th-TH' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>ไทย</span>
+            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${lang === 'en-US' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400'}`}>EN</span>
           </button>
         )}
 
@@ -110,7 +110,7 @@ export default function KruNoteEntry() {
             onClick={listening ? stopListening : startListening}
             type="button"
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-              listening ? 'bg-brand-red text-white animate-pulse' : 'bg-brand-card text-brand-bone-dim hover:bg-brand-card-edge'
+              listening ? 'bg-brand-red text-white animate-pulse' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
             <span>{listening ? '⏹' : '🎙'}</span>

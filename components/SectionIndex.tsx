@@ -25,7 +25,7 @@ export default function SectionIndex({
       <section className="bg-brand-black text-white py-16 px-6">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{title}</h1>
-          <p className="text-brand-bone-dim text-lg leading-relaxed max-w-xl">
+          <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
             {description}
           </p>
         </div>
@@ -33,13 +33,13 @@ export default function SectionIndex({
 
       {/* Tracks */}
       {tracks.map((track) => (
-        <section key={track.name} className="py-16 px-6 border-b border-brand-card-edge">
+        <section key={track.name} className="py-16 px-6 border-b border-gray-100">
           <div className="max-w-5xl mx-auto">
             <div className="mb-8">
               <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-2">
                 Track
               </p>
-              <h2 className="text-2xl font-bold text-brand-bone">{track.name}</h2>
+              <h2 className="text-2xl font-bold text-brand-black">{track.name}</h2>
             </div>
             <div className="flex flex-col md:flex-row md:items-stretch gap-4 md:gap-0">
               {track.challenges.map((c, i) => (
@@ -48,14 +48,14 @@ export default function SectionIndex({
                     href={`${basePath}/${c.slug}`}
                     className="flex-1 min-w-0 block group h-full"
                   >
-                    <article className="border border-brand-card-edge rounded-lg p-6 h-full hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                      <div className="text-3xl font-bold text-brand-bone mb-4 leading-none">
+                    <article className="border border-gray-200 rounded-lg p-6 h-full hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                      <div className="text-3xl font-bold text-gray-100 mb-4 leading-none">
                         {String(i + 1).padStart(2, '0')}
                       </div>
-                      <h3 className="font-semibold text-brand-bone text-lg leading-snug mb-3 group-hover:text-brand-red transition-colors">
+                      <h3 className="font-semibold text-brand-black text-lg leading-snug mb-3 group-hover:text-brand-red transition-colors">
                         {c.title}
                       </h3>
-                      <div className="flex items-center gap-2 text-xs text-brand-muted">
+                      <div className="flex items-center gap-2 text-xs text-gray-400">
                         <span className="capitalize">{c.difficulty}</span>
                         {!c.isFree && (
                           <>
@@ -67,7 +67,7 @@ export default function SectionIndex({
                     </article>
                   </Link>
                   {i < track.challenges.length - 1 && (
-                    <div className="hidden md:block w-10 text-center text-brand-bone-dim text-xl shrink-0 select-none">
+                    <div className="hidden md:block w-10 text-center text-gray-300 text-xl shrink-0 select-none">
                       →
                     </div>
                   )}
@@ -83,7 +83,7 @@ export default function SectionIndex({
         <section className="py-16 px-6">
           <div className="max-w-5xl mx-auto">
             {tracks.length > 0 && (
-              <h2 className="text-sm font-medium text-brand-muted uppercase tracking-widest mb-8">
+              <h2 className="text-sm font-medium text-gray-400 uppercase tracking-widest mb-8">
                 More
               </h2>
             )}
@@ -100,7 +100,7 @@ export default function SectionIndex({
       {articles.length === 0 && (
         <section className="py-32 px-6">
           <div className="max-w-5xl mx-auto text-center">
-            <p className="text-brand-muted">Coming soon.</p>
+            <p className="text-gray-400">Coming soon.</p>
           </div>
         </section>
       )}

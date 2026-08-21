@@ -40,7 +40,7 @@ export default function BookPage() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Book a Session
           </h1>
-          <p className="text-brand-bone-dim text-lg leading-relaxed max-w-xl">
+          <p className="text-gray-300 text-lg leading-relaxed max-w-xl">
             One hour. One problem. Thirty years of experience applied directly
             to your training.
           </p>
@@ -48,9 +48,9 @@ export default function BookPage() {
       </section>
 
       {/* Session types */}
-      <section className="py-16 px-6 bg-brand-card">
+      <section className="py-16 px-6 bg-white">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold text-brand-bone mb-10">
+          <h2 className="text-2xl font-bold text-brand-black mb-10">
             Session Types
           </h2>
 
@@ -58,21 +58,21 @@ export default function BookPage() {
             {sessionTypes.map((s) => (
               <div
                 key={s.name}
-                className="border border-brand-card-edge rounded-lg p-7"
+                className="border border-gray-200 rounded-lg p-7"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-brand-bone text-xl">
+                  <h3 className="font-semibold text-brand-black text-xl">
                     {s.name}
                   </h3>
-                  <span className="text-sm text-brand-muted bg-brand-card px-3 py-1 rounded-full">
+                  <span className="text-sm text-gray-400 bg-gray-50 px-3 py-1 rounded-full">
                     {s.duration}
                   </span>
                 </div>
-                <p className="text-brand-bone-dim leading-relaxed mb-3">
+                <p className="text-gray-600 leading-relaxed mb-3">
                   {s.description}
                 </p>
-                <p className="text-sm text-brand-muted">
-                  <span className="font-medium text-brand-bone-dim">
+                <p className="text-sm text-gray-400">
+                  <span className="font-medium text-gray-500">
                     Ideal for:
                   </span>{' '}
                   {s.ideal}
@@ -84,24 +84,24 @@ export default function BookPage() {
       </section>
 
       {/* Booking CTA */}
-      <section className="py-16 px-6 bg-brand-card border-t border-brand-card-edge">
+      <section className="py-16 px-6 bg-gray-50 border-t border-gray-100">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-brand-bone mb-4">
+          <h2 className="text-2xl font-bold text-brand-black mb-4">
             Ready to book?
           </h2>
-          <p className="text-brand-bone-dim mb-8 leading-relaxed max-w-lg mx-auto">
+          <p className="text-gray-500 mb-8 leading-relaxed max-w-lg mx-auto">
             Booking and payment will be available here shortly. In the meantime,
             reach out directly to arrange a session.
           </p>
 
           {/* Placeholder — replace with Cal.com embed when live */}
-          <div className="bg-brand-card border-2 border-dashed border-brand-card-edge rounded-xl py-20 px-8 mb-8">
-            <p className="text-brand-muted text-sm">
+          <div className="bg-white border-2 border-dashed border-gray-200 rounded-xl py-20 px-8 mb-8">
+            <p className="text-gray-400 text-sm">
               Cal.com booking widget — coming soon
             </p>
           </div>
 
-          <p className="text-sm text-brand-muted">
+          <p className="text-sm text-gray-400">
             Questions?{' '}
             <Link
               href="/about"

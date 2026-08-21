@@ -42,28 +42,28 @@ function JournalRow({ entry }: { entry: Entry }) {
   }
 
   return (
-    <div className="border border-brand-card-edge rounded-xl overflow-hidden">
+    <div className="border border-gray-100 rounded-xl overflow-hidden">
       {/* Header row */}
       <button
         onClick={() => { if (!editing) setExpanded((v) => !v) }}
-        className="w-full text-left px-4 py-3 flex items-center justify-between gap-4 hover:bg-brand-card transition-colors"
+        className="w-full text-left px-4 py-3 flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors"
       >
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-brand-bone">{dateLabel}</p>
+          <p className="text-sm font-semibold text-brand-black">{dateLabel}</p>
           {!expanded && (
-            <p className="text-xs text-brand-muted mt-0.5 truncate">{entry.text}</p>
+            <p className="text-xs text-gray-400 mt-0.5 truncate">{entry.text}</p>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-brand-muted">{timeLabel}</span>
-          <span className="text-brand-bone-dim text-lg leading-none"
+          <span className="text-xs text-gray-400">{timeLabel}</span>
+          <span className="text-gray-300 text-lg leading-none"
             style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>›</span>
         </div>
       </button>
 
       {/* Expanded content */}
       {expanded && (
-        <div className="px-4 pb-4 border-t border-brand-card-edge">
+        <div className="px-4 pb-4 border-t border-gray-100">
           {editing ? (
             <div className="pt-3 space-y-2">
               <textarea
@@ -71,7 +71,7 @@ function JournalRow({ entry }: { entry: Entry }) {
                 onChange={(e) => setEditText(e.target.value)}
                 rows={5}
                 autoFocus
-                className="w-full text-sm border border-brand-card-edge rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
+                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
               />
               <div className="flex gap-2">
                 <button
@@ -83,7 +83,7 @@ function JournalRow({ entry }: { entry: Entry }) {
                 </button>
                 <button
                   onClick={() => { setEditing(false); setEditText(entry.text) }}
-                  className="px-4 py-2 text-xs text-brand-muted hover:text-brand-bone-dim"
+                  className="px-4 py-2 text-xs text-gray-400 hover:text-gray-600"
                 >
                   Cancel
                 </button>
@@ -91,19 +91,19 @@ function JournalRow({ entry }: { entry: Entry }) {
             </div>
           ) : (
             <div className="pt-3">
-              <p className="text-sm text-brand-bone leading-relaxed whitespace-pre-wrap">
+              <p className="text-sm text-brand-black leading-relaxed whitespace-pre-wrap">
                 {entry.text}
               </p>
               <div className="flex gap-3 mt-4">
                 <button
                   onClick={() => setEditing(true)}
-                  className="text-xs text-brand-muted hover:text-brand-bone transition-colors"
+                  className="text-xs text-gray-400 hover:text-brand-black transition-colors"
                 >
                   Edit
                 </button>
                 {confirmDelete ? (
                   <span className="flex items-center gap-2 text-xs">
-                    <span className="text-brand-muted">Delete this entry?</span>
+                    <span className="text-gray-400">Delete this entry?</span>
                     <button
                       onClick={handleDelete}
                       disabled={isPending}
@@ -113,7 +113,7 @@ function JournalRow({ entry }: { entry: Entry }) {
                     </button>
                     <button
                       onClick={() => setConfirmDelete(false)}
-                      className="text-brand-muted hover:text-brand-bone-dim"
+                      className="text-gray-400 hover:text-gray-600"
                     >
                       Cancel
                     </button>
@@ -121,7 +121,7 @@ function JournalRow({ entry }: { entry: Entry }) {
                 ) : (
                   <button
                     onClick={() => setConfirmDelete(true)}
-                    className="text-xs text-brand-muted hover:text-red-500 transition-colors"
+                    className="text-xs text-gray-400 hover:text-red-500 transition-colors"
                   >
                     Delete
                   </button>
@@ -140,7 +140,7 @@ export default function JournalList({ entries }: { entries: Entry[] }) {
 
   return (
     <section>
-      <h2 className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-3">
+      <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">
         Previous entries ({entries.length})
       </h2>
       <div className="space-y-2">

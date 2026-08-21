@@ -14,8 +14,8 @@ export default async function VotePage() {
         <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
           Internal
         </p>
-        <h1 className="text-3xl font-bold text-brand-bone">Polls</h1>
-        <p className="text-brand-muted text-sm mt-2">
+        <h1 className="text-3xl font-bold text-brand-black">Polls</h1>
+        <p className="text-gray-400 text-sm mt-2">
           Send Kru a link — he picks an option and saves.
         </p>
       </div>
@@ -23,7 +23,7 @@ export default async function VotePage() {
       {/* Poll list */}
       {polls.length > 0 && (
         <section className="mb-8">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-brand-muted mb-3">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">
             All polls ({polls.length})
           </h2>
           <div className="space-y-2">
@@ -31,11 +31,11 @@ export default async function VotePage() {
               <Link
                 key={poll.slug}
                 href={`/vote/${poll.slug}`}
-                className="flex items-center justify-between gap-4 border border-brand-card-edge rounded-xl p-4 hover:border-brand-muted hover:bg-brand-card transition-colors"
+                className="flex items-center justify-between gap-4 border border-gray-200 rounded-xl p-4 hover:border-gray-300 hover:bg-gray-50 transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-brand-bone truncate">{poll.question}</p>
-                  <p className="text-xs text-brand-muted mt-0.5">
+                  <p className="text-sm font-semibold text-brand-black truncate">{poll.question}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">
                     {new Date(poll.createdAt).toLocaleDateString()}
                   </p>
                 </div>

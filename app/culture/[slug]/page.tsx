@@ -36,11 +36,11 @@ export default async function CultureStoryPage({ params }: Props) {
   return (
     <main>
       {/* Back */}
-      <div className="border-b border-brand-card-edge bg-brand-card px-6 py-3">
+      <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="max-w-3xl mx-auto">
           <Link
             href="/culture"
-            className="text-sm text-brand-muted hover:text-brand-red transition-colors"
+            className="text-sm text-gray-400 hover:text-brand-red transition-colors"
           >
             ← Culture
           </Link>
@@ -50,11 +50,11 @@ export default async function CultureStoryPage({ params }: Props) {
       <article className="max-w-3xl mx-auto px-6 py-14">
         {/* Header */}
         <div className="mb-12">
-          <p className="text-xs text-brand-muted mb-4">{formattedDate}</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-brand-bone leading-tight mb-6">
+          <p className="text-xs text-gray-400 mb-4">{formattedDate}</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-brand-black leading-tight mb-6">
             {story.title}
           </h1>
-          <p className="text-xl text-brand-bone-dim leading-relaxed border-l-4 border-brand-red pl-5">
+          <p className="text-xl text-gray-500 leading-relaxed border-l-4 border-brand-red pl-5">
             {story.excerpt}
           </p>
         </div>
@@ -65,10 +65,10 @@ export default async function CultureStoryPage({ params }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="mt-16 pt-8 border-t border-brand-card-edge flex justify-between items-center flex-wrap gap-4">
+        <div className="mt-16 pt-8 border-t border-gray-100 flex justify-between items-center flex-wrap gap-4">
           <Link
             href="/culture"
-            className="text-sm text-brand-muted hover:text-brand-red transition-colors"
+            className="text-sm text-gray-400 hover:text-brand-red transition-colors"
           >
             ← More Stories
           </Link>

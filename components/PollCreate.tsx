@@ -94,51 +94,51 @@ export default function PollCreate() {
 
       {/* Question */}
       <div>
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted block mb-1.5">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-1.5">
           Question
         </label>
         <input
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Which logo do you prefer?"
-          className="w-full border border-brand-card-edge rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted block mb-1.5">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-1.5">
           Description <span className="font-normal normal-case tracking-normal">(optional)</span>
         </label>
         <input
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Any context for Kru…"
-          className="w-full border border-brand-card-edge rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
         />
       </div>
 
       {/* Options */}
       <div>
-        <label className="text-xs font-bold uppercase tracking-widest text-brand-muted block mb-3">
+        <label className="text-xs font-bold uppercase tracking-widest text-gray-400 block mb-3">
           Options
         </label>
         <div className="space-y-3">
           {options.map((opt, i) => (
-            <div key={opt.id} className="border border-brand-card-edge rounded-xl p-4 space-y-3">
+            <div key={opt.id} className="border border-gray-200 rounded-xl p-4 space-y-3">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-brand-bone-dim w-4 shrink-0">{i + 1}</span>
+                <span className="text-xs font-bold text-gray-300 w-4 shrink-0">{i + 1}</span>
                 <input
                   value={opt.label}
                   onChange={(e) => updateLabel(opt.id, e.target.value)}
                   placeholder={`Option ${i + 1} label`}
-                  className="flex-1 border border-brand-card-edge rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-red"
+                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-red"
                 />
                 {options.length > 2 && (
                   <button
                     type="button"
                     onClick={() => removeOption(opt.id)}
-                    className="text-brand-bone-dim hover:text-red-400 text-xl leading-none"
+                    className="text-gray-300 hover:text-red-400 text-xl leading-none"
                   >
                     ×
                   </button>
@@ -165,7 +165,7 @@ export default function PollCreate() {
                 <button
                   type="button"
                   onClick={() => fileRefs.current[opt.id]?.click()}
-                  className="w-full text-xs text-brand-muted hover:text-brand-red border border-dashed border-brand-card-edge hover:border-brand-red rounded-lg py-3 transition-colors"
+                  className="w-full text-xs text-gray-400 hover:text-brand-red border border-dashed border-gray-200 hover:border-brand-red rounded-lg py-3 transition-colors"
                 >
                   + Add image (optional)
                 </button>
@@ -187,7 +187,7 @@ export default function PollCreate() {
         <button
           type="button"
           onClick={addOption}
-          className="mt-3 text-xs text-brand-muted hover:text-brand-red transition-colors"
+          className="mt-3 text-xs text-gray-400 hover:text-brand-red transition-colors"
         >
           + Add another option
         </button>

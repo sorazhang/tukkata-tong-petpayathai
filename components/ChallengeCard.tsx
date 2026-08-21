@@ -23,36 +23,36 @@ export default function ChallengeCard({
   basePath?: string
 }) {
   const colorClass =
-    categoryColors[challenge.category] ?? 'bg-brand-card text-brand-bone-dim'
+    categoryColors[challenge.category] ?? 'bg-gray-100 text-gray-600'
 
   return (
     <Link href={`${basePath}/${challenge.slug}`} className="block group">
-      <article className="border border-brand-card-edge rounded-lg p-6 h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+      <article className="border border-gray-200 rounded-lg p-6 h-full flex flex-col hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div className="flex items-center justify-between mb-4">
           <span
             className={`text-xs font-medium px-2.5 py-1 rounded-full ${colorClass}`}
           >
             {challenge.category}
           </span>
-          <span className="text-xs text-brand-muted">
+          <span className="text-xs text-gray-400">
             {difficultyLabel[challenge.difficulty]}
           </span>
         </div>
 
-        <h3 className="font-semibold text-brand-bone text-lg mb-3 leading-snug group-hover:text-brand-red transition-colors">
+        <h3 className="font-semibold text-brand-black text-lg mb-3 leading-snug group-hover:text-brand-red transition-colors">
           {challenge.title}
         </h3>
 
-        <p className="text-brand-bone-dim text-sm leading-relaxed line-clamp-3 flex-1">
+        <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 flex-1">
           {challenge.situation}
         </p>
 
-        <div className="flex items-center justify-between mt-5 pt-4 border-t border-brand-card-edge">
+        <div className="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
           <span className="text-brand-red text-sm font-medium group-hover:underline">
             See the challenge
           </span>
           {!challenge.isFree && (
-            <span className="text-xs text-brand-muted flex items-center gap-1">
+            <span className="text-xs text-gray-400 flex items-center gap-1">
               <svg
                 className="w-3 h-3"
                 fill="none"
