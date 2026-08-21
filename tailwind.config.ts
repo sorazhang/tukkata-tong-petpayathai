@@ -9,9 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'brand-black': '#1a1a1a',
-        'brand-red': '#d32f2f',
-        'brand-red-dark': '#b71c1c',
+        // legacy aliases — kept so existing classes keep working
+        'brand-black':    '#14110F',  // → Void
+        'brand-red':      '#A63A2E',  // → Clay
+        'brand-red-dark': '#8A7038',  // → Gold Dim
+
+        // full palette
+        'brand-void':      '#14110F',
+        'brand-card':      '#211C17',
+        'brand-card-edge': '#2E271F',
+        'brand-gold':      '#C79A48',
+        'brand-gold-dim':  '#8A7038',
+        'brand-clay':      '#A63A2E',
+        'brand-bone':      '#EDE6D9',
+        'brand-bone-dim':  '#B8AF9E',
+        'brand-muted':     '#8C8175',
       },
       fontFamily: {
         sans: [
@@ -28,12 +40,12 @@ const config: Config = {
           css: {
             maxWidth: 'none',
             color: '#333',
-            a: { color: '#d32f2f', '&:hover': { color: '#b71c1c' } },
-            'h2, h3': { color: '#1a1a1a' },
+            a: { color: '#C79A48', '&:hover': { color: '#8A7038' } },
+            'h2, h3': { color: '#EDE6D9' },
             blockquote: {
-              borderLeftColor: '#d32f2f',
+              borderLeftColor: '#A63A2E',
               fontStyle: 'normal',
-              color: '#555',
+              color: '#B8AF9E',
             },
           },
         },
