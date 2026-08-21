@@ -63,7 +63,7 @@ function MyAnalysisRow({ analysis }: { analysis: MyAnalysis }) {
             </div>
           )}
 
-          <div className="p-3 bg-brand-red/5 rounded-lg border border-brand-red/10">
+          <div className="p-3 bg-brand-gold/5 rounded-lg border border-brand-clay/10">
             <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Focus</p>
             <p className="text-sm text-brand-black leading-relaxed">{analysis.suggestion}</p>
           </div>

@@ -89,7 +89,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/challenges"
-                className="inline-block bg-brand-red text-white px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+                className="inline-block bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dark transition-colors"
               >
                 See the Challenges →
               </Link>
@@ -265,7 +265,7 @@ export default async function Home() {
           </p>
           <Link
             href="/book"
-            className="bg-brand-red text-white px-8 py-3.5 rounded font-medium hover:bg-brand-red-dark transition-colors inline-block"
+            className="bg-brand-gold text-black px-8 py-3.5 rounded font-medium hover:bg-brand-gold-dark transition-colors inline-block"
           >
             Book a Session
           </Link>

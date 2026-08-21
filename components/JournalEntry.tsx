@@ -108,7 +108,7 @@ export default function JournalEntry() {
         onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
         placeholder="What did you observe today? Speak or type — in Thai or English."
         rows={8}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-clay"
       />
 
       <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export default function JournalEntry() {
         <button
           onClick={handleSave}
           disabled={!text.trim() || isPending}
-          className="flex-1 bg-brand-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+          className="flex-1 bg-brand-gold text-black py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-40"
         >
           {saveState === 'saving' ? 'Saving…'
             : saveState === 'saved' ? '✓ Saved'

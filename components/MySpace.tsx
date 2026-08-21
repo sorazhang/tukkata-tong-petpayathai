@@ -89,7 +89,7 @@ export default function MySpace({
         >
           Insights
           {canAccessInsights && analyses.length > 0 && (
-            <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
+            <span className="ml-1.5 text-xs bg-brand-gold text-black px-1.5 py-0.5 rounded-full align-middle">
               {analyses.length}
             </span>
           )}
@@ -105,7 +105,7 @@ export default function MySpace({
         >
           Challenges
           {canAccessChallenges && challenges.length > 0 && (
-            <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
+            <span className="ml-1.5 text-xs bg-brand-gold text-black px-1.5 py-0.5 rounded-full align-middle">
               {challenges.length}
             </span>
           )}

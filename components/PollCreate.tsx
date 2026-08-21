@@ -101,7 +101,7 @@ export default function PollCreate() {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Which logo do you prefer?"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-clay"
         />
       </div>
 
@@ -114,7 +114,7 @@ export default function PollCreate() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Any context for Kru…"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-clay"
         />
       </div>
 
@@ -132,7 +132,7 @@ export default function PollCreate() {
                   value={opt.label}
                   onChange={(e) => updateLabel(opt.id, e.target.value)}
                   placeholder={`Option ${i + 1} label`}
-                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-red"
+                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brand-clay"
                 />
                 {options.length > 2 && (
                   <button
@@ -165,7 +165,7 @@ export default function PollCreate() {
                 <button
                   type="button"
                   onClick={() => fileRefs.current[opt.id]?.click()}
-                  className="w-full text-xs text-gray-400 hover:text-brand-red border border-dashed border-gray-200 hover:border-brand-red rounded-lg py-3 transition-colors"
+                  className="w-full text-xs text-gray-400 hover:text-brand-red border border-dashed border-gray-200 hover:border-brand-clay rounded-lg py-3 transition-colors"
                 >
                   + Add image (optional)
                 </button>
@@ -198,7 +198,7 @@ export default function PollCreate() {
       <button
         type="submit"
         disabled={isPending || !question.trim()}
-        className="w-full bg-brand-red text-white py-3 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+        className="w-full bg-brand-gold text-black py-3 rounded-xl text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-40"
       >
         {isPending ? 'Creating…' : 'Create poll'}
       </button>

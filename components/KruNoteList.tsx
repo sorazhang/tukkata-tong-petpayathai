@@ -59,11 +59,11 @@ function KruNoteRow({ note }: { note: KruNote }) {
                 value={editText}
                 onChange={(e) => setEditText(e.target.value)}
                 rows={5} autoFocus
-                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
+                className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-clay"
               />
               <div className="flex gap-2">
                 <button onClick={handleSaveEdit} disabled={isPending || !editText.trim()}
-                  className="px-4 py-2 bg-brand-red text-white text-xs font-semibold rounded-lg disabled:opacity-40">
+                  className="px-4 py-2 bg-brand-gold text-black text-xs font-semibold rounded-lg disabled:opacity-40">
                   {isPending ? 'Saving…' : 'Save'}
                 </button>
                 <button onClick={() => { setEditing(false); setEditText(note.text) }}

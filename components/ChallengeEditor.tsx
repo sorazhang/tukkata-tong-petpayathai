@@ -245,7 +245,7 @@ export default function ChallengeEditor({
           onChange={(e) => { setSolution(e.target.value); setSaveState('idle') }}
           rows={10}
           placeholder="What do you tell this fighter? What actually works and why…"
-          className="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red resize-y font-sans"
+          className="w-full text-sm text-gray-800 leading-relaxed border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-clay resize-y font-sans"
         />
       </div>
 
@@ -296,7 +296,7 @@ export default function ChallengeEditor({
             disabled={isPending || !isDirty}
             className={`px-5 py-2 rounded text-sm font-semibold transition-all ${
               isPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : isDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
+              : isDirty ? 'bg-brand-gold text-black hover:bg-brand-gold-dark'
               : 'bg-gray-100 text-gray-300 cursor-not-allowed'
             }`}
           >
@@ -330,7 +330,7 @@ export default function ChallengeEditor({
           {recordState === 'idle' && (
             <button
               onClick={startRecording}
-              className="flex items-center gap-2 px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-brand-gold text-black text-sm font-semibold rounded hover:bg-brand-gold-dark transition-colors"
             >
               <span className="w-2 h-2 rounded-full bg-white inline-block" />
               {voiceNote ? 'Re-record' : 'Record answer'}
@@ -358,7 +358,7 @@ export default function ChallengeEditor({
               <button
                 onClick={saveRecording}
                 disabled={isVoicePending}
-                className="px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors"
+                className="px-4 py-2 bg-brand-gold text-black text-sm font-semibold rounded hover:bg-brand-gold-dark transition-colors"
               >
                 {isVoicePending ? 'Saving…' : 'Save recording'}
               </button>
@@ -391,14 +391,14 @@ export default function ChallengeEditor({
           value={videoUrl}
           onChange={(e) => { setVideoUrl(e.target.value); setVideoSaveState('idle') }}
           placeholder="https://youtube.com/watch?v=…"
-          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red mb-2 font-sans"
+          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-clay mb-2 font-sans"
         />
         <input
           type="text"
           value={videoNote}
           onChange={(e) => { setVideoNote(e.target.value); setVideoSaveState('idle') }}
           placeholder="e.g. Watch from 1:32 — this is where I shift weight before the kick"
-          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-red font-sans"
+          className="w-full text-sm text-gray-800 border border-gray-200 rounded-lg p-3 focus:outline-none focus:border-brand-clay font-sans"
         />
 
         {videoUrl && (
@@ -427,7 +427,7 @@ export default function ChallengeEditor({
             disabled={isVideoPending || !isVideoDirty}
             className={`px-4 py-1.5 rounded text-xs font-semibold transition-all ${
               isVideoPending ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-              : isVideoDirty ? 'bg-brand-red text-white hover:bg-brand-red-dark'
+              : isVideoDirty ? 'bg-brand-gold text-black hover:bg-brand-gold-dark'
               : 'bg-gray-100 text-gray-300 cursor-not-allowed'
             }`}
           >
@@ -489,7 +489,7 @@ export default function ChallengeEditor({
               <button
                 onClick={handleIllustrationSave}
                 disabled={isIllustrationPending}
-                className="px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded hover:bg-brand-red-dark transition-colors disabled:opacity-50"
+                className="px-4 py-2 bg-brand-gold text-black text-sm font-semibold rounded hover:bg-brand-gold-dark transition-colors disabled:opacity-50"
               >
                 {isIllustrationPending ? 'Saving…' : 'Save illustration'}
               </button>

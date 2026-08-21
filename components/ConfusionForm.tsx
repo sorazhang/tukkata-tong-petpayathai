@@ -63,7 +63,7 @@ export default function ConfusionForm() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="How Kru knows you"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-red"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-brand-clay"
         />
       </div>
 
@@ -80,7 +80,7 @@ export default function ConfusionForm() {
               onClick={() => setTag(t.id)}
               className={`text-left px-3 py-2.5 rounded-xl border-2 transition-all ${
                 tag === t.id
-                  ? 'border-brand-red bg-red-50'
+                  ? 'border-brand-clay bg-red-50'
                   : 'border-gray-200 hover:border-gray-300 bg-white'
               }`}
             >
@@ -102,7 +102,7 @@ export default function ConfusionForm() {
           placeholder="Describe the situation. When does it happen? What do you try? What goes wrong?"
           rows={6}
           autoFocus
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
+          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-clay"
         />
         <p className="text-xs text-gray-400 mt-1">The more specific, the more useful Kru&apos;s answer will be.</p>
       </div>
@@ -112,7 +112,7 @@ export default function ConfusionForm() {
       <button
         type="submit"
         disabled={!text.trim() || isPending}
-        className="w-full bg-brand-red text-white py-3 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+        className="w-full bg-brand-gold text-black py-3 rounded-xl text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-40"
       >
         {isPending ? 'Submitting…' : 'Submit to Kru'}
       </button>

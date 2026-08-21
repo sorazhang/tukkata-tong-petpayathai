@@ -133,7 +133,7 @@ export default function AboutPage() {
         <div className="mt-12 flex flex-wrap gap-4 pt-8 border-t border-gray-100">
           <Link
             href="/challenges"
-            className="bg-brand-red text-white px-6 py-3 rounded font-medium hover:bg-brand-red-dark transition-colors"
+            className="bg-brand-gold text-black px-6 py-3 rounded font-medium hover:bg-brand-gold-dark transition-colors"
           >
             See the Challenges
           </Link>

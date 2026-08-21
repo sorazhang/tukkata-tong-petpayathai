@@ -96,7 +96,7 @@ export default function SectionDetail({
 
         {/* ── 02 · Your Turn ── */}
         {yourTurn && (
-          <div className="border-l-4 border-brand-red bg-gray-50 rounded-r-xl p-8 mb-6">
+          <div className="border-l-4 border-brand-clay bg-gray-50 rounded-r-xl p-8 mb-6">
             <p className="text-xs font-medium text-brand-red uppercase tracking-widest mb-5">
               02 · Your Turn
             </p>
@@ -147,7 +147,7 @@ export default function SectionDetail({
                       The solution lands differently after you have felt the
                       problem in your own body.
                     </p>
-                    <button className="w-full bg-brand-red text-white py-3 rounded font-medium hover:bg-brand-red-dark transition-colors">
+                    <button className="w-full bg-brand-gold text-black py-3 rounded font-medium hover:bg-brand-gold-dark transition-colors">
                       Unlock the Solution
                     </button>
                     <p className="text-gray-400 text-xs mt-3">

@@ -46,13 +46,13 @@ export default function ReviewLogin() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             autoFocus
-            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-red"
+            className="w-full border border-gray-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-clay"
           />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full bg-brand-red text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-50"
+            className="w-full bg-brand-gold text-black py-3 rounded-lg text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-50"
           >
             {loading ? 'Checking…' : 'Enter'}
           </button>

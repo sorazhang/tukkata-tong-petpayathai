@@ -68,7 +68,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
             onClick={() => { setSelected(opt.id); setSaveState('idle') }}
             className={`w-full text-left border-2 rounded-xl p-4 transition-all ${
               active
-                ? 'border-brand-red bg-red-50'
+                ? 'border-brand-clay bg-red-50'
                 : 'border-gray-200 hover:border-gray-300 bg-white'
             }`}
           >
@@ -91,7 +91,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
         onClick={() => { setSelected('custom'); setSaveState('idle') }}
         className={`w-full text-left border-2 rounded-xl p-4 transition-all ${
           isCustom
-            ? 'border-brand-red bg-red-50'
+            ? 'border-brand-clay bg-red-50'
             : 'border-gray-200 hover:border-gray-300 bg-white'
         }`}
       >
@@ -108,7 +108,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
             onChange={(e) => { setCustomText(e.target.value); setSaveState('idle') }}
             placeholder="Describe what you have in mind…"
             rows={3}
-            className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-red"
+            className="w-full text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:border-brand-clay"
           />
 
           {/* Image upload */}
@@ -130,7 +130,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
             ) : (
               <button
                 onClick={() => fileRef.current?.click()}
-                className="text-xs text-gray-400 hover:text-brand-red border border-dashed border-gray-300 hover:border-brand-red rounded-lg px-4 py-3 w-full transition-colors"
+                className="text-xs text-gray-400 hover:text-brand-red border border-dashed border-gray-300 hover:border-brand-clay rounded-lg px-4 py-3 w-full transition-colors"
               >
                 + Attach a photo as reference
               </button>
@@ -157,7 +157,7 @@ export default function PollVote({ poll }: { poll: Poll }) {
       <button
         onClick={handleSave}
         disabled={!selected || isPending}
-        className="w-full bg-brand-red text-white py-3 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+        className="w-full bg-brand-gold text-black py-3 rounded-xl text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-40"
       >
         {saveState === 'saving' ? 'Saving…'
           : saveState === 'saved' ? '✓ Saved'

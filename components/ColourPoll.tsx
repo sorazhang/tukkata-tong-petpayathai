@@ -86,7 +86,7 @@ export default function ColourPoll() {
             key={t.id}
             onClick={() => { setSelected(t.id); setSaveState('idle') }}
             className={`w-full text-left rounded-xl border-2 overflow-hidden transition-all ${
-              active ? 'border-brand-red ring-2 ring-brand-red/20' : 'border-gray-200 hover:border-gray-300'
+              active ? 'border-brand-clay ring-2 ring-brand-red/20' : 'border-gray-200 hover:border-gray-300'
             }`}
           >
             {/* Mini mockup preview */}
@@ -131,7 +131,7 @@ export default function ColourPoll() {
       <button
         onClick={() => { setSelected('custom'); setSaveState('idle') }}
         className={`w-full text-left border-2 rounded-xl p-4 transition-all ${
-          selected === 'custom' ? 'border-brand-red bg-red-50' : 'border-gray-200 hover:border-gray-300 bg-white'
+          selected === 'custom' ? 'border-brand-clay bg-red-50' : 'border-gray-200 hover:border-gray-300 bg-white'
         }`}
       >
         <p className={`text-sm font-semibold ${selected === 'custom' ? 'text-brand-red' : 'text-brand-black'}`}>
@@ -142,7 +142,7 @@ export default function ColourPoll() {
       <button
         onClick={handleSave}
         disabled={!selected || isPending}
-        className="w-full bg-brand-red text-white py-3 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+        className="w-full bg-brand-gold text-black py-3 rounded-xl text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-40"
       >
         {saveState === 'saving' ? 'Saving…'
           : saveState === 'saved' ? '✓ Saved'

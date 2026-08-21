@@ -54,7 +54,7 @@ export default async function CultureStoryPage({ params }: Props) {
           <h1 className="text-3xl md:text-4xl font-bold text-brand-black leading-tight mb-6">
             {story.title}
           </h1>
-          <p className="text-xl text-gray-500 leading-relaxed border-l-4 border-brand-red pl-5">
+          <p className="text-xl text-gray-500 leading-relaxed border-l-4 border-brand-clay pl-5">
             {story.excerpt}
           </p>
         </div>

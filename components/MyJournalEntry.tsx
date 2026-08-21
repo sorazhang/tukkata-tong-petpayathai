@@ -118,7 +118,7 @@ export default function MyJournalEntry() {
               onClick={() => setTag(t.id)}
               className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
                 tag === t.id
-                  ? 'bg-brand-red text-white'
+                  ? 'bg-brand-gold text-black'
                   : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
               }`}
             >
@@ -134,7 +134,7 @@ export default function MyJournalEntry() {
         onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
         placeholder="What did you notice today in training?"
         rows={7}
-        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
+        className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-clay"
       />
 
       <div className="flex items-center gap-2">
@@ -169,7 +169,7 @@ export default function MyJournalEntry() {
         <button
           onClick={handleSave}
           disabled={!text.trim() || isPending}
-          className="flex-1 bg-brand-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+          className="flex-1 bg-brand-gold text-black py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gold-dark transition-colors disabled:opacity-40"
         >
           {saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? '✓ Saved' : saveState === 'error' ? 'Error — try again' : 'Save'}
         </button>
@@ -195,7 +195,7 @@ export default function MyJournalEntry() {
             <a
               key={m.slug}
               href={`/review/${m.slug}`}
-              className="flex flex-col gap-0.5 px-3 py-2.5 rounded-lg border border-gray-100 hover:border-brand-red/40 hover:bg-red-50/30 transition-colors"
+              className="flex flex-col gap-0.5 px-3 py-2.5 rounded-lg border border-gray-100 hover:border-brand-clay/40 hover:bg-red-50/30 transition-colors"
             >
               <span className="text-sm font-semibold text-brand-black">{m.title}</span>
               <span className="text-xs text-gray-400">{m.reason}</span>

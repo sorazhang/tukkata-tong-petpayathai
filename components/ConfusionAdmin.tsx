@@ -69,7 +69,7 @@ function ConfusionRow({ c }: { c: Confusion }) {
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 placeholder="Challenge slug (optional)"
-                className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-brand-red flex-1 min-w-0"
+                className="border border-gray-200 rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:border-brand-clay flex-1 min-w-0"
               />
               <button
                 onClick={handleAnswer}
