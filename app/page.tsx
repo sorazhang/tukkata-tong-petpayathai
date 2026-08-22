@@ -21,7 +21,7 @@ export default async function Home() {
         className="relative bg-brand-black text-white py-16 md:py-28 px-6"
         style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '60% center' }}
       >
-        <div className="absolute inset-0 bg-brand-black/70" />
+        <div className="absolute inset-0 bg-brand-black/50" />
         <div className="max-w-3xl mx-auto relative z-10">
           <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
