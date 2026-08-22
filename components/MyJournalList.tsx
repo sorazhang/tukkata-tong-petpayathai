@@ -117,7 +117,7 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
               <div className="flex flex-wrap gap-2">
                 {TAGS.map((t) => (
                   <button key={t.id} type="button" onClick={() => setEditTag(t.id)}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${editTag === t.id ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-500'}`}>
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${editTag === t.id ? 'bg-brand-gold text-black' : 'bg-gray-100 text-gray-500'}`}>
                     {t.label}
                   </button>
                 ))}
@@ -130,7 +130,7 @@ function MyJournalRow({ entry }: { entry: MyEntry }) {
               />
               <div className="flex gap-2">
                 <button onClick={handleSaveEdit} disabled={isPending || !editText.trim()}
-                  className="px-4 py-2 bg-brand-red text-white text-xs font-semibold rounded-lg disabled:opacity-40">
+                  className="px-4 py-2 bg-brand-gold text-black text-xs font-semibold rounded-lg disabled:opacity-40">
                   {isPending ? 'Saving…' : 'Save'}
                 </button>
                 <button onClick={() => { setEditing(false); setEditText(entry.text); setEditTag(entry.tag) }}

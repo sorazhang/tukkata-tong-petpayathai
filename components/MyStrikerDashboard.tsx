@@ -30,7 +30,7 @@ const STRIKE_LABELS: Record<string, string> = {
 
 const STRIKE_COLORS: Record<string, string> = {
   jab: 'bg-blue-400',
-  cross: 'bg-brand-red',
+  cross: 'bg-brand-gold',
   left_kick: 'bg-orange-400',
   right_kick: 'bg-amber-400',
   knee: 'bg-purple-400',
@@ -61,7 +61,7 @@ function PowerBar({ sessions }: { sessions: Session[] }) {
             <div key={i} className="flex-1 flex flex-col items-center gap-1">
               <div className="w-full flex items-end justify-center" style={{ height: '52px' }}>
                 <div
-                  className={`w-full rounded-t ${s.outcome === 'win' ? 'bg-brand-red' : s.outcome === 'capture' ? 'bg-blue-400' : 'bg-gray-200'}`}
+                  className={`w-full rounded-t ${s.outcome === 'win' ? 'bg-brand-gold' : s.outcome === 'capture' ? 'bg-blue-400' : 'bg-gray-200'}`}
                   style={{ height: `${Math.max(4, pct * 0.52)}px` }}
                 />
               </div>
@@ -104,7 +104,7 @@ export default function MyStrikerDashboard() {
           href="/muay-thai-striker.html"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block mt-4 px-6 py-3 bg-brand-red text-white text-sm font-bold rounded-xl hover:bg-red-700 transition-colors"
+          className="inline-block mt-4 px-6 py-3 bg-brand-gold text-black text-sm font-bold rounded-xl hover:bg-red-700 transition-colors"
         >
           Launch Game →
         </a>

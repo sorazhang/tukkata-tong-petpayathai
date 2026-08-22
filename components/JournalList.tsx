@@ -77,7 +77,7 @@ function JournalRow({ entry }: { entry: Entry }) {
                 <button
                   onClick={handleSaveEdit}
                   disabled={isPending || !editText.trim()}
-                  className="px-4 py-2 bg-brand-red text-white text-xs font-semibold rounded-lg disabled:opacity-40"
+                  className="px-4 py-2 bg-brand-gold text-black text-xs font-semibold rounded-lg disabled:opacity-40"
                 >
                   {isPending ? 'Saving…' : 'Save'}
                 </button>

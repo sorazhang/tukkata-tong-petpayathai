@@ -81,7 +81,7 @@ export default function MyJournalPatterns() {
             </div>
           )}
 
-          <div className="p-3 bg-brand-red/5 rounded-lg border border-brand-red/10">
+          <div className="p-3 bg-brand-gold/5 rounded-lg border border-brand-red/10">
             <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">Next session focus</p>
             <p className="text-sm text-brand-black leading-relaxed">{result.suggestion}</p>
           </div>

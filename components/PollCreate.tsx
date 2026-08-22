@@ -198,7 +198,7 @@ export default function PollCreate() {
       <button
         type="submit"
         disabled={isPending || !question.trim()}
-        className="w-full bg-brand-red text-white py-3 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+        className="w-full bg-brand-gold text-black py-3 rounded-xl text-sm font-semibold hover:bg-brand-gold-dim transition-colors disabled:opacity-40"
       >
         {isPending ? 'Creating…' : 'Create poll'}
       </button>

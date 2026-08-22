@@ -145,7 +145,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap gap-4">
             <Link
               href="/my-space"
-              className="bg-brand-red text-white px-6 py-3 rounded font-medium hover:bg-brand-red-dark transition-colors"
+              className="bg-brand-gold text-black px-6 py-3 rounded font-medium hover:bg-brand-gold-dim transition-colors"
             >
               Start your journal →
             </Link>
