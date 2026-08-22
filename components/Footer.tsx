@@ -23,13 +23,8 @@ export default function Footer() {
 
           <nav className="flex gap-12">
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Challenges</p>
+              <p className="text-xs text-gray-500 uppercase tracking-widest mb-3">Sessions</p>
               <ul className="space-y-2 list-none p-0 m-0">
-                <li>
-                  <Link href="/challenges" className="text-sm text-gray-400 hover:text-white transition-colors">
-                    All Challenges
-                  </Link>
-                </li>
                 <li>
                   <Link href="/book" className="text-sm text-gray-400 hover:text-white transition-colors">
                     Book a Session

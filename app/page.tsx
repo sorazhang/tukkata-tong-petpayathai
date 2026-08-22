@@ -18,27 +18,27 @@ export default async function Home() {
       <KruQuickCapture />
       {/* ── Hero ── */}
       <section
-        className="relative bg-brand-black text-white py-28 px-6"
-        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
+        className="relative bg-brand-black text-white py-16 md:py-28 px-6"
+        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '60% center' }}
       >
-        <div className="absolute inset-0 bg-brand-black/80" />
+        <div className="absolute inset-0 bg-brand-black/50 md:bg-brand-black/70" />
         <div className="max-w-3xl mx-auto relative z-10">
           <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
           </p>
-          <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
+          <p className="font-thai text-gray-400 text-base md:text-lg mb-4 md:mb-6" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </p>
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6">
             Some fighters improve faster. The difference is the part of Muay Thai your training isn&apos;t giving you.
           </h1>
-          <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
+          <p className="text-gray-300 text-sm md:text-lg leading-relaxed max-w-xl mb-3 md:mb-4">
             You train consistently. You try hard. But the same confusion keeps coming back in sparring —
             the kick that doesn&apos;t land, the pressure that makes you freeze, the situation you
             don&apos;t know how to handle. You&apos;ve been told what to do. Nobody has helped you
             see what your training is actually showing you.
           </p>
-          <p className="text-gray-500 text-lg leading-relaxed max-w-xl mb-10">
+          <p className="text-gray-500 text-sm md:text-lg leading-relaxed max-w-xl mb-8 md:mb-10">
             This platform changes that. A journal to see your own patterns. Challenges your body has to solve before you read Kru&apos;s answer. And when something specific keeps stopping you — knowledge and direct access to thirty years of experience.
           </p>
           <div className="flex flex-wrap items-center gap-4">
@@ -47,12 +47,6 @@ export default async function Home() {
               className="bg-brand-gold text-black px-6 py-3 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
             >
               Start your training journal →
-            </Link>
-            <Link
-              href="/challenges"
-              className="text-gray-400 text-sm hover:text-white transition-colors"
-            >
-              Browse challenges
             </Link>
           </div>
         </div>
@@ -64,154 +58,53 @@ export default async function Home() {
             How it works
           </h2>
           <p className="text-center text-gray-400 text-sm mb-14">
-            Three parts. One loop. All of it pointing toward understanding.
+            Three steps. One journal. All of it pointing toward understanding.
           </p>
 
           <div className="grid md:grid-cols-3 gap-6">
 
-            {/* Journal */}
+            {/* Step 1 */}
             <div className="border-2 border-brand-black rounded-xl p-8 flex flex-col">
               <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
-                Journal
+                Step 01
               </p>
-              <h3 className="text-xl font-bold text-brand-black mb-2">
-                Your training becomes visible.
+              <h3 className="text-xl font-bold text-brand-black mb-4">
+                Write
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                Most students leave the gym and forget what just happened. Write it down.
-                The patterns you keep running into become clear — and you can bring them directly to Kru.
+              <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                A short note after training. What confused you. What clicked. No structure needed.
               </p>
-              <div className="space-y-5 mb-8 flex-1">
-                {[
-                  {
-                    step: '01',
-                    title: 'Write',
-                    body: 'A short note after training. What confused you. What clicked. No structure needed.',
-                  },
-                  {
-                    step: '02',
-                    title: 'See your patterns',
-                    body: 'AI surfaces what keeps coming up across your entries. The recurring confusion you may not have named yet.',
-                  },
-                  {
-                    step: '03',
-                    title: 'Bring it to Kru',
-                    body: 'Save what matters as an observation. Send your specific struggle directly — thirty years of experience applied to what you keep getting stuck on.',
-                  },
-                ].map(({ step, title, body }) => (
-                  <div key={step} className="flex gap-4">
-                    <span className="text-2xl font-bold text-gray-100 leading-none shrink-0 w-8">
-                      {step}
-                    </span>
-                    <div>
-                      <p className="font-semibold text-brand-black text-sm mb-0.5">{title}</p>
-                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
+                Step 02
+              </p>
+              <h3 className="text-xl font-bold text-brand-black mb-4">
+                See your patterns
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                AI surfaces what keeps coming up across your entries. The recurring confusion you may not have named yet.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
+                Step 03
+              </p>
+              <h3 className="text-xl font-bold text-brand-black mb-4">
+                Bring it to Kru
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                Save what matters as an observation. Send your specific struggle directly — thirty years of experience applied to what you keep getting stuck on.
+              </p>
               <Link
                 href="/my-space"
-                className="inline-block bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
+                className="inline-block mt-6 bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
               >
                 Start your journal →
-              </Link>
-            </div>
-
-            {/* Challenges */}
-            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
-                Challenges
-              </p>
-              <h3 className="text-xl font-bold text-brand-black mb-2">
-                Your body has to figure it out.
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                You cannot get the answer by reading. You have to move, feel,
-                and try. The answer arrives through your body, not through words.
-              </p>
-              <div className="space-y-5 mb-8 flex-1">
-                {[
-                  {
-                    step: '01',
-                    title: 'The Situation',
-                    body: 'A problem you recognise from your own training. Specific enough that you feel it when you read it.',
-                  },
-                  {
-                    step: '02',
-                    title: 'Your Turn',
-                    body: 'Go try it. In the gym, on the bag, in sparring. Come back when your body has felt something.',
-                  },
-                  {
-                    step: '03',
-                    title: 'The Solution',
-                    body: "What Tukkatatong actually does. Why it works. The understanding most coaches never put into words.",
-                  },
-                ].map(({ step, title, body }) => (
-                  <div key={step} className="flex gap-4">
-                    <span className="text-2xl font-bold text-gray-200 leading-none shrink-0 w-8">
-                      {step}
-                    </span>
-                    <div>
-                      <p className="font-semibold text-brand-black text-sm mb-0.5">{title}</p>
-                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/challenges"
-                className="inline-block border border-gray-300 text-gray-700 px-5 py-2.5 rounded font-medium text-sm hover:border-brand-black transition-colors"
-              >
-                See the Challenges →
-              </Link>
-            </div>
-
-            {/* Knowledge */}
-            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
-                Knowledge
-              </p>
-              <h3 className="text-xl font-bold text-brand-black mb-2">
-                Your mind understands it.
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                Things you can understand without physically doing them. Read,
-                watch, think. Then bring it to the gym.
-              </p>
-              <ul className="space-y-4 mb-8 flex-1">
-                {[
-                  {
-                    label: 'Real Fights',
-                    body: 'What was actually happening in that specific moment.',
-                  },
-                  {
-                    label: 'Opponent Types',
-                    body: 'How this kind of fighter thinks, moves, and where they are vulnerable.',
-                  },
-                  {
-                    label: 'Scoring Game',
-                    body: 'What Muay Thai judges look for. How fights are won on the cards.',
-                  },
-                  {
-                    label: 'Culture',
-                    body: 'The Wai Kru, the Mongkol, the meaning behind the art.',
-                  },
-                ].map(({ label, body }) => (
-                  <li key={label} className="flex gap-3">
-                    <span className="text-gray-300 mt-0.5 shrink-0">→</span>
-                    <div>
-                      <p className="font-semibold text-brand-black text-sm mb-0.5">{label}</p>
-                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/knowledge"
-                className="inline-block border border-gray-300 text-gray-700 px-5 py-2.5 rounded font-medium text-sm hover:border-brand-black transition-colors"
-              >
-                Explore Knowledge →
               </Link>
             </div>
 
@@ -234,34 +127,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Featured Challenges ── */}
-      {featured.length > 0 && (
-        <section className="py-20 px-6 bg-gray-50">
-          <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
-                  Challenges
-                </p>
-                <h2 className="text-2xl font-bold text-brand-black">
-                  Try one. See what your body finds.
-                </h2>
-              </div>
-              <Link
-                href="/challenges"
-                className="text-brand-red text-sm hover:underline font-medium shrink-0 ml-6"
-              >
-                All challenges →
-              </Link>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {featured.map((c) => (
-                <ChallengeCard key={c.slug} challenge={c} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ── Culture teaser ── */}
       <section className="py-20 px-6 bg-white">
