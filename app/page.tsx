@@ -18,10 +18,10 @@ export default async function Home() {
       <KruQuickCapture />
       {/* ── Hero ── */}
       <section
-        className="relative bg-brand-black text-white py-28 px-6"
-        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
+        className="relative bg-brand-black text-white py-16 md:py-28 px-6"
+        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '60% center' }}
       >
-        <div className="absolute inset-0 bg-brand-black/80" />
+        <div className="absolute inset-0 bg-brand-black/70" />
         <div className="max-w-3xl mx-auto relative z-10">
           <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
@@ -29,7 +29,7 @@ export default async function Home() {
           <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </p>
-          <h1 className="text-5xl md:text-6xl font-bold leading-tight mb-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
             Some fighters improve faster. The difference is the part of Muay Thai your training isn&apos;t giving you.
           </h1>
           <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
