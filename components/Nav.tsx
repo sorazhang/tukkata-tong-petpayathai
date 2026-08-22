@@ -10,6 +10,7 @@ const STUDENT_KEY = 'tkt_student'
 const studentLinks = [
   { href: '/my-space',      label: 'My Space'         },
   { href: '/videos',        label: 'Videos'           },
+  { href: '/scoring',       label: 'Game'             },
   { href: '/knowledge',     label: 'Knowledge'        },
   { href: '/about',         label: 'About'            },
 ]
