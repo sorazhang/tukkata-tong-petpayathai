@@ -17,8 +17,12 @@ export default async function Home() {
     <main>
       <KruQuickCapture />
       {/* ── Hero ── */}
-      <section className="bg-brand-black text-white py-28 px-6">
-        <div className="max-w-3xl mx-auto">
+      <section
+        className="relative text-white py-28 px-6"
+        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
+      >
+        <div className="absolute inset-0 bg-brand-black/80" />
+        <div className="max-w-3xl mx-auto relative z-10">
           <p className="text-brand-gold text-xs font-medium uppercase tracking-widest mb-3">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
           </p>
@@ -53,7 +57,6 @@ export default async function Home() {
           </div>
         </div>
       </section>
-
       {/* ── How it works ── */}
       <section className="py-20 px-6 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto">
