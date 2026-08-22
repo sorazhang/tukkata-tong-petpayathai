@@ -10,6 +10,8 @@ const config: Config = {
     extend: {
       colors: {
         'brand-black': '#1a1a1a',
+        'brand-gold': '#C79A48',
+        'brand-gold-dim': '#8A7038',
         'brand-red': '#d32f2f',
         'brand-red-dark': '#b71c1c',
       },
