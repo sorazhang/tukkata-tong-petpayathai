@@ -48,12 +48,6 @@ export default async function Home() {
             >
               Start your training journal →
             </Link>
-            <Link
-              href="/challenges"
-              className="text-gray-400 text-sm hover:text-white transition-colors"
-            >
-              Browse challenges
-            </Link>
           </div>
         </div>
       </section>
@@ -115,55 +109,6 @@ export default async function Home() {
                 className="inline-block bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
               >
                 Start your journal →
-              </Link>
-            </div>
-
-            {/* Challenges */}
-            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
-              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
-                Challenges
-              </p>
-              <h3 className="text-xl font-bold text-brand-black mb-2">
-                Your body has to figure it out.
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                You cannot get the answer by reading. You have to move, feel,
-                and try. The answer arrives through your body, not through words.
-              </p>
-              <div className="space-y-5 mb-8 flex-1">
-                {[
-                  {
-                    step: '01',
-                    title: 'The Situation',
-                    body: 'A problem you recognise from your own training. Specific enough that you feel it when you read it.',
-                  },
-                  {
-                    step: '02',
-                    title: 'Your Turn',
-                    body: 'Go try it. In the gym, on the bag, in sparring. Come back when your body has felt something.',
-                  },
-                  {
-                    step: '03',
-                    title: 'The Solution',
-                    body: "What Tukkatatong actually does. Why it works. The understanding most coaches never put into words.",
-                  },
-                ].map(({ step, title, body }) => (
-                  <div key={step} className="flex gap-4">
-                    <span className="text-2xl font-bold text-gray-200 leading-none shrink-0 w-8">
-                      {step}
-                    </span>
-                    <div>
-                      <p className="font-semibold text-brand-black text-sm mb-0.5">{title}</p>
-                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/challenges"
-                className="inline-block border border-gray-300 text-gray-700 px-5 py-2.5 rounded font-medium text-sm hover:border-brand-black transition-colors"
-              >
-                See the Challenges →
               </Link>
             </div>
 
@@ -234,34 +179,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Featured Challenges ── */}
-      {featured.length > 0 && (
-        <section className="py-20 px-6 bg-gray-50">
-          <div className="max-w-5xl mx-auto">
-            <div className="flex items-center justify-between mb-10">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
-                  Challenges
-                </p>
-                <h2 className="text-2xl font-bold text-brand-black">
-                  Try one. See what your body finds.
-                </h2>
-              </div>
-              <Link
-                href="/challenges"
-                className="text-brand-red text-sm hover:underline font-medium shrink-0 ml-6"
-              >
-                All challenges →
-              </Link>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {featured.map((c) => (
-                <ChallengeCard key={c.slug} challenge={c} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ── Culture teaser ── */}
       <section className="py-20 px-6 bg-white">
