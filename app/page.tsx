@@ -26,19 +26,19 @@ export default async function Home() {
           <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
           </p>
-          <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
+          <p className="font-thai text-gray-400 text-base md:text-lg mb-4 md:mb-6" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </p>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6">
             Some fighters improve faster. The difference is the part of Muay Thai your training isn&apos;t giving you.
           </h1>
-          <p className="text-gray-300 text-lg leading-relaxed max-w-xl mb-4">
+          <p className="text-gray-300 text-sm md:text-lg leading-relaxed max-w-xl mb-3 md:mb-4">
             You train consistently. You try hard. But the same confusion keeps coming back in sparring —
             the kick that doesn&apos;t land, the pressure that makes you freeze, the situation you
             don&apos;t know how to handle. You&apos;ve been told what to do. Nobody has helped you
             see what your training is actually showing you.
           </p>
-          <p className="text-gray-500 text-lg leading-relaxed max-w-xl mb-10">
+          <p className="text-gray-500 text-sm md:text-lg leading-relaxed max-w-xl mb-8 md:mb-10">
             This platform changes that. A journal to see your own patterns. Challenges your body has to solve before you read Kru&apos;s answer. And when something specific keeps stopping you — knowledge and direct access to thirty years of experience.
           </p>
           <div className="flex flex-wrap items-center gap-4">
