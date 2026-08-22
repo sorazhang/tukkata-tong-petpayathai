@@ -19,7 +19,7 @@ export default async function Home() {
       {/* ── Hero ── */}
       <section
         className="relative bg-brand-black text-white py-16 md:py-28 px-6"
-        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '60% center' }}
+        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '20% top' }}
       >
         <div className="absolute inset-0 bg-brand-black/50 md:bg-brand-black/70" />
         <div className="max-w-3xl mx-auto relative z-10">
