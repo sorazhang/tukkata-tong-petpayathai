@@ -120,38 +120,12 @@ export default function MySpace({
             tab === 'striker' ? 'bg-white text-brand-black shadow-sm' : 'text-gray-400 hover:text-gray-600'
           }`}
         >
-          🥊 Stats
+          🥊 Game
         </button>
       </div>
 
       {tab === 'journal' && (
         <div className="space-y-6">
-
-          {/* Striker game entry */}
-          <a
-            href="/muay-thai-striker.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block bg-brand-black rounded-xl p-5 group hover:-translate-y-0.5 transition-all duration-200"
-          >
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
-                  Training Game
-                </p>
-                <h3 className="text-white font-bold text-base mb-1 group-hover:text-brand-red transition-colors">
-                  Muay Thai Striker
-                </h3>
-                <p className="text-gray-400 text-xs leading-relaxed">
-                  Camera-detected strikes. Real-time scoring. Play a round, then log what you felt in your journal.
-                </p>
-              </div>
-              <span className="text-2xl shrink-0">🥊</span>
-            </div>
-            <p className="text-brand-red text-xs font-semibold mt-3 group-hover:underline">
-              Launch game →
-            </p>
-          </a>
 
           <div className="border border-gray-200 rounded-xl p-5">
             <MyJournalEntry />

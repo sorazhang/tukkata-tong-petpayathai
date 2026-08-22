@@ -1,16 +1,10 @@
 import Link from 'next/link'
-import { getChallenges, getCultureStories } from '@/lib/content'
-import ChallengeCard from '@/components/ChallengeCard'
-import SurveyWidget from '@/components/SurveyWidget'
+import { getCultureStories } from '@/lib/content'
 import KruQuickCapture from '@/components/KruQuickCapture'
 
 export default async function Home() {
-  const [challenges, stories] = await Promise.all([
-    getChallenges(),
-    getCultureStories(),
-  ])
+  const stories = await getCultureStories()
 
-  const featured = challenges.slice(0, 3)
   const featuredStories = stories.slice(0, 2)
 
   return (
@@ -21,7 +15,7 @@ export default async function Home() {
         className="relative bg-brand-black text-white py-16 md:py-28 px-6"
         style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '20% top' }}
       >
-        <div className="absolute inset-0 bg-brand-black/50 md:bg-brand-black/70" />
+        <div className="absolute inset-0 bg-brand-black/70" />
         <div className="max-w-3xl mx-auto relative z-10">
           <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
@@ -112,20 +106,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Survey ── */}
-      <section className="py-16 px-6 bg-gray-50 border-b border-gray-100 hover:bg-white transition-colors duration-500 group/survey">
-        <div className="max-w-xl mx-auto group-hover/survey:-translate-y-0.5 transition-transform duration-300">
-          <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 text-center flex items-center justify-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse shrink-0" />
-            Not sure where to start?
-            <span className="inline-block w-2 h-2 rounded-full bg-brand-red animate-pulse shrink-0" />
-          </p>
-          <h2 className="text-2xl font-bold text-brand-black mb-8 text-center">
-            Tell us where you are.
-          </h2>
-          <SurveyWidget challenges={challenges.map(({ slug, title }) => ({ slug, title }))} />
-        </div>
-      </section>
 
 
       {/* ── Culture teaser ── */}

@@ -41,16 +41,6 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/opponents" className="text-sm text-gray-400 hover:text-white transition-colors">
-                    Opponent Types
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/scoring" className="text-sm text-gray-400 hover:text-white transition-colors">
-                    Scoring Game
-                  </Link>
-                </li>
-                <li>
                   <Link href="/culture" className="text-sm text-gray-400 hover:text-white transition-colors">
                     Culture
                   </Link>

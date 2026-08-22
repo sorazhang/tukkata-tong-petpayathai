@@ -14,23 +14,7 @@ const sections = [
     question: 'What was actually happening in that moment?',
     description:
       'Specific moments from professional fights broken down from the inside. Not highlights — the decisions, the reads, the things that do not show on camera.',
-    status: 'live' as const,
-  },
-  {
-    href: '/opponents',
-    label: 'Opponent Types',
-    question: 'How do I handle this kind of fighter?',
-    description:
-      'Every fighter has patterns. How they move, what they want, where they are vulnerable. Know the type before you meet them.',
-    status: 'live' as const,
-  },
-  {
-    href: '/scoring',
-    label: 'Scoring Game',
-    question: 'How does Muay Thai judging actually work?',
-    description:
-      'Fights are won and lost on the cards as much as in the ring. What judges look for, and why winning the exchanges is not always the same as winning the round.',
-    status: 'live' as const,
+    status: 'live' as 'live' | 'coming',
   },
   {
     href: '/culture',
@@ -38,15 +22,7 @@ const sections = [
     question: 'What does this tradition mean?',
     description:
       'The Wai Kru, the Mongkol, the music, the gyms of Isaan. Muay Thai carries a history in every ritual. This is where it lives.',
-    status: 'live' as const,
-  },
-  {
-    href: '/principles',
-    label: 'Principles',
-    question: 'Why do things work the way they do?',
-    description:
-      'Deep single-topic pieces. Why the teep controls the ring. What the clinch is really for. The understanding underneath the technique.',
-    status: 'coming' as const,
+    status: 'live' as 'live' | 'coming',
   },
 ]
 
@@ -129,22 +105,6 @@ export default function KnowledgePage() {
         </div>
       </section>
 
-      {/* ── Separator ── */}
-      <section className="py-12 px-6 border-t border-gray-100">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-sm text-gray-400 leading-relaxed">
-            Looking for something to actively try?{' '}
-            <Link
-              href="/challenges"
-              className="text-brand-red hover:underline font-medium"
-            >
-              Challenges →
-            </Link>{' '}
-            are things your body has to figure out. These are things your mind
-            can understand.
-          </p>
-        </div>
-      </section>
     </main>
   )
 }

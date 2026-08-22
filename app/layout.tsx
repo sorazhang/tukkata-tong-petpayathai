@@ -15,6 +15,10 @@ export const metadata: Metadata = {
     siteName: 'ตุ๊กตาทอง เพชรพญาไท',
     type: 'website',
   },
+  manifest: '/manifest.json',
+  icons: {
+    apple: '/icon-192.png',
+  },
 }
 
 export default function RootLayout({
