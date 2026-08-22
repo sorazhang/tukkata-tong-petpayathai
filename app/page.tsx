@@ -58,105 +58,53 @@ export default async function Home() {
             How it works
           </h2>
           <p className="text-center text-gray-400 text-sm mb-14">
-            Three parts. One loop. All of it pointing toward understanding.
+            Three steps. One journal. All of it pointing toward understanding.
           </p>
 
           <div className="grid md:grid-cols-3 gap-6">
 
-            {/* Journal */}
+            {/* Step 1 */}
             <div className="border-2 border-brand-black rounded-xl p-8 flex flex-col">
               <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
-                Journal
+                Step 01
               </p>
-              <h3 className="text-xl font-bold text-brand-black mb-2">
-                Your training becomes visible.
+              <h3 className="text-xl font-bold text-brand-black mb-4">
+                Write
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                Most students leave the gym and forget what just happened. Write it down.
-                The patterns you keep running into become clear — and you can bring them directly to Kru.
+              <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                A short note after training. What confused you. What clicked. No structure needed.
               </p>
-              <div className="space-y-5 mb-8 flex-1">
-                {[
-                  {
-                    step: '01',
-                    title: 'Write',
-                    body: 'A short note after training. What confused you. What clicked. No structure needed.',
-                  },
-                  {
-                    step: '02',
-                    title: 'See your patterns',
-                    body: 'AI surfaces what keeps coming up across your entries. The recurring confusion you may not have named yet.',
-                  },
-                  {
-                    step: '03',
-                    title: 'Bring it to Kru',
-                    body: 'Save what matters as an observation. Send your specific struggle directly — thirty years of experience applied to what you keep getting stuck on.',
-                  },
-                ].map(({ step, title, body }) => (
-                  <div key={step} className="flex gap-4">
-                    <span className="text-2xl font-bold text-gray-100 leading-none shrink-0 w-8">
-                      {step}
-                    </span>
-                    <div>
-                      <p className="font-semibold text-brand-black text-sm mb-0.5">{title}</p>
-                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Link
-                href="/my-space"
-                className="inline-block bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
-              >
-                Start your journal →
-              </Link>
             </div>
 
-            {/* Knowledge */}
+            {/* Step 2 */}
             <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
               <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
-                Knowledge
+                Step 02
               </p>
-              <h3 className="text-xl font-bold text-brand-black mb-2">
-                Your mind understands it.
+              <h3 className="text-xl font-bold text-brand-black mb-4">
+                See your patterns
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-8">
-                Things you can understand without physically doing them. Read,
-                watch, think. Then bring it to the gym.
+              <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                AI surfaces what keeps coming up across your entries. The recurring confusion you may not have named yet.
               </p>
-              <ul className="space-y-4 mb-8 flex-1">
-                {[
-                  {
-                    label: 'Real Fights',
-                    body: 'What was actually happening in that specific moment.',
-                  },
-                  {
-                    label: 'Opponent Types',
-                    body: 'How this kind of fighter thinks, moves, and where they are vulnerable.',
-                  },
-                  {
-                    label: 'Scoring Game',
-                    body: 'What Muay Thai judges look for. How fights are won on the cards.',
-                  },
-                  {
-                    label: 'Culture',
-                    body: 'The Wai Kru, the Mongkol, the meaning behind the art.',
-                  },
-                ].map(({ label, body }) => (
-                  <li key={label} className="flex gap-3">
-                    <span className="text-gray-300 mt-0.5 shrink-0">→</span>
-                    <div>
-                      <p className="font-semibold text-brand-black text-sm mb-0.5">{label}</p>
-                      <p className="text-gray-500 text-sm leading-relaxed">{body}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+            </div>
+
+            {/* Step 3 */}
+            <div className="border border-gray-200 rounded-xl p-8 bg-gray-50 flex flex-col">
+              <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">
+                Step 03
+              </p>
+              <h3 className="text-xl font-bold text-brand-black mb-4">
+                Bring it to Kru
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1">
+                Save what matters as an observation. Send your specific struggle directly — thirty years of experience applied to what you keep getting stuck on.
+              </p>
               <Link
-                href="/knowledge"
-                className="inline-block border border-gray-300 text-gray-700 px-5 py-2.5 rounded font-medium text-sm hover:border-brand-black transition-colors"
+                href="/my-space"
+                className="inline-block mt-6 bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
               >
-                Explore Knowledge →
+                Start your journal →
               </Link>
             </div>
 
