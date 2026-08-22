@@ -121,7 +121,7 @@ export default function KruNoteEntry() {
         <button
           onClick={handleSave}
           disabled={!text.trim() || isPending}
-          className="flex-1 bg-brand-red text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-40"
+          className="flex-1 bg-brand-gold text-black py-2.5 rounded-xl text-sm font-semibold hover:bg-brand-gold-dim transition-colors disabled:opacity-40"
         >
           {saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? '✓ Saved' : saveState === 'error' ? 'Error — try again' : 'Save'}
         </button>

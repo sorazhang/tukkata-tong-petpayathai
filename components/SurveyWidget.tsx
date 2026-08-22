@@ -140,7 +140,7 @@ export default function SurveyWidget({
             key={s}
             className={`block h-1 rounded-full transition-all duration-300 ${
               i <= stepIndex - 0
-                ? 'bg-brand-red w-6'
+                ? 'bg-brand-gold w-6'
                 : 'bg-gray-200 w-3'
             }`}
           />

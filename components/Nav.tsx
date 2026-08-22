@@ -132,7 +132,7 @@ export default function Nav() {
             <li>
               <Link
                 href="/book"
-                className="bg-brand-red text-white px-4 py-2 rounded text-sm font-medium hover:bg-brand-red-dark transition-colors"
+                className="bg-brand-gold text-black px-4 py-2 rounded text-sm font-medium hover:bg-brand-gold-dim transition-colors"
               >
                 Book a Session
               </Link>
@@ -208,7 +208,7 @@ export default function Nav() {
                   <Link
                     href="/book"
                     onClick={() => setOpen(false)}
-                    className="block w-full text-center bg-brand-red text-white px-4 py-3 rounded text-sm font-medium hover:bg-brand-red-dark transition-colors"
+                    className="block w-full text-center bg-brand-gold text-black px-4 py-3 rounded text-sm font-medium hover:bg-brand-gold-dim transition-colors"
                   >
                     Book a Session
                   </Link>

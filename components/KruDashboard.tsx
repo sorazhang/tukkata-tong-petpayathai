@@ -22,7 +22,7 @@ function EmptyState({ message }: { message: string }) {
 function Badge({ count }: { count: number }) {
   if (count === 0) return null
   return (
-    <span className="ml-1.5 text-xs bg-brand-red text-white px-1.5 py-0.5 rounded-full align-middle">
+    <span className="ml-1.5 text-xs bg-brand-gold text-black px-1.5 py-0.5 rounded-full align-middle">
       {count}
     </span>
   )

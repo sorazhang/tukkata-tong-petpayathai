@@ -54,7 +54,7 @@ export default function ReviewLogin() {
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full bg-brand-red text-white py-3 rounded-lg text-sm font-semibold hover:bg-brand-red-dark transition-colors disabled:opacity-50"
+            className="w-full bg-brand-gold text-black py-3 rounded-lg text-sm font-semibold hover:bg-brand-gold-dim transition-colors disabled:opacity-50"
           >
             {loading ? 'Checking…' : 'Enter'}
           </button>

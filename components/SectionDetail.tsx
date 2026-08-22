@@ -147,7 +147,7 @@ export default function SectionDetail({
                       The solution lands differently after you have felt the
                       problem in your own body.
                     </p>
-                    <button className="w-full bg-brand-red text-white py-3 rounded font-medium hover:bg-brand-red-dark transition-colors">
+                    <button className="w-full bg-brand-gold text-black py-3 rounded font-medium hover:bg-brand-gold-dim transition-colors">
                       Unlock the Solution
                     </button>
                     <p className="text-gray-400 text-xs mt-3">

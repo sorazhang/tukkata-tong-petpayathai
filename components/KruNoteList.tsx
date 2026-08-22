@@ -63,7 +63,7 @@ function KruNoteRow({ note }: { note: KruNote }) {
               />
               <div className="flex gap-2">
                 <button onClick={handleSaveEdit} disabled={isPending || !editText.trim()}
-                  className="px-4 py-2 bg-brand-red text-white text-xs font-semibold rounded-lg disabled:opacity-40">
+                  className="px-4 py-2 bg-brand-gold text-black text-xs font-semibold rounded-lg disabled:opacity-40">
                   {isPending ? 'Saving…' : 'Save'}
                 </button>
                 <button onClick={() => { setEditing(false); setEditText(note.text) }}
