@@ -14,7 +14,7 @@ const sections = [
     question: 'What was actually happening in that moment?',
     description:
       'Specific moments from professional fights broken down from the inside. Not highlights — the decisions, the reads, the things that do not show on camera.',
-    status: 'live' as const,
+    status: 'live' as 'live' | 'coming',
   },
   {
     href: '/culture',
@@ -22,7 +22,7 @@ const sections = [
     question: 'What does this tradition mean?',
     description:
       'The Wai Kru, the Mongkol, the music, the gyms of Isaan. Muay Thai carries a history in every ritual. This is where it lives.',
-    status: 'live' as const,
+    status: 'live' as 'live' | 'coming',
   },
 ]
 
