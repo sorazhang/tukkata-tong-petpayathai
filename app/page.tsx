@@ -19,9 +19,6 @@ export default async function Home() {
       {/* ── Hero ── */}
       <section className="bg-brand-black text-white py-28 px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
-            Lumpinee Stadium Champion · Channel 7 World Title Holder
-          </p>
           <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </p>
@@ -40,7 +37,7 @@ export default async function Home() {
           <div className="flex flex-wrap items-center gap-4">
             <Link
               href="/my-space"
-              className="bg-brand-red text-white px-6 py-3 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+              className="bg-brand-gold text-black px-6 py-3 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
             >
               Start your training journal →
             </Link>
@@ -109,7 +106,7 @@ export default async function Home() {
               </div>
               <Link
                 href="/my-space"
-                className="inline-block bg-brand-red text-white px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-red-dark transition-colors"
+                className="inline-block bg-brand-gold text-black px-5 py-2.5 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
               >
                 Start your journal →
               </Link>
@@ -344,7 +341,7 @@ export default async function Home() {
           </p>
           <Link
             href="/book"
-            className="bg-brand-red text-white px-8 py-3.5 rounded font-medium hover:bg-brand-red-dark transition-colors inline-block"
+            className="bg-brand-gold text-black px-8 py-3.5 rounded font-medium hover:bg-brand-gold-dim transition-colors inline-block"
           >
             Book a Session
           </Link>
