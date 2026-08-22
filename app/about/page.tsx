@@ -12,14 +12,28 @@ export default function AboutPage() {
     <main>
       {/* Header */}
       <section className="bg-brand-black text-white py-20 px-6">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-4">
-            About
-          </p>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">
-            ตุ๊กตาทอง เพชรพญาไท
-          </h1>
-          <p className="text-gray-400 text-lg mt-2">Tukkatatong Petpayathai</p>
+        <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-8">
+          {/* Circle photo */}
+          <div className="shrink-0">
+            <img
+              src="/bio.png"
+              alt="Tukkatatong Petpayathai"
+              className="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover object-top border-2 border-gray-700"
+            />
+          </div>
+          {/* Name + record */}
+          <div>
+            <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-4">
+              About
+            </p>
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+              ตุ๊กตาทอง เพชรพญาไท
+            </h1>
+            <p className="text-gray-400 text-lg mt-2">Tukkatatong Petpayathai</p>
+            <p className="text-xs text-gray-500 mt-3 uppercase tracking-widest">
+              ONE Championship · 2W 2L 0D
+            </p>
+          </div>
         </div>
       </section>
 
