@@ -18,7 +18,7 @@ export default async function Home() {
       <KruQuickCapture />
       {/* ── Hero ── */}
       <section
-        className="relative text-white py-28 px-6"
+        className="relative bg-brand-black text-white py-28 px-6"
         style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: 'center top' }}
       >
         <div className="absolute inset-0 bg-brand-black/80" />
