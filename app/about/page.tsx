@@ -16,7 +16,7 @@ export default function AboutPage() {
           {/* Circle photo */}
           <div className="shrink-0">
             <img
-              src="/bio.png"
+              src="/bio2.png"
               alt="Tukkatatong Petpayathai"
               className="w-36 h-36 md:w-44 md:h-44 rounded-full object-cover object-top border-2 border-gray-700"
             />
