@@ -19,6 +19,9 @@ export default async function Home() {
       {/* ── Hero ── */}
       <section className="bg-brand-black text-white py-28 px-6">
         <div className="max-w-3xl mx-auto">
+          <p className="text-brand-gold text-xs font-medium uppercase tracking-widest mb-3">
+            2x Channel 7 Muay Thai Champion · North East Thailand Champion
+          </p>
           <p className="font-thai text-gray-400 text-lg mb-6" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </p>
