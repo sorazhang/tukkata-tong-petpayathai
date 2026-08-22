@@ -64,7 +64,7 @@ export default function Nav() {
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
           <img
-            src="/logo7.png"
+            src="/Logo_elephant.png"
             alt="Tukkatatong logo"
             className="h-9 w-auto shrink-0"
           />
