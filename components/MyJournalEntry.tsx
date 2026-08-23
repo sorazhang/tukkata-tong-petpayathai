@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useTransition, useRef, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { saveMyEntry } from '@/lib/my-journal-actions'
 import type { JournalTag } from '@/lib/my-journal-actions'
 import { matchEntryToChallenges } from '@/lib/ai-journal-actions'
 import type { ChallengeMatch } from '@/lib/ai-journal-actions'
+
+const DRAFT_KEY = 'tkt_journal_draft'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyRecognition = any
@@ -18,14 +21,14 @@ const TAGS: { id: JournalTag; label: string }[] = [
   { id: 'other',     label: 'Other' },
 ]
 
-export default function MyJournalEntry() {
+export default function MyJournalEntry({ isLoggedIn }: { isLoggedIn: boolean }) {
   const router = useRouter()
   const [text, setText]              = useState('')
   const [tag, setTag]                = useState<JournalTag>('other')
   const [listening, setListening]    = useState(false)
   const [supported, setSupported]    = useState(true)
   const [lang, setLang]              = useState<'th-TH' | 'en-US'>('en-US')
-  const [saveState, setSaveState]    = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const [saveState, setSaveState]    = useState<'idle' | 'saving' | 'saved' | 'error' | 'guest'>('idle')
   const [isPending, startTransition] = useTransition()
   const recognitionRef               = useRef<AnyRecognition>(null)
   const finalTextRef                 = useRef<string>('')
@@ -43,6 +46,16 @@ export default function MyJournalEntry() {
     recognitionRef.current.interimResults = true
     return () => recognitionRef.current?.abort()
   }, [])
+
+  // Load draft from localStorage for guests
+  useEffect(() => {
+    if (!isLoggedIn) {
+      try {
+        const draft = localStorage.getItem(DRAFT_KEY)
+        if (draft) { setText(draft); finalTextRef.current = draft }
+      } catch (_) { /* ignore */ }
+    }
+  }, [isLoggedIn])
 
   function startListening() {
     const r = recognitionRef.current
@@ -80,8 +93,21 @@ export default function MyJournalEntry() {
     setListening(false)
   }
 
+  function handleTextChange(value: string) {
+    setText(value)
+    finalTextRef.current = value
+    setSaveState('idle')
+    if (!isLoggedIn) {
+      try { localStorage.setItem(DRAFT_KEY, value) } catch (_) { /* ignore */ }
+    }
+  }
+
   function handleSave() {
     if (!text.trim()) return
+    if (!isLoggedIn) {
+      setSaveState('guest')
+      return
+    }
     const savedText = text
     startTransition(async () => {
       setSaveState('saving')
@@ -91,9 +117,9 @@ export default function MyJournalEntry() {
         setSaveState('saved')
         setText('')
         finalTextRef.current = ''
+        try { localStorage.removeItem(DRAFT_KEY) } catch (_) { /* ignore */ }
         stopListening()
         router.refresh()
-        // kick off challenge matching after save
         setMatchLoading(true)
         const matchRes = await matchEntryToChallenges(savedText)
         setMatchLoading(false)
@@ -131,7 +157,7 @@ export default function MyJournalEntry() {
       {/* Textarea */}
       <textarea
         value={text}
-        onChange={(e) => { setText(e.target.value); finalTextRef.current = e.target.value; setSaveState('idle') }}
+        onChange={(e) => handleTextChange(e.target.value)}
         placeholder="What did you notice today in training?"
         rows={7}
         className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm leading-relaxed resize-none focus:outline-none focus:border-brand-red"
@@ -174,6 +200,21 @@ export default function MyJournalEntry() {
           {saveState === 'saving' ? 'Saving…' : saveState === 'saved' ? '✓ Saved' : saveState === 'error' ? 'Error — try again' : 'Save'}
         </button>
       </div>
+
+      {saveState === 'guest' && (
+        <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 space-y-2">
+          <p className="text-sm font-semibold text-brand-black">Create an account to save</p>
+          <p className="text-xs text-gray-500">Your entry is ready — sign up to keep your training journal. Your draft will be waiting.</p>
+          <div className="flex gap-2 pt-1">
+            <Link href="/signup" className="flex-1 text-center text-xs bg-brand-red text-white py-2 rounded-lg font-semibold hover:bg-brand-red/80 transition-colors">
+              Sign up free
+            </Link>
+            <Link href="/login" className="flex-1 text-center text-xs bg-gray-100 text-gray-600 py-2 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
+              Log in
+            </Link>
+          </div>
+        </div>
+      )}
 
       {listening && (
         <p className="text-xs text-brand-red animate-pulse">
