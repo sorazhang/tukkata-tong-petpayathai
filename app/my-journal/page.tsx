@@ -1,4 +1,5 @@
 import { getMyEntries } from '@/lib/my-journal-actions'
+import { getSessionUser } from '@/lib/session'
 import MyJournalEntry from '@/components/MyJournalEntry'
 import MyJournalList from '@/components/MyJournalList'
 import MyJournalPatterns from '@/components/MyJournalPatterns'
@@ -6,7 +7,7 @@ import MyJournalPatterns from '@/components/MyJournalPatterns'
 export const dynamic = 'force-dynamic'
 
 export default async function MyJournalPage() {
-  const entries = await getMyEntries()
+  const [entries, user] = await Promise.all([getMyEntries(), getSessionUser()])
 
   return (
     <main className="max-w-xl mx-auto px-6 py-12">
@@ -22,7 +23,7 @@ export default async function MyJournalPage() {
       </div>
 
       <div className="border border-gray-200 rounded-xl p-5 mb-6">
-        <MyJournalEntry />
+        <MyJournalEntry isLoggedIn={!!user} />
       </div>
 
       <div className="mb-10">
