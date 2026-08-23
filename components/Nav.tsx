@@ -66,7 +66,7 @@ export default function Nav() {
           className="flex items-center gap-3 hover:opacity-80 transition-opacity"
         >
           <img
-            src="/make_transparent_background__Nano_Banana_2_25119.png"
+            src="/Firefly_Gemini Flash_make background transparent 940157.png"
             alt="Tukkatatong logo"
             className="h-9 w-auto shrink-0"
           />
