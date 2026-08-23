@@ -1,6 +1,7 @@
 'use server'
 
 import { adminDb } from './firebase-admin'
+import { getSessionUserId } from './session'
 
 export type JournalTag = 'footwork' | 'striking' | 'clinch' | 'mental' | 'other'
 
@@ -15,8 +16,11 @@ export async function saveMyEntry(
   text: string,
   tag: JournalTag,
 ): Promise<{ ok: boolean; error?: string }> {
+  const userId = await getSessionUserId()
+  if (!userId) return { ok: false, error: 'Not signed in.' }
   try {
     await adminDb.collection('my-journal').add({
+      userId,
       text:      text.trim(),
       tag,
       createdAt: new Date().toISOString(),
@@ -33,10 +37,13 @@ export async function updateMyEntry(
   text: string,
   tag: JournalTag,
 ): Promise<{ ok: boolean; error?: string }> {
+  const userId = await getSessionUserId()
+  if (!userId) return { ok: false, error: 'Not signed in.' }
   try {
-    await adminDb.collection('my-journal').doc(id).update({
-      text, tag, updatedAt: new Date().toISOString(),
-    })
+    const ref = adminDb.collection('my-journal').doc(id)
+    const doc = await ref.get()
+    if (doc.data()?.userId !== userId) return { ok: false, error: 'Forbidden.' }
+    await ref.update({ text, tag, updatedAt: new Date().toISOString() })
     return { ok: true }
   } catch (err) {
     console.error('updateMyEntry error:', err)
@@ -47,8 +54,13 @@ export async function updateMyEntry(
 export async function deleteMyEntry(
   id: string,
 ): Promise<{ ok: boolean; error?: string }> {
+  const userId = await getSessionUserId()
+  if (!userId) return { ok: false, error: 'Not signed in.' }
   try {
-    await adminDb.collection('my-journal').doc(id).delete()
+    const ref = adminDb.collection('my-journal').doc(id)
+    const doc = await ref.get()
+    if (doc.data()?.userId !== userId) return { ok: false, error: 'Forbidden.' }
+    await ref.delete()
     return { ok: true }
   } catch (err) {
     console.error('deleteMyEntry error:', err)
@@ -57,8 +69,11 @@ export async function deleteMyEntry(
 }
 
 export async function getMyEntries(): Promise<MyEntry[]> {
+  const userId = await getSessionUserId()
+  if (!userId) return []
   const snap = await adminDb
     .collection('my-journal')
+    .where('userId', '==', userId)
     .orderBy('createdAt', 'desc')
     .get()
   return snap.docs.map((d) => ({
