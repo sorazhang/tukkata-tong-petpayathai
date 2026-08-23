@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { auth } from '@/lib/firebase'
 
 const PERSONA_KEY = 'tkt_persona'
 const STUDENT_KEY = 'tkt_student'
@@ -20,37 +22,36 @@ const kruLinks = [
 ]
 
 export default function Nav() {
-  const [open, setOpen]             = useState(false)
-  const [isKru, setIsKru]           = useState(false)
-  const [studentName, setStudentName] = useState<string | null>(null)
-  const pathname                    = usePathname()
+  const [open, setOpen]           = useState(false)
+  const [isKru, setIsKru]         = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const pathname                  = usePathname()
 
   useEffect(() => {
-    function sync() {
+    function syncKru() {
       setIsKru(localStorage.getItem(PERSONA_KEY) === 'kru')
-      try {
-        const raw = localStorage.getItem(STUDENT_KEY)
-        const parsed = raw ? JSON.parse(raw) : null
-        setStudentName(parsed?.name ?? null)
-      } catch {
-        setStudentName(null)
-      }
     }
-    sync()
-    window.addEventListener('storage', sync)
-    window.addEventListener('persona-change', sync)
-    window.addEventListener('student-change', sync)
+    syncKru()
+    window.addEventListener('storage', syncKru)
+    window.addEventListener('persona-change', syncKru)
     return () => {
-      window.removeEventListener('storage', sync)
-      window.removeEventListener('persona-change', sync)
-      window.removeEventListener('student-change', sync)
+      window.removeEventListener('storage', syncKru)
+      window.removeEventListener('persona-change', syncKru)
     }
   }, [])
 
-  function handleStudentLogout() {
+  useEffect(() => {
+    return onAuthStateChanged(auth, (user) => {
+      setUserEmail(user?.email ?? null)
+    })
+  }, [])
+
+  async function handleSignOut() {
+    await signOut(auth)
+    await fetch('/api/auth/session', { method: 'DELETE' })
     localStorage.removeItem(STUDENT_KEY)
-    window.dispatchEvent(new Event('student-change'))
     setOpen(false)
+    window.location.href = '/'
   }
 
   const links = isKru ? kruLinks : studentLinks
@@ -94,18 +95,7 @@ export default function Nav() {
             </li>
           ))}
 
-          {!isKru && (
-            <li>
-              <Link
-                href="/review-login"
-                className="text-gray-600 hover:text-gray-400 text-xs transition-colors"
-              >
-                Kru
-              </Link>
-            </li>
-          )}
-
-          {isKru ? (
+{isKru ? (
             <li>
               <button
                 onClick={async () => {
@@ -119,25 +109,35 @@ export default function Nav() {
                 Sign out
               </button>
             </li>
-          ) : studentName ? (
+          ) : userEmail ? (
             <li className="flex items-center gap-3">
-              <span className="text-gray-400 text-xs">{studentName}</span>
+              <span className="text-gray-400 text-xs truncate max-w-[140px]">{userEmail}</span>
               <button
-                onClick={handleStudentLogout}
+                onClick={handleSignOut}
                 className="text-gray-400 hover:text-white text-xs transition-colors"
               >
                 Log out
               </button>
             </li>
           ) : (
-            <li>
-              <Link
-                href="/book"
-                className="bg-brand-gold text-black px-4 py-2 rounded text-sm font-medium hover:bg-brand-gold-dim transition-colors"
-              >
-                Book a Session
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  href="/login"
+                  className="text-gray-400 hover:text-white text-sm transition-colors"
+                >
+                  Log in
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/signup"
+                  className="bg-brand-gold text-black px-4 py-2 rounded text-sm font-medium hover:bg-brand-gold-dim transition-colors"
+                >
+                  Sign up
+                </Link>
+              </li>
+            </>
           )}
         </ul>
 
@@ -184,11 +184,11 @@ export default function Nav() {
                   Sign out
                 </button>
               </li>
-            ) : studentName ? (
+            ) : userEmail ? (
               <li className="pt-3 flex items-center justify-between">
-                <span className="text-gray-400 text-sm">{studentName}</span>
+                <span className="text-gray-400 text-sm truncate max-w-[180px]">{userEmail}</span>
                 <button
-                  onClick={handleStudentLogout}
+                  onClick={handleSignOut}
                   className="text-gray-400 hover:text-white text-sm transition-colors"
                 >
                   Log out
@@ -198,20 +198,20 @@ export default function Nav() {
               <>
                 <li className="pt-2">
                   <Link
-                    href="/review-login"
+                    href="/login"
                     onClick={() => setOpen(false)}
-                    className="block py-2 text-sm text-gray-600 hover:text-gray-400 transition-colors"
+                    className="block py-3 text-base text-gray-400 hover:text-white transition-colors border-b border-gray-800"
                   >
-                    Kru
+                    Log in
                   </Link>
                 </li>
                 <li className="pt-1">
                   <Link
-                    href="/book"
+                    href="/signup"
                     onClick={() => setOpen(false)}
                     className="block w-full text-center bg-brand-gold text-black px-4 py-3 rounded text-sm font-medium hover:bg-brand-gold-dim transition-colors"
                   >
-                    Book a Session
+                    Sign up
                   </Link>
                 </li>
               </>
