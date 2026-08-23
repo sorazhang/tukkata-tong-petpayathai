@@ -71,6 +71,20 @@ export async function deleteMyEntry(
 export async function getMyEntries(): Promise<MyEntry[]> {
   const userId = await getSessionUserId()
   if (!userId) return []
+
+  // Claim any unclaimed entries (one-time migration; no-op once all are stamped)
+  const unclaimedSnap = await adminDb
+    .collection('my-journal')
+    .where('userId', '==', null)
+    .get()
+  const allSnap = await adminDb.collection('my-journal').get()
+  const unclaimed = allSnap.docs.filter((d) => !d.data().userId)
+  if (unclaimed.length > 0) {
+    const batch = adminDb.batch()
+    for (const doc of unclaimed) batch.update(doc.ref, { userId })
+    await batch.commit()
+  }
+
   const snap = await adminDb
     .collection('my-journal')
     .where('userId', '==', userId)
