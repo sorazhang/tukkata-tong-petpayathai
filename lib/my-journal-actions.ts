@@ -74,12 +74,13 @@ export async function getMyEntries(): Promise<MyEntry[]> {
   const snap = await adminDb
     .collection('my-journal')
     .where('userId', '==', userId)
-    .orderBy('createdAt', 'desc')
     .get()
-  return snap.docs.map((d) => ({
-    id:        d.id,
-    text:      d.data().text ?? '',
-    tag:       d.data().tag ?? 'other',
-    createdAt: d.data().createdAt ?? '',
-  }))
+  return snap.docs
+    .map((d) => ({
+      id:        d.id,
+      text:      d.data().text ?? '',
+      tag:       d.data().tag ?? 'other',
+      createdAt: d.data().createdAt ?? '',
+    }))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 }
