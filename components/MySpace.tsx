@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import MyJournalEntry from './MyJournalEntry'
 import MyJournalList from './MyJournalList'
 import MyJournalPatterns from './MyJournalPatterns'
@@ -14,7 +15,6 @@ import type { MyAnalysis } from '@/lib/my-analysis-actions'
 type Tab = 'journal' | 'challenges' | 'insights' | 'striker'
 type Tier = 'free' | 'silver' | 'gold'
 
-// Mock tier — swap this with real auth session data once auth is wired up
 const userTier: Tier = 'gold'
 
 const TIER_LABELS: Record<Tier, string> = {
@@ -52,24 +52,69 @@ export default function MySpace({
   entries,
   challenges,
   analyses,
+  user,
 }: {
   entries: MyEntry[]
   challenges: MyChallenge[]
   analyses: MyAnalysis[]
+  user: { uid: string; email: string | null } | null
 }) {
-  const [tab, setTab] = useState<Tab>('journal')
+  const [tab, setTab]                   = useState<Tab>('journal')
+  const [showAccount, setShowAccount]   = useState(false)
 
-  const canAccessInsights = userTier === 'silver' || userTier === 'gold'
+  const isLoggedIn = !!user
+  const initial    = user?.email?.[0]?.toUpperCase() ?? 'G'
+
+  const canAccessInsights   = userTier === 'silver' || userTier === 'gold'
   const canAccessChallenges = userTier === 'silver' || userTier === 'gold'
-  const canAskKru = userTier === 'gold'
+  const canAskKru           = userTier === 'gold'
 
   return (
     <div>
-      {/* Tier badge */}
-      <div className="flex justify-end mb-4">
-        <span className={`text-xs font-semibold uppercase tracking-widest ${TIER_COLORS[userTier]}`}>
-          {TIER_LABELS[userTier]} Member
-        </span>
+      {/* Account icon */}
+      <div className="relative flex justify-end mb-4">
+        <button
+          onClick={() => setShowAccount((v) => !v)}
+          className="w-8 h-8 rounded-full bg-brand-red text-white text-xs font-bold flex items-center justify-center hover:bg-brand-red/80 transition-colors"
+          aria-label="Account"
+        >
+          {initial}
+        </button>
+
+        {showAccount && (
+          <div
+            className="absolute top-10 right-0 bg-white border border-gray-100 rounded-xl shadow-lg p-4 min-w-[200px] z-10"
+            onMouseLeave={() => setShowAccount(false)}
+          >
+            {isLoggedIn ? (
+              <>
+                <p className="text-xs text-gray-500 truncate mb-0.5">{user.email}</p>
+                <p className={`text-xs font-semibold ${TIER_COLORS[userTier]}`}>
+                  {TIER_LABELS[userTier]} Member
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-semibold text-brand-black mb-1">Guest</p>
+                <p className="text-xs text-gray-400 mb-3">
+                  Create an account to save your training journal.
+                </p>
+                <Link
+                  href="/signup"
+                  className="block text-center text-xs bg-brand-gold text-black px-3 py-2 rounded-lg font-semibold hover:bg-brand-gold-dim transition-colors"
+                >
+                  Sign up free
+                </Link>
+                <Link
+                  href="/login"
+                  className="block text-center text-xs text-gray-400 mt-1.5 hover:text-gray-600 transition-colors"
+                >
+                  Log in
+                </Link>
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Tab bar */}
@@ -126,18 +171,17 @@ export default function MySpace({
 
       {tab === 'journal' && (
         <div className="space-y-6">
-
           <div className="border border-gray-200 rounded-xl p-5">
-            <MyJournalEntry />
+            <MyJournalEntry isLoggedIn={isLoggedIn} />
           </div>
-          {canAccessInsights && <MyJournalPatterns />}
-          {!canAccessInsights && (
+          {isLoggedIn && canAccessInsights && <MyJournalPatterns />}
+          {isLoggedIn && !canAccessInsights && (
             <div className="border border-gray-100 rounded-xl p-5">
               <p className="text-xs font-bold uppercase tracking-widest text-gray-300 mb-2">AI Pattern Analysis</p>
               <LockedFeature label="Unlock AI-powered pattern recognition" requiredTier="silver" />
             </div>
           )}
-          {entries.length > 0 && <MyJournalList entries={entries} />}
+          {isLoggedIn && entries.length > 0 && <MyJournalList entries={entries} />}
         </div>
       )}
 
