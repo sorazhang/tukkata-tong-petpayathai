@@ -68,7 +68,7 @@ export default function Nav() {
           <img
             src="/logo3.png"
             alt="Tukkatatong logo"
-            className="h-9 w-auto shrink-0"
+            className="h-12 w-auto shrink-0"
           />
           <div className="flex flex-col leading-tight">
             <span className="text-white font-semibold text-base tracking-tight">
