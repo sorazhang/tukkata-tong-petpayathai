@@ -41,6 +41,41 @@ export default function VideosPage() {
         </Link>
 
       </div>
+
+      {/* YouTube Shorts */}
+      <div className="mt-16">
+        <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-2">From YouTube</p>
+        <h2 className="text-2xl font-bold text-brand-black mb-8">Latest from Kru</h2>
+        <div className="grid sm:grid-cols-2 gap-8 max-w-2xl">
+
+          <div>
+            <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+              <iframe
+                src="https://www.youtube.com/embed/vep5CFkaJ2w"
+                title="ASK KRU TUK Intro video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+            <p className="mt-3 text-sm font-semibold text-brand-black">ASK KRU TUK Intro video</p>
+          </div>
+
+          <div>
+            <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+              <iframe
+                src="https://www.youtube.com/embed/zwqaOk7Mpaw"
+                title="Never Mind Restart Again"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+              />
+            </div>
+            <p className="mt-3 text-sm font-semibold text-brand-black">Never Mind Restart Again</p>
+          </div>
+
+        </div>
+      </div>
     </main>
   )
 }
