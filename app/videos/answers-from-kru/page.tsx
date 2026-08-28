@@ -15,8 +15,34 @@ export default function AnswersFromKruPage() {
         </p>
       </div>
 
-      <div className="py-20 text-center border border-dashed border-gray-200 rounded-xl">
-        <p className="text-gray-400 text-sm">Videos coming soon.</p>
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div>
+          <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+            <iframe
+              src="https://www.youtube.com/embed/vep5CFkaJ2w"
+              title="ASK KRU TUK Intro video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+          <p className="mt-3 text-sm font-semibold text-brand-black">ASK KRU TUK Intro video</p>
+        </div>
+
+        <div>
+          <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+            <iframe
+              src="https://www.youtube.com/embed/zwqaOk7Mpaw"
+              title="Never Mind Restart Again"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+          <p className="mt-3 text-sm font-semibold text-brand-black">Never Mind Restart Again</p>
+        </div>
+
       </div>
     </main>
   )
