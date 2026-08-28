@@ -177,27 +177,7 @@ export default async function Home() {
         </Link>
       </div>
 
-      {/* ── 1-on-1 CTA ── */}
-      <section className="py-20 px-6 bg-brand-black text-white">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-4">
-            Direct Access
-          </p>
-          <h2 className="text-3xl font-bold mb-4">
-            Stuck on something specific?
-          </h2>
-          <p className="text-gray-300 leading-relaxed mb-8 max-w-xl mx-auto">
-            Book a 1-on-1 session. Bring your footage, your questions, your
-            problem. We work through it together.
-          </p>
-          <Link
-            href="/book"
-            className="bg-brand-gold text-black px-8 py-3.5 rounded font-medium hover:bg-brand-gold-dim transition-colors inline-block"
-          >
-            Book a Session
-          </Link>
-        </div>
-      </section>
+      {/* 1-on-1 CTA — hidden for now, keep for future */}
     </main>
   )
 }
