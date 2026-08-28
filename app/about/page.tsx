@@ -105,12 +105,6 @@ export default function AboutPage() {
               </svg>
               YouTube Channel
             </a>
-            <Link
-              href="/book"
-              className="border border-gray-300 text-gray-700 px-6 py-3 rounded font-medium hover:border-brand-black transition-colors"
-            >
-              Book a Session
-            </Link>
           </div>
         </div>
       </article>
