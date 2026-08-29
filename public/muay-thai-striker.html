@@ -407,19 +407,21 @@
 
 <script>
 const CFG = {
-  PUNCH_VEL:   0.036,
-  KICK_VEL:    0.040,
-  KNEE_VEL:    0.033,
-  COOLDOWN:    550,
+  PUNCH_VEL:   0.046,   // raised — need committed extension
+  KICK_VEL:    0.052,
+  KNEE_VEL:    0.042,
+  COOLDOWN:    500,
   POSE_INTERVAL: 30,
   PLAYER_MAX_HP: 100,
-  OPP_MAX_HP:    100,
-  OPP_ATTACK_INTERVAL: 3800,
-  OPP_ATTACK_DMG: 9,
-  OPP_ATTACK_VARIANCE: 4,
-  DAMAGE: { jab: 5, cross: 11, lkick: 16, rkick: 19, knee: 13 },
+  DAMAGE: { jab: 6, cross: 13, lkick: 18, rkick: 21, knee: 15 },
   COMBO_WINDOW: 1400,
   TOTAL_ROUNDS: 3,
+  // Per-round difficulty scaling
+  ROUNDS: [
+    { opp_hp: 80,  attack_ms: 4800, dmg: 7,  dmg_var: 3, block_chance: 0.00, label: 'BEGINNER'  },
+    { opp_hp: 110, attack_ms: 3000, dmg: 13, dmg_var: 5, block_chance: 0.25, label: 'FIGHTER'   },
+    { opp_hp: 145, attack_ms: 1900, dmg: 18, dmg_var: 6, block_chance: 0.45, label: 'CHAMPION'  },
+  ],
 };
 
 const SESSION = { startTime: null, strikes: [], bestCombo: 0 };
@@ -641,7 +643,8 @@ function addToStrikeLog(name, power, combo) {
 
 async function startRound() {
   G.phase = 'countdown';
-  G.oppHP = CFG.OPP_MAX_HP; G.playerHP = CFG.PLAYER_MAX_HP;
+  const rc = CFG.ROUNDS[G.round - 1];
+  G.oppHP = rc.opp_hp; G.playerHP = CFG.PLAYER_MAX_HP;
   G.combo = 0; G.poseHistory = [];
   if (G.round === 1) resetSession();
   document.getElementById('session-stats').style.display = 'none';
@@ -650,6 +653,7 @@ async function startRound() {
   G.lastOppAttack = Date.now() + 2000;
   updateHUD();
   document.getElementById('round-num').textContent = G.round;
+  document.getElementById('opp-hp-num').textContent = rc.label;
   for (const val of ['3', '2', '1', 'FIGHT']) {
     G.countdownText = val; G.countdownT = 0.85;
     await sleep(850);
@@ -722,11 +726,11 @@ function detectStrikes() {
   } else { G.isBlocking = false; }
 
   const lwv = vel(9),  lwAngle = elbowAngle(5, 7, 9);
-  if (lwv.sp > CFG.PUNCH_VEL && (lwAngle === 0 || lwAngle > 105))
+  if (lwv.sp > CFG.PUNCH_VEL && (lwAngle === 0 || lwAngle > 125))
     fire('jab',   'JAB',        'jab',   'punch', lwv, [5,7,9]);
 
   const rwv = vel(10), rwAngle = elbowAngle(6, 8, 10);
-  if (rwv.sp > CFG.PUNCH_VEL && (rwAngle === 0 || rwAngle > 105))
+  if (rwv.sp > CFG.PUNCH_VEL && (rwAngle === 0 || rwAngle > 125))
     fire('cross', 'CROSS',      'cross', 'punch', rwv, [6,8,10]);
 
   const lav = vel(15);
@@ -745,11 +749,22 @@ function onStrike(name, baseDmg, sound, velObj, kpIndices) {
   if (now - G.lastStrikeTime < CFG.COMBO_WINDOW) { G.combo = Math.min(G.combo + 1, 9); } else { G.combo = 1; }
   G.lastStrikeTime = now;
   const threshold = sound === 'punch' ? CFG.PUNCH_VEL : CFG.KICK_VEL;
-  const power = velObj ? Math.min(100, Math.round((velObj.sp / (threshold * 2.5)) * 100)) : 0;
+  const power    = velObj ? Math.min(100, Math.round((velObj.sp / (threshold * 2.5)) * 100)) : 0;
+  const accuracy = velObj ? Math.min(100, Math.round((velObj.sp / (threshold * 3.0)) * 100)) : 50;
+  const accLabel = accuracy >= 80 ? '· PERFECT' : accuracy >= 55 ? '· GOOD' : '· WEAK';
+  const accMult  = accuracy >= 80 ? 1.0 : accuracy >= 55 ? 0.75 : 0.45;
 
   if (G.mode === 'fight') {
-    const mult   = G.combo >= 4 ? 2.0 : G.combo >= 3 ? 1.6 : G.combo >= 2 ? 1.3 : 1.0;
-    const dmg    = Math.round(baseDmg * mult);
+    const rc = CFG.ROUNDS[G.round - 1];
+    if (Math.random() < rc.block_chance) {
+      G.moveFlashName = name + ' — BLOCKED';
+      G.moveFlashT = 0.9;
+      G.combo = Math.max(1, G.combo - 1);
+      playHit('punch');
+      return;
+    }
+    const comboMult = G.combo >= 4 ? 2.0 : G.combo >= 3 ? 1.6 : G.combo >= 2 ? 1.3 : 1.0;
+    const dmg    = Math.round(baseDmg * comboMult * accMult);
     const points = dmg * (G.combo >= 3 ? 3 : G.combo >= 2 ? 2 : 1);
     G.oppHP  = Math.max(0, G.oppHP - dmg);
     G.score += points;
@@ -768,12 +783,12 @@ function onStrike(name, baseDmg, sound, velObj, kpIndices) {
     addToStrikeLog(name, power, G.combo);
   }
 
-  G.moveFlashName = name + (G.combo >= 2 ? ' ×' + G.combo : '');
+  G.moveFlashName = name + (G.combo >= 2 ? ' ×' + G.combo + ' ' : ' ') + accLabel;
   G.moveFlashT = 1.1;
   SESSION.strikes.push({
     type: name.toLowerCase().replace(' ', '_'),
     velocity: velObj ? +velObj.sp.toFixed(4) : 0,
-    power,
+    power, accuracy,
     extension: kpIndices ? computeExtensionAngle(kpIndices) : null,
     combo: G.combo, t: now,
   });
@@ -788,12 +803,13 @@ function updateOpponent(dt) {
     G.oppStateTimer -= dt;
     if (G.oppStateTimer <= 0 && G.oppState !== 'ko') G.oppState = 'idle';
   }
-  if (G.oppState === 'idle' && now - G.lastOppAttack > CFG.OPP_ATTACK_INTERVAL) {
+  const rc = CFG.ROUNDS[G.round - 1];
+  if (G.oppState === 'idle' && now - G.lastOppAttack > rc.attack_ms) {
     G.lastOppAttack = now;
     G.oppState = 'attack'; G.oppStateTimer = 0.55;
     const dmg = G.isBlocking
-      ? Math.max(0, Math.round((CFG.OPP_ATTACK_DMG + (Math.random()-0.5)*CFG.OPP_ATTACK_VARIANCE) * 0.3))
-      : CFG.OPP_ATTACK_DMG + Math.round((Math.random()-0.5)*CFG.OPP_ATTACK_VARIANCE);
+      ? Math.max(0, Math.round((rc.dmg + (Math.random()-0.5)*rc.dmg_var) * 0.3))
+      : rc.dmg + Math.round((Math.random()-0.5)*rc.dmg_var);
     G.playerHP = Math.max(0, G.playerHP - dmg);
     G.playerHitFlash = 0.45; G.screenFlash = 0.28;
     playHit('player_hit');
@@ -931,14 +947,14 @@ function drawOpponent(W, H) {
   const barW=110*sc, barH=7*sc;
   const bx=cx-barW/2, by=cy+S*0.95;
   ctx.fillStyle='rgba(0,0,0,0.55)'; ctx.fillRect(bx,by,barW,barH);
-  const pct=Math.max(0,G.oppHP/CFG.OPP_MAX_HP);
+  const pct=Math.max(0,G.oppHP/CFG.ROUNDS[G.round-1].opp_hp);
   ctx.fillStyle=pct>0.5?'#dd1111':pct>0.25?'#ff8800':'#ffcc00';
   ctx.fillRect(bx,by,barW*pct,barH);
 }
 
 function updateHUD() {
   const pp=Math.max(0,G.playerHP/CFG.PLAYER_MAX_HP*100);
-  const op=Math.max(0,G.oppHP/CFG.OPP_MAX_HP*100);
+  const op=Math.max(0,G.oppHP/CFG.ROUNDS[G.round-1].opp_hp*100);
   document.getElementById('player-hp-fill').style.width=pp+'%';
   document.getElementById('opp-hp-fill').style.width=op+'%';
   document.getElementById('player-hp-num').textContent=`${G.playerHP} HP`;
