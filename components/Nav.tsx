@@ -10,7 +10,7 @@ const PERSONA_KEY = 'tkt_persona'
 const STUDENT_KEY = 'tkt_student'
 
 const studentLinks = [
-  { href: '/my-space',      label: 'My Space'         },
+  { href: '/my-space',      label: 'Training Hub'     },
   { href: '/videos',        label: 'Videos'           },
   { href: '/scoring',       label: 'Game'             },
   { href: '/knowledge',     label: 'Knowledge'        },
