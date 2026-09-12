@@ -63,21 +63,14 @@ export default function Nav() {
         <Link
           href="/"
           onClick={() => setOpen(false)}
-          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+          className="flex flex-col leading-tight hover:opacity-80 transition-opacity"
         >
-          <img
-            src="/logo3.png"
-            alt="Tukkatatong logo"
-            className="h-12 w-auto shrink-0"
-          />
-          <div className="flex flex-col leading-tight">
-            <span className="text-white font-semibold text-base tracking-tight">
-              Tukkatatong Petpayathai
-            </span>
-            <span className="font-thai text-gray-500 text-xs" lang="th">
-              ตุ๊กตาทอง เพชรพญาไท
-            </span>
-          </div>
+          <span className="text-white font-semibold text-base tracking-tight">
+            Tukkatatong Petpayathai
+          </span>
+          <span className="font-thai text-gray-500 text-xs" lang="th">
+            ตุ๊กตาทอง เพชรพญาไท
+          </span>
         </Link>
 
         {/* Desktop links */}

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getCultureStories } from '@/lib/content'
 import KruQuickCapture from '@/components/KruQuickCapture'
+import HeroCarousel from '@/components/HeroCarousel'
 
 export default async function Home() {
   const stories = await getCultureStories()
@@ -11,31 +12,28 @@ export default async function Home() {
     <main>
       <KruQuickCapture />
       {/* ── Hero ── */}
-      <section
-        className="relative bg-brand-black text-white py-16 md:py-28 px-6"
-        style={{ backgroundImage: 'url(/Kru.webp)', backgroundSize: 'cover', backgroundPosition: '20% top' }}
-      >
-        <div className="absolute inset-0 bg-brand-black/70" />
-        <div className="max-w-3xl mx-auto relative z-10">
-          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-3">
+      <section className="relative bg-brand-black text-white">
+        {/* Carousel fills the background */}
+        <HeroCarousel />
+
+        {/* Text overlay centred on the carousel */}
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
+          {/* Logo — large, on-page */}
+          <img
+            src="/logo3.png"
+            alt="Tukkatatong Petpayathai"
+            className="h-28 md:h-40 w-auto mb-5 drop-shadow-lg pointer-events-auto"
+          />
+          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-2">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
           </p>
-          <p className="font-thai text-gray-400 text-base md:text-lg mb-4 md:mb-6" lang="th">
+          <p className="font-thai text-gray-300 text-base md:text-lg mb-3" lang="th">
             ตุ๊กตาทอง เพชรพญาไท
           </p>
-          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4 md:mb-6">
+          <h1 className="text-xl md:text-4xl lg:text-5xl font-bold leading-tight max-w-2xl mb-5">
             Some fighters improve faster. The difference is the part of Muay Thai your training isn&apos;t giving you.
           </h1>
-          <p className="text-gray-300 text-sm md:text-lg leading-relaxed max-w-xl mb-3 md:mb-4">
-            You train consistently. You try hard. But the same confusion keeps coming back in sparring —
-            the kick that doesn&apos;t land, the pressure that makes you freeze, the situation you
-            don&apos;t know how to handle. You&apos;ve been told what to do. Nobody has helped you
-            see what your training is actually showing you.
-          </p>
-          <p className="text-gray-500 text-sm md:text-lg leading-relaxed max-w-xl mb-8 md:mb-10">
-            This platform changes that. A journal to see your own patterns. Challenges your body has to solve before you read Kru&apos;s answer. And when something specific keeps stopping you — knowledge and direct access to thirty years of experience.
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="pointer-events-auto">
             <Link
               href="/my-space"
               className="bg-brand-gold text-black px-6 py-3 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
@@ -43,6 +41,21 @@ export default async function Home() {
               Start your training journal →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* ── Sub-hero text ── */}
+      <section className="bg-brand-black text-white px-6 pb-12 pt-8 border-b border-gray-800">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-gray-300 text-sm md:text-base leading-relaxed mb-3">
+            You train consistently. You try hard. But the same confusion keeps coming back in sparring —
+            the kick that doesn&apos;t land, the pressure that makes you freeze, the situation you
+            don&apos;t know how to handle.
+          </p>
+          <p className="text-gray-500 text-sm md:text-base leading-relaxed">
+            A journal to see your own patterns. Challenges your body has to solve before you read Kru&apos;s answer.
+            And when something specific keeps stopping you — thirty years of experience, direct.
+          </p>
         </div>
       </section>
       {/* ── How it works ── */}
