@@ -16,24 +16,25 @@ export default async function Home() {
         {/* Carousel fills the background */}
         <HeroCarousel />
 
-        {/* Text overlay centred on the carousel */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
-          {/* Logo — large, on-page */}
+        {/* Logo — anchored to top-center, clear of the face */}
+        <div className="absolute top-0 inset-x-0 z-10 flex justify-center pt-6 pointer-events-none">
           <img
             src="/logo3.png"
             alt="Tukkatatong Petpayathai"
-            className="h-28 md:h-40 w-auto mb-5 drop-shadow-lg pointer-events-auto"
+            className="h-24 md:h-32 w-auto drop-shadow-lg pointer-events-auto"
           />
-          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-2">
+        </div>
+
+        {/* Text + CTA — anchored to bottom, face stays visible */}
+        <div className="absolute bottom-0 inset-x-0 z-10 px-6 pb-10 text-center pointer-events-none"
+             style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 60%, transparent 100%)' }}>
+          <p className="text-brand-red text-xs font-medium uppercase tracking-widest mb-1">
             2x Channel 7 Muay Thai Champion · North East Thailand Champion
           </p>
-          <p className="font-thai text-gray-300 text-base md:text-lg mb-3" lang="th">
-            ตุ๊กตาทอง เพชรพญาไท
-          </p>
-          <h1 className="text-xl md:text-4xl lg:text-5xl font-bold leading-tight max-w-2xl mb-5">
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-bold leading-tight max-w-2xl mx-auto mb-4">
             Some fighters improve faster. The difference is the part of Muay Thai your training isn&apos;t giving you.
           </h1>
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto inline-block">
             <Link
               href="/my-space"
               className="bg-brand-gold text-black px-6 py-3 rounded font-medium text-sm hover:bg-brand-gold-dim transition-colors"
