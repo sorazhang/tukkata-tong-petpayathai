@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 const SLIDES = [
   { src: '/IMG-20260911-WA0008.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
   { src: '/IMG-20260911-WA0009.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0011.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
+  { src: '/IMG-20260911-WA0033.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
   { src: '/IMG-20260911-WA0022.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
   { src: '/IMG-20260911-WA0031.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
   { src: '/IMG-20260911-WA0034.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
