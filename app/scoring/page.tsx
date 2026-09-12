@@ -28,7 +28,7 @@ export default function ScoringPage() {
       <div className="mt-16 border-t border-gray-100 pt-10">
         <p className="text-sm text-gray-400 mb-2">Your stats are recorded in your training hub.</p>
         <Link href="/my-space" className="text-brand-red text-sm font-medium hover:underline">
-          Go to My Space →
+          Go to Training Hub →
         </Link>
       </div>
     </main>
