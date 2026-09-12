@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from 'react'
 
 const SLIDES = [
-  { src: '/IMG-20260911-WA0008.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0009.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0011.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0022.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0031.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0034.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
-  { src: '/IMG-20260911-WA0039.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
+  { src: '/IMG-20260911-WA0008.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
+  { src: '/IMG-20260911-WA0009.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
+  { src: '/IMG-20260911-WA0011.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
+  { src: '/IMG-20260911-WA0022.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
+  { src: '/IMG-20260911-WA0031.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
+  { src: '/IMG-20260911-WA0034.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
+  { src: '/IMG-20260911-WA0039.jpg', alt: 'Tukkatatong Petpayathai', position: 'center center' },
 ]
 
 const INTERVAL_MS = 4500
@@ -30,7 +30,7 @@ export default function HeroCarousel() {
 
   return (
     <div
-      className="relative w-full h-[62vh] min-h-[420px] overflow-hidden"
+      className="relative w-full h-[85vh] min-h-[560px] overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -50,8 +50,8 @@ export default function HeroCarousel() {
         </div>
       ))}
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-brand-black/65 z-10" />
+      {/* Dark overlay — lighter so image detail shows through */}
+      <div className="absolute inset-0 bg-brand-black/45 z-10" />
 
       {/* Dot indicators */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
