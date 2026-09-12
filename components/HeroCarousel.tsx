@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 const SLIDES = [
   { src: '/IMG-20260911-WA0008.jpg', alt: 'Tukkatatong Petpayathai', position: 'center top' },
@@ -13,13 +13,19 @@ const SLIDES = [
 ]
 
 const INTERVAL_MS = 4500
+const SWIPE_THRESHOLD = 50
 
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0)
   const [paused,  setPaused]  = useState(false)
+  const touchStartX = useRef<number | null>(null)
 
   const advance = useCallback(() => {
     setCurrent((c) => (c + 1) % SLIDES.length)
+  }, [])
+
+  const prev = useCallback(() => {
+    setCurrent((c) => (c - 1 + SLIDES.length) % SLIDES.length)
   }, [])
 
   useEffect(() => {
@@ -28,11 +34,27 @@ export default function HeroCarousel() {
     return () => clearInterval(timer)
   }, [advance, paused])
 
+  function onTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX
+    setPaused(true)
+  }
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return
+    const delta = touchStartX.current - e.changedTouches[0].clientX
+    if (delta > SWIPE_THRESHOLD) advance()
+    else if (delta < -SWIPE_THRESHOLD) prev()
+    touchStartX.current = null
+    setPaused(false)
+  }
+
   return (
     <div
-      className="relative w-full h-[62vh] min-h-[420px] overflow-hidden"
+      className="relative w-full h-[85vh] min-h-[560px] overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       {SLIDES.map((slide, i) => (
         <div
@@ -50,8 +72,8 @@ export default function HeroCarousel() {
         </div>
       ))}
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-brand-black/65 z-10" />
+      {/* Dark overlay — lighter so image detail shows through */}
+      <div className="absolute inset-0 bg-brand-black/45 z-10" />
 
       {/* Dot indicators */}
       <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-20">
