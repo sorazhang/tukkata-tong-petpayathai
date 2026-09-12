@@ -16,12 +16,12 @@ export default async function Home() {
         {/* Carousel fills the background */}
         <HeroCarousel />
 
-        {/* Logo — anchored to top-center, clear of the face */}
-        <div className="absolute top-0 inset-x-0 z-10 flex justify-center pt-6 pointer-events-none">
+        {/* Logo — top-right corner watermark */}
+        <div className="absolute top-4 right-5 z-20 pointer-events-none">
           <img
             src="/logo3.png"
             alt="Tukkatatong Petpayathai"
-            className="h-24 md:h-32 w-auto drop-shadow-lg pointer-events-auto"
+            className="h-14 md:h-16 w-auto drop-shadow-lg opacity-80"
           />
         </div>
 
