@@ -21,7 +21,7 @@ export default async function Home() {
           <img
             src="/logo3.png"
             alt="Tukkatatong Petpayathai"
-            className="h-14 md:h-16 w-auto drop-shadow-lg opacity-80"
+            className="h-28 md:h-32 w-auto drop-shadow-lg opacity-80"
           />
         </div>
 
@@ -120,7 +120,70 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── YouTube preview ── */}
+      <section className="py-20 px-6 bg-brand-black text-white border-t border-gray-900">
+        <div className="max-w-5xl mx-auto">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-brand-red mb-1">
+                Watch
+              </p>
+              <h2 className="text-2xl font-bold mb-1">Answers from Kru</h2>
+              <p className="text-gray-500 text-sm">Direct answers to the questions students ask most.</p>
+            </div>
+            <a
+              href="https://www.youtube.com/@TukkatatongPetpayathai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center gap-2 text-brand-red text-sm hover:underline font-medium shrink-0"
+            >
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+              </svg>
+              All videos →
+            </a>
+          </div>
 
+          <div className="grid sm:grid-cols-2 gap-8 max-w-2xl">
+            <div>
+              <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+                <iframe
+                  src="https://www.youtube.com/embed/vep5CFkaJ2w"
+                  title="ASK KRU TUK Intro video"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+              <p className="mt-3 text-sm font-semibold text-white">ASK KRU TUK Intro video</p>
+            </div>
+            <div>
+              <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+                <iframe
+                  src="https://www.youtube.com/embed/zwqaOk7Mpaw"
+                  title="Never Mind Restart Again"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+              <p className="mt-3 text-sm font-semibold text-white">Never Mind Restart Again</p>
+            </div>
+          </div>
+
+          <a
+            href="https://www.youtube.com/@TukkatatongPetpayathai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="md:hidden mt-6 inline-flex items-center gap-2 text-brand-red text-sm hover:underline font-medium"
+          >
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.54 3.5 12 3.5 12 3.5s-7.54 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.04 0 12 0 12s0 3.96.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.46 20.5 12 20.5 12 20.5s7.54 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.96 24 12 24 12s0-3.96-.5-5.81zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/>
+            </svg>
+            All videos →
+          </a>
+        </div>
+      </section>
 
       {/* ── Culture teaser ── */}
       <section className="py-20 px-6 bg-white">
