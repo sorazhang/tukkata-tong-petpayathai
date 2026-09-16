@@ -144,30 +144,42 @@ export default async function Home() {
             </a>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-8 max-w-2xl">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div>
               <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
                 <iframe
                   src="https://www.youtube.com/embed/vep5CFkaJ2w"
-                  title="ASK KRU TUK Intro video"
+                  title="Who am I"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="absolute inset-0 w-full h-full"
                 />
               </div>
-              <p className="mt-3 text-sm font-semibold text-white">ASK KRU TUK Intro video</p>
+              <p className="mt-3 text-sm font-semibold text-white">Who am I</p>
             </div>
             <div>
               <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
                 <iframe
-                  src="https://www.youtube.com/embed/zwqaOk7Mpaw"
-                  title="Never Mind Restart Again"
+                  src="https://www.youtube.com/embed/wrptudAUBx4"
+                  title="What I can do"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="absolute inset-0 w-full h-full"
                 />
               </div>
-              <p className="mt-3 text-sm font-semibold text-white">Never Mind Restart Again</p>
+              <p className="mt-3 text-sm font-semibold text-white">What I can do</p>
+            </div>
+            <div>
+              <div className="relative w-full rounded-xl overflow-hidden bg-black" style={{ paddingBottom: '177.78%' }}>
+                <iframe
+                  src="https://www.youtube.com/embed/F5S0dZe9N-c"
+                  title="Latest"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+              <p className="mt-3 text-sm font-semibold text-white">Latest</p>
             </div>
           </div>
 
