@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: 'About',
   description:
-    'Lumpinee Stadium champion, Channel 7 World title holder. Thirty years of understanding that most coaches never put into words.',
+    'Two-time Muay Thai World Champion (240-33-2). Channel 7 Stadium title holder, ONE Championship veteran. Thirty years of understanding that most coaches never put into words.',
 }
 
 export default function AboutPage() {
@@ -38,48 +38,65 @@ export default function AboutPage() {
       <article className="max-w-3xl mx-auto px-6 py-16">
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-600 leading-relaxed">
-            I started fighting because my family needed the money. That is the
-            honest answer. Most Thai fighters from Isaan will tell you the same
-            thing.
+            My dad was a big Muay Thai fan. He used to watch all the fights on
+            television. That is how I got introduced to Muay Thai. I would watch
+            the fights with him, and I became a fan. One day, my dad bought some
+            gloves and a bag for us to mess around with. As time went by,
+            messing around, punching, and kicking, I decided I wanted to give
+            Muay Thai a proper go and try fighting.
           </p>
 
           <p>
-            What I did not expect was what the ring would teach me. Not just how
-            to fight — but how to think. How to stay calm when everything is
-            going wrong. How to read a person before they know what they are
-            going to do themselves. These are things that do not have a name in
-            Muay Thai, but every champion knows them.
+            The village I grew up in is like any other small countryside village
+            in Thailand — a quiet place where everyone knows each other. My life
+            was a normal country kid&apos;s life. I spent my time playing with friends
+            and being naughty. I was quite misbehaved as a kid.
+          </p>
+
+          <h2>Starting Young</h2>
+          <p>
+            I started training at home at first, and then moved to a gym nearby
+            called Sitkawee. I had my first fight when I was 10 — I was in the
+            fourth grade. After fighting for a few years in the provinces, I
+            relocated to Bangkok at the age of 13 and moved to the Kiatpetch Gym.
+          </p>
+          <p>
+            The move to the Thai capital helped me take my skills to new levels,
+            as I refined my technique and developed my own aggressive style. That
+            style took me to my first title — the Channel 7 Stadium World Title —
+            and a host of wins over some of the biggest names in the sport.
+          </p>
+          <p>
+            My proudest win would be when I beat Ninmongkon, as he was a top fighter.
+          </p>
+
+          <h2>The Hardest Time</h2>
+          <p>
+            The hardest time of my life was when my family lost all our money.
+            My dad was up for re-election for the local government. He spent a
+            lot of money on his campaign, but lost the election. We were left
+            penniless. It was extremely difficult for everyone.
+          </p>
+          <p>
+            Once my family went bankrupt, I decided I had to return to fight and
+            help the family out with money. We got through this hardship by
+            fighting and never giving up. Seeing my dad continue to fight and
+            refusing to give up taught me that you can overcome anything, as long
+            as you keep fighting. I carry this with me today. I refuse to give up.
           </p>
 
           <h2>The Record</h2>
           <p>
-            Multiple Channel 7
-            Stadium World Titles from 2007. North East Thailand Championship.
-            Andaman League Tournament Champion. Over 200 professional fights across
-            three decades.
+            Two-time Muay Thai World Champion (240-33-2). Multiple Channel 7
+            Stadium World Titles. North East Thailand Championship. Andaman League
+            Tournament Champion. Over 275 professional fights across three decades.
           </p>
           <p>
-            In 2018 and 2019 I competed in ONE Championship, bringing Muay Thai to
-            the international stage. Different rules, different judges, different
-            opponents — but the same art.
+            I competed in ONE Championship&apos;s ONE Super Series — the biggest stage
+            I have ever fought on — following in the footsteps of teammates
+            Sam-A Gaiyanghadao, Nong-O Gaiyanghadao, and Singtongnoi Por Telakun
+            at Evolve MMA.
           </p>
-
-          <h2>What I Fought</h2>
-          <p>
-            I came up in the golden era of Thai fighting — the 1990s, when
-            Lumpinee and Rajadamnern were the only arenas that mattered and
-            every fight card had four or five future champions on it. You learned
-            fast or you did not last. There was no internet to study opponents.
-            You watched from the corner, you felt things in sparring, and you
-            asked your Kru questions until he told you to stop asking and start
-            feeling.
-          </p>
-          <p>
-            I fought in small provincial stadiums for 500 baht and in Lumpinee
-            for the kind of money that meant my mother did not have to work in
-            the fields anymore. Both mattered. Both taught me different things.
-          </p>
-
         </div>
 
         {/* CTAs */}
