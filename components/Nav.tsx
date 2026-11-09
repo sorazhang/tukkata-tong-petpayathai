@@ -18,7 +18,8 @@ const studentLinks = [
 ]
 
 const kruLinks = [
-  { href: '/kru', label: 'Dashboard' },
+  { href: '/kru',      label: 'Dashboard' },
+  { href: '/dialogue', label: 'Dialogue'  },
 ]
 
 export default function Nav() {

@@ -67,6 +67,17 @@ export default function KruDashboard({
         </p>
       </div>
 
+      <Link
+        href="/dialogue"
+        className="flex items-center justify-between mb-8 px-4 py-3 rounded-xl border border-gray-200 hover:border-brand-red transition-colors"
+      >
+        <span>
+          <span className="block text-sm font-semibold text-brand-black">🎙 Dialogue capture</span>
+          <span className="block text-xs text-gray-400">Record a Q&amp;A session — English questions, Thai answers, auto-translated</span>
+        </span>
+        <span className="text-brand-red">→</span>
+      </Link>
+
       {/* Tab bar */}
       <div className="flex gap-1 p-1 bg-gray-100 rounded-xl mb-8">
         {([
