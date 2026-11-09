@@ -23,6 +23,7 @@ interface LiveTurn {
   at: string
   final: string
   interim: string
+  spark: boolean
 }
 
 function newId() {
@@ -51,9 +52,18 @@ function toMarkdown(title: string, createdAt: string, turns: DialogueTurn[]) {
     '---',
     '',
   ]
+  const sparks = turns.filter((t) => t.spark)
+  if (sparks.length) {
+    lines.push(`## ⚡ Sparks (${sparks.length})`, '')
+    for (const t of sparks) {
+      const what = t.speaker === 'kru' ? (t.translation || t.text) : t.text
+      lines.push(`- [${offset(t.at, start)}] ${LABEL[t.speaker]}: ${what || '(moment marked, no note)'}`)
+    }
+    lines.push('', '## Transcript', '')
+  }
   for (const t of turns) {
     const tag = t.speaker === 'kru' ? 'Kru (TH)' : 'Me (EN)'
-    lines.push(`**[${offset(t.at, start)}] ${tag}:** ${t.text}`)
+    lines.push(`**[${offset(t.at, start)}] ${t.spark ? '⚡ ' : ''}${tag}:** ${t.text || '(spark — no note)'}`)
     if (t.speaker === 'kru' && t.translation) lines.push(`> EN: ${t.translation}`)
     lines.push('')
   }
@@ -87,6 +97,7 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
   const [editText, setEditText]   = useState('')
   const [typed, setTyped]         = useState('')
   const [copied, setCopied]       = useState(false)
+  const [sparksOnly, setSparksOnly] = useState(false)
 
   const recRef     = useRef<AnyRecognition>(null)
   const liveRef    = useRef<LiveTurn | null>(null)
@@ -131,6 +142,7 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
     const idx  = list.findIndex((t) => t.id === turnId)
     if (idx < 0) return
     const turn = list[idx]
+    if (!turn.text.trim()) return
     const prevQ = [...list.slice(0, idx)].reverse().find((t) => t.speaker === 'me')?.text
     setTranslating((s) => new Set(s).add(turnId))
     const res = await translateKruTurn(turn.text, prevQ)
@@ -147,13 +159,14 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
     setLive(null)
     if (!l) return
     const text = `${l.final} ${l.interim}`.replace(/\s+/g, ' ').trim()
-    if (!text) return
+    // A spark is kept even with no words — the moment itself matters
+    if (!text && !l.spark) return
     const turn: DialogueTurn = {
-      id: newId(), speaker: l.speaker, lang: LANG[l.speaker], text, translation: null, at: l.at,
+      id: newId(), speaker: l.speaker, lang: LANG[l.speaker], text, translation: null, at: l.at, spark: l.spark,
     }
     turnsRef.current = [...turnsRef.current, turn]
     setTurns(turnsRef.current)
-    if (turn.speaker === 'kru') translate(turn.id)
+    if (turn.speaker === 'kru' && text) translate(turn.id)
   }, [translate])
 
   const stopListening = useCallback(() => {
@@ -165,9 +178,9 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
     wakeRef.current = null
   }, [commitLive])
 
-  const startListening = useCallback((speaker: Speaker) => {
+  const startListening = useCallback((speaker: Speaker, spark = false) => {
     // Tapping the active speaker again ends their turn
-    if (liveRef.current?.speaker === speaker) { stopListening(); return }
+    if (!spark && liveRef.current?.speaker === speaker) { stopListening(); return }
     // Switching speaker: close the current turn first
     if (liveRef.current) stopListening()
 
@@ -184,7 +197,7 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
     rec.interimResults  = true
     recRef.current      = rec
 
-    const l: LiveTurn = { speaker, at: new Date().toISOString(), final: '', interim: '' }
+    const l: LiveTurn = { speaker, at: new Date().toISOString(), final: '', interim: '', spark }
     liveRef.current = l
     setLive({ ...l })
 
@@ -232,12 +245,40 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
     }
   }, [stopListening])
 
+  // ⚡ One tap to capture the moment something clicks.
+  // While someone is speaking → that turn becomes the spark.
+  // Otherwise → a spark marker is dropped now, and the mic opens for a quick
+  // English note on what clicked (optional — tap Spark/Me again to close it).
+  const triggerSpark = useCallback(() => {
+    try { navigator.vibrate?.(60) } catch { /* noop */ }
+    if (liveRef.current) {
+      if (liveRef.current.spark && liveRef.current.speaker === 'me') { stopListening(); return }
+      liveRef.current.spark = true
+      setLive({ ...liveRef.current })
+      return
+    }
+    if (supported) {
+      startListening('me', true)
+    } else {
+      const turn: DialogueTurn = {
+        id: newId(), speaker: 'me', lang: LANG.me, text: '', translation: null,
+        at: new Date().toISOString(), spark: true,
+      }
+      turnsRef.current = [...turnsRef.current, turn]
+      setTurns(turnsRef.current)
+    }
+  }, [startListening, stopListening, supported])
+
+  function toggleSpark(id: string) {
+    setTurns((ts) => ts.map((t) => (t.id === id ? { ...t, spark: !t.spark } : t)))
+  }
+
   // ── Turn editing ─────────────────────────────────────────────────────────
   function addTyped(speaker: Speaker) {
     const text = typed.trim()
     if (!text) return
     const turn: DialogueTurn = {
-      id: newId(), speaker, lang: LANG[speaker], text, translation: null, at: new Date().toISOString(),
+      id: newId(), speaker, lang: LANG[speaker], text, translation: null, at: new Date().toISOString(), spark: false,
     }
     turnsRef.current = [...turnsRef.current, turn]
     setTurns(turnsRef.current)
@@ -248,13 +289,13 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
   function saveEdit(id: string) {
     const text = editText.trim()
     setEditingId(null)
-    if (!text) return
+    if (!text && !turnsRef.current.find((t) => t.id === id)?.spark) return
     const before = turnsRef.current.find((t) => t.id === id)
     turnsRef.current = turnsRef.current.map((t) =>
       t.id === id ? { ...t, text, translation: t.text === text ? t.translation : null } : t,
     )
     setTurns(turnsRef.current)
-    if (before?.speaker === 'kru' && before.text !== text) translate(id)
+    if (before?.speaker === 'kru' && before.text !== text && text) translate(id)
   }
 
   function swapSpeaker(id: string) {
@@ -290,7 +331,9 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
   }
 
   const start = turns[0]?.at ?? live?.at
-  const untranslated = turns.filter((t) => t.speaker === 'kru' && !t.translation && !translating.has(t.id))
+  const untranslated = turns.filter((t) => t.speaker === 'kru' && t.text && !t.translation && !translating.has(t.id))
+  const sparkCount   = turns.filter((t) => t.spark).length
+  const visible      = sparksOnly ? turns.filter((t) => t.spark) : turns
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
@@ -309,6 +352,7 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
       />
       <p className="text-xs text-gray-400 mt-1">
         {initial.createdAt ? new Date(initial.createdAt).toLocaleString() : ''} · {turns.length} turns
+        {sparkCount > 0 && <> · <span className="text-brand-gold font-semibold">⚡ {sparkCount}</span></>}
       </p>
 
       {/* Toolbar */}
@@ -327,6 +371,11 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
             Translate {untranslated.length} missing
           </button>
         )}
+        {sparkCount > 0 && (
+          <button onClick={() => setSparksOnly((v) => !v)} className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${sparksOnly ? 'bg-brand-gold text-black' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+            ⚡ {sparksOnly ? 'Show all' : 'Sparks only'}
+          </button>
+        )}
         <button onClick={handleDeleteSession} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-gray-400 hover:text-brand-red ml-auto">
           Delete
         </button>
@@ -337,17 +386,19 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
         {turns.length === 0 && !live && (
           <li className="py-12 text-center text-sm text-gray-400">
             Tap <b>Me</b> before you ask, tap <b>Kru</b> when he answers. Tap the active button again to pause.
+            <br />When something clicks, hit <b>⚡ Spark</b>.
           </li>
         )}
 
-        {turns.map((t) => {
+        {visible.map((t) => {
           const isKru = t.speaker === 'kru'
           return (
             <li key={t.id} className={`flex ${isKru ? 'justify-start' : 'justify-end'}`}>
-              <div className={`group max-w-[85%] rounded-2xl px-4 py-3 ${isKru ? 'bg-gray-100 rounded-tl-sm' : 'bg-brand-black text-white rounded-tr-sm'}`}>
+              <div className={`group max-w-[85%] rounded-2xl px-4 py-3 ${isKru ? 'bg-gray-100 rounded-tl-sm' : 'bg-brand-black text-white rounded-tr-sm'} ${t.spark ? 'ring-2 ring-brand-gold' : ''}`}>
                 <div className={`flex items-center gap-2 text-[11px] mb-1 ${isKru ? 'text-gray-400' : 'text-gray-400'}`}>
                   <span className="font-bold uppercase tracking-wider">{LABEL[t.speaker]}</span>
                   <span>{offset(t.at, start)}</span>
+                  {t.spark && <span className="text-brand-gold font-bold">⚡ Spark</span>}
                 </div>
 
                 {editingId === t.id ? (
@@ -367,11 +418,11 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
                   </div>
                 ) : (
                   <p className={`text-sm leading-relaxed whitespace-pre-wrap ${isKru ? 'font-thai text-brand-black' : ''}`} lang={isKru ? 'th' : 'en'}>
-                    {t.text}
+                    {t.text || <span className="opacity-60 italic">Spark moment — tap Edit to add what clicked</span>}
                   </p>
                 )}
 
-                {isKru && editingId !== t.id && (
+                {isKru && t.text && editingId !== t.id && (
                   <p className="text-sm text-gray-600 mt-2 pt-2 border-t border-gray-200 italic">
                     {translating.has(t.id) ? 'Translating…' : t.translation ?? (
                       <button onClick={() => translate(t.id)} className="not-italic text-xs font-semibold text-brand-red">Translate</button>
@@ -381,6 +432,7 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
 
                 {editingId !== t.id && (
                   <div className="flex gap-3 mt-2 text-[11px] opacity-50 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => toggleSpark(t.id)} className={t.spark ? 'text-brand-gold font-bold' : ''}>{t.spark ? '⚡ Unspark' : '⚡ Spark'}</button>
                     <button onClick={() => { setEditingId(t.id); setEditText(t.text) }}>Edit</button>
                     <button onClick={() => swapSpeaker(t.id)}>Switch to {isKru ? 'Me' : 'Kru'}</button>
                     <button onClick={() => removeTurn(t.id)}>Delete</button>
@@ -393,16 +445,21 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
 
         {live && (
           <li className={`flex ${live.speaker === 'kru' ? 'justify-start' : 'justify-end'}`}>
-            <div className="max-w-[85%] rounded-2xl px-4 py-3 border-2 border-dashed border-brand-red bg-white">
+            <div className={`max-w-[85%] rounded-2xl px-4 py-3 border-2 border-dashed bg-white ${live.spark ? 'border-brand-gold' : 'border-brand-red'}`}>
               <div className="flex items-center gap-2 text-[11px] mb-1 text-brand-red">
                 <span className="w-2 h-2 rounded-full bg-brand-red animate-pulse" />
                 <span className="font-bold uppercase tracking-wider">{LABEL[live.speaker]} speaking</span>
+                {live.spark && <span className="text-brand-gold font-bold">⚡ Spark</span>}
                 <span>{live.speaker === 'kru' ? 'ไทย' : 'English'}</span>
               </div>
               <p className={`text-sm leading-relaxed ${live.speaker === 'kru' ? 'font-thai' : ''}`} lang={live.speaker === 'kru' ? 'th' : 'en'}>
                 {live.final}
                 <span className="text-gray-400"> {live.interim}</span>
-                {!live.final && !live.interim && <span className="text-gray-400">Listening…</span>}
+                {!live.final && !live.interim && (
+                  <span className="text-gray-400">
+                    {live.spark && live.speaker === 'me' ? 'Spark saved. Say what clicked (optional)…' : 'Listening…'}
+                  </span>
+                )}
               </p>
             </div>
           </li>
@@ -414,6 +471,20 @@ export default function DialogueRecorder({ initial }: { initial: Dialogue }) {
       <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-gray-200 z-40">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-3 space-y-3">
           {micError && <p className="text-xs text-brand-red">{micError}</p>}
+
+          <button
+            onClick={triggerSpark}
+            className={`w-full py-3 rounded-2xl font-bold text-lg transition-all active:scale-[0.98] ${
+              live?.spark ? 'bg-brand-gold text-black ring-4 ring-brand-gold/30' : 'bg-brand-gold/90 text-black hover:bg-brand-gold'
+            }`}
+          >
+            ⚡ Spark
+            <span className="block text-xs font-normal opacity-70">
+              {live?.spark && live.speaker === 'me' ? 'tap to finish note'
+                : live ? `mark what ${LABEL[live.speaker]} is saying`
+                : 'something just clicked'}
+            </span>
+          </button>
 
           {supported ? (
             <div className="grid grid-cols-2 gap-3">

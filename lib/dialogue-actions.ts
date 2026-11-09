@@ -19,6 +19,8 @@ export interface DialogueTurn {
   translation: string | null
   /** ISO timestamp when the turn started */
   at: string
+  /** ⚡ A "spark" — a moment where something clicked */
+  spark: boolean
 }
 
 export interface Dialogue {
@@ -34,6 +36,15 @@ export interface DialogueSummary {
   title: string
   createdAt: string
   turnCount: number
+  sparkCount: number
+}
+
+export interface SparkItem {
+  dialogueId: string
+  dialogueTitle: string
+  turn: DialogueTurn
+  /** Up to two turns before the spark, for context */
+  context: DialogueTurn[]
 }
 
 const COLLECTION = 'dialogues'
@@ -47,6 +58,7 @@ function cleanTurn(t: DialogueTurn): DialogueTurn {
     text:        String(t.text ?? ''),
     translation: t.translation ? String(t.translation) : null,
     at:          String(t.at ?? new Date().toISOString()),
+    spark:       Boolean(t.spark),
   }
 }
 
@@ -105,8 +117,28 @@ export async function getDialogues(): Promise<DialogueSummary[]> {
       title:     d.title ?? 'Untitled session',
       createdAt: d.createdAt ?? '',
       turnCount: Array.isArray(d.turns) ? d.turns.length : 0,
+      sparkCount: Array.isArray(d.turns) ? d.turns.filter((t: DialogueTurn) => t.spark).length : 0,
     }
   })
+}
+
+export async function getAllSparks(): Promise<SparkItem[]> {
+  const snap = await adminDb.collection(COLLECTION).orderBy('createdAt', 'desc').get()
+  const out: SparkItem[] = []
+  for (const doc of snap.docs) {
+    const d = doc.data()
+    const turns: DialogueTurn[] = Array.isArray(d.turns) ? d.turns.map(cleanTurn) : []
+    turns.forEach((t, i) => {
+      if (!t.spark) return
+      out.push({
+        dialogueId:    doc.id,
+        dialogueTitle: d.title ?? 'Untitled session',
+        turn:          t,
+        context:       turns.slice(Math.max(0, i - 2), i),
+      })
+    })
+  }
+  return out
 }
 
 export async function deleteDialogue(id: string): Promise<{ ok: boolean; error?: string }> {

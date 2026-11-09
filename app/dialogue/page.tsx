@@ -17,7 +17,14 @@ export default async function DialogueIndexPage() {
         translation of Kru&apos;s answers — so it can be mined for key ideas later.
       </p>
 
-      <form action={createDialogue} className="mt-8 flex gap-2">
+      <Link
+        href="/dialogue/sparks"
+        className="inline-block mt-6 text-sm font-semibold text-brand-gold-dim hover:text-brand-black"
+      >
+        ⚡ All sparks →
+      </Link>
+
+      <form action={createDialogue} className="mt-6 flex gap-2">
         <input
           name="title"
           placeholder="Topic (optional), e.g. Clinch entries"
@@ -47,7 +54,10 @@ export default async function DialogueIndexPage() {
                   {s.createdAt ? new Date(s.createdAt).toLocaleString() : ''}
                 </p>
               </div>
-              <span className="text-xs text-gray-400">{s.turnCount} turns</span>
+              <span className="text-xs text-gray-400 text-right">
+                {s.turnCount} turns
+                {s.sparkCount > 0 && <span className="block text-brand-gold font-semibold">⚡ {s.sparkCount}</span>}
+              </span>
             </Link>
           </li>
         ))}
